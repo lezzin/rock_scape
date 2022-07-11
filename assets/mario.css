@@ -3,12 +3,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    user-select: none
+    user-select: none;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #fff;
 }
 
 body {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    color: #fff;
     background: #000
 }
 
@@ -22,54 +22,14 @@ body {
     font-size: 1.5rem;
 }
 
-.comandos {
-    z-index: 15;
-    display: none !important;
-    border-radius: 10px;
-    padding: 50px;
-    font-family: Arial, Helvetica, sans-serif;
+#timer {
+    z-index: 10;
     position: absolute;
-    top: 12%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    color: #fff;
-    background-color: #111
-}
-
-.comandos.active {
-    display: block !important;
-}
-
-.comandos h1 {
-    font-size: 1.3rem;
-    padding: 10px;
-    text-align: center
-}
-
-.comandos ul {
-    list-style-type: none;
+    top: 0;
+    right: 0;
+    margin: 10px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 10px
-}
-
-.comandos li {
-    font-size: 1rem;
-    padding: 5px
-}
-
-.comandos li span {
-    color: grey
-}
-
-.comandos #importante {
-    font-size: .8rem;
-    display: flex;
-    justify-content: center;
-    color: #a23535;
-    opacity: .8
+    font-size: 1.5rem;
 }
 
 button {
