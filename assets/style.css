@@ -1,10 +1,12 @@
+@import url('http://fonts.cdnfonts.com/css/arcade-classic');
+
 * {
     letter-spacing: 2px;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     user-select: none;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: monospace;
     color: #fff;
 }
 
@@ -14,25 +16,37 @@ body {
 }
 
 .player-control {
+    position: absolute;
+    top: 16%;
+    left: -100%;
+    background: #252525;
+
+    border-radius: 5px;
+
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 80%;
-    padding: .6em 0;
-    border-top: 1px solid #363636;
-    border-bottom: 1px solid #363636;
+    justify-content: space-around;
+    opacity: 0;
+
+    transition: .6s;
+    width: 20vw;
+    height: 10vh;
+    z-index: 10;
 }
 
-.player-control i {
-    padding: .2em 0;
+.player-control.clicked {
+    opacity: 1;
+    left: 10vh;
 }
 
 .pontuacao {
     position: absolute;
     top: 0;
     left: -100%;
-    background: #252525;
+    background: #252525d1;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
     display: flex;
     flex-direction: column;
@@ -44,8 +58,8 @@ body {
     width: 40vw;
     height: 100vh;
 
-    z-index: 10;
-    overflow-y: scroll;
+    z-index: 9;
+    overflow-y: auto;
 }
 
 .pontuacao .lista {
@@ -70,6 +84,17 @@ body {
     height: 100vh;
 }
 
+.togglers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.togglers span {
+    padding: .6em 0;
+}
+
 @media(max-width:992.98px) {
     .sidemenu {
         width: 100vw;
@@ -79,8 +104,7 @@ body {
         flex-direction: row;
     }
 
-    .sidemenu ul,
-    .player-control {
+    .sidemenu ul {
         border-right: 1px solid #363636;
         border-left: 1px solid #363636;
         border-top: none !important;
@@ -97,14 +121,46 @@ body {
         width: 70vw;
     }
 
-    .player-control i {
-        padding: 0 .2em;
+    .player-control {
+        top: 70vh;
+        flex-direction: column;
+        justify-content: center !important;
+
+        width: 20vw;
+        height: 20vh;
+    }
+
+    .player-control.clicked {
+        left: 0;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        margin: .5em;
+    }
+
+    .player-control .controls i {
+        font-size: 2em;
+        padding: .5em 0 !important;
     }
 
     .player-control span {
-        padding: 0 .4em;
-        font-size: 2em !important;
+        font-size: 1.6em;
     }
+
+    .togglers {
+        flex-direction: row;
+    }
+
+    .togglers span {
+        padding: 0 .6em;
+    }
+
+    i {
+        font-size: 2.8em !important;
+    }
+
 }
 
 .sidemenu ul {
@@ -128,7 +184,7 @@ body {
 
 i {
     cursor: pointer;
-    font-size: clamp(1.4rem, 1.8rem, 2.4rem);
+    font-size: 1.6em;
 }
 
 i:hover {
@@ -137,9 +193,6 @@ i:hover {
 
 .toggler,
 .lixeira {
-    background: #363636;
-    border-radius: 50%;
-    padding: .3em;
     z-index: 7;
 }
 
@@ -160,7 +213,6 @@ i:hover {
 
 button {
     font-weight: 500;
-    z-index: 9;
     font-family: Arial, Helvetica, sans-serif;
     outline: 0;
     opacity: .7;
@@ -234,6 +286,7 @@ button:hover {
 .game-over h1 {
     text-shadow: #000 2px 1px 2px;
     font-size: 3rem;
+    z-index: 7;
 }
 
 .iniciar,

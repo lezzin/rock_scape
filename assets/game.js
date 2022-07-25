@@ -1,9 +1,9 @@
 const jogador = document.querySelector(".jogador");
 const obstaculo = document.querySelector(".obstaculo");
 // Músicas do jogo
-const somPulo = new Audio('./assets/audio/jump.wav'); somPulo.volume = 0.8;
-const somGameOver = new Audio('./assets/audio/hit.wav'); somGameOver.volume = 0.5;
-const musicaFundo = new Audio('./assets/audio/background.mp3'); musicaFundo.volume = 0.1;
+const somPulo = new Audio('./assets/audio/jump.wav'); somPulo.volume = 1;
+const somGameOver = new Audio('./assets/audio/hit.wav'); somGameOver.volume = 0.8;
+const musicaFundo = new Audio('./assets/audio/background.mp3');
 let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [];
 
 function playPause() {
@@ -19,15 +19,11 @@ function playPause() {
 };
 function abaixaVolume() {
     if (musicaFundo.volume > 0) musicaFundo.volume -= 0.1;
-    $("#mostraVolume").text((musicaFundo.volume).toFixed(1));
-
-    setTimeout(() => $("#mostraVolume").text(""), 4000);
+    $("#mostraVolume").text("Volume: " + (musicaFundo.volume).toFixed(1));
 }
 function aumentaVolume() {
     if (musicaFundo.volume < 1) musicaFundo.volume += 0.1;
-    $("#mostraVolume").text((musicaFundo.volume).toFixed(1));
-
-    setTimeout(() => $("#mostraVolume").text(""), 4000);
+    $("#mostraVolume").text("Volume: " + (musicaFundo.volume).toFixed(1));
 }
 
 // Funções que manipulam os dados do local storage
@@ -65,6 +61,16 @@ $(window).on("load", () => {
             return;
         };
         $(".pontuacao").toggleClass("clicked");
+    });
+
+    // Botão que mostra os controles da música de fundo
+    $("#player-toggler").on("touchstart click", e => {
+        if (e.type == "touchstart") {
+            $(".player-control").toggleClass("clicked");
+            e.preventDefault();
+            return;
+        };
+        $(".player-control").toggleClass("clicked");
     });
 
     // Botão que exclui o histórico de tempo

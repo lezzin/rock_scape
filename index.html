@@ -20,8 +20,10 @@
 <body>
     <!-- Menu lateral -->
     <div class="sidemenu">
-        <span class="toggler"><i class="fa-solid fa-trophy"></i></span>
-
+        <div class="togglers">
+            <span class="toggler"><i class="fa-solid fa-trophy"></i></span>
+            <span id="player-toggler"><i class="fa-solid fa-music" id="player-toggler"></i></span>
+        </div>
         <ul>
             <li>
                 <a target="_blank" href="https://instagram.com/leandroadrian_"><i
@@ -34,15 +36,21 @@
                 <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
             </li>
         </ul>
-        <div class="player-control">
+        <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
+    </div>
+
+    <!-- Fim do menu lateral -->
+
+    <!-- Player de audio -->
+    <div class="player-control">
+        <div class="controls">
             <i class="fa-solid fa-play" onclick="playPause()" id="player"></i>
             <i class="fa-solid fa-minus" onclick="abaixaVolume()"></i>
             <i class="fa-solid fa-plus" onclick="aumentaVolume()"></i>
-            <span id="mostraVolume"></span>
         </div>
-        <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
+        <span id="mostraVolume">Volume: 0.0</span>
     </div>
-    <!-- Fim do menu lateral -->
+    <!-- Fim player de audio -->
 
     <!-- Lista do histórico de tempos -->
     <div class="pontuacao">
