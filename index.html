@@ -7,17 +7,21 @@
     <meta name="description"
         content="Jogo criado em javascript, com o uso da biblioteca jquery a fins de treinar meus conhecimentos.">
     <meta name="keywords" content="js, jquery, javascript, css, CSS, projeto, jogo, jogos em javascript">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./assets/img/mario.gif" />
+    <link rel="icon" type="image/png" href="./assets/img/animation.gif" />
     <link rel="stylesheet" href="./assets/style.css">
 
     <title>Jogo em javascript</title>
 </head>
 
 <body>
+    <!-- Menu lateral -->
     <div class="sidemenu">
         <span class="toggler"><i class="fa-solid fa-trophy"></i></span>
+
         <ul>
             <li>
                 <a target="_blank" href="https://instagram.com/leandroadrian_"><i
@@ -30,21 +34,31 @@
                 <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
             </li>
         </ul>
+        <div class="player-control">
+            <i class="fa-solid fa-play" onclick="playPause()" id="player"></i>
+            <i class="fa-solid fa-minus" onclick="abaixaVolume()"></i>
+            <i class="fa-solid fa-plus" onclick="aumentaVolume()"></i>
+            <span id="mostraVolume"></span>
+        </div>
         <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
     </div>
+    <!-- Fim do menu lateral -->
 
+    <!-- Lista do histórico de tempos -->
     <div class="pontuacao">
         <h2>Histórico de tempos</h2>
+
         <ul class="lista"></ul>
         <span class="lixeira"><i class="fa-solid fa-trash"></i></span>
     </div>
+    <!-- Fim da lista do histórico de tempos -->
 
     <!-- Inicio do display do jogo - onde ele vai aparecer -->
     <section class="display">
         <div class="game-board">
 
             <!-- Contador -->
-            <span id="contador"></span>
+            <span id="contador">Tempo: 0</span>
 
             <!-- Mensagem que mostra que o personagem foi selecionado -->
             <span id="msg-personagem">Personagem selecionado!</span>
@@ -77,9 +91,9 @@
             <!-- Fim da div de animações do cenário -->
         </div>
     </section>
+    <!-- Fim do display do jogo -->
 
     <!-- Botões mobile -->
-
     <div class="area-mobile">
         <p>Clique aqui para pular</p>
     </div>
@@ -89,7 +103,6 @@
     </div>
     <!-- Fim dos botões mobile -->
 
-    <!-- Fim do display -->
     <script src="./assets/game.js"></script>
 </body>
 

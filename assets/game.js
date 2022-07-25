@@ -1,30 +1,34 @@
 const jogador = document.querySelector(".jogador");
 const obstaculo = document.querySelector(".obstaculo");
 // Músicas do jogo
-const musicaFundo = new Audio("./assets/audio/musica_mario.mp3"); musicaFundo.volume = 0.5; musicaFundo.loop = false;
-const somPulo = new Audio('./assets/audio/mario_pulando.mp3'); somPulo.volume = 0.2;
-const somGameOver = new Audio('./assets/audio/mario_morrendo.mp3'); somGameOver.volume = 0.5;
+const somPulo = new Audio('./assets/audio/jump.wav'); somPulo.volume = 0.8;
+const somGameOver = new Audio('./assets/audio/hit.wav'); somGameOver.volume = 0.5;
+const musicaFundo = new Audio('./assets/audio/background.mp3'); musicaFundo.volume = 0.1;
 let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [];
 
-// Botão que mostra o histórico de tempo do jogador
-$(".toggler").on("touchstart click", e => {
-    if (e.type == "touchstart") {
-        $(".pontuacao").toggleClass("clicked");
-        e.preventDefault();
-        return;
-    };
-    $(".pontuacao").toggleClass("clicked");
-});
+function playPause() {
+    if ($("#player").hasClass("fa-play")) {
+        musicaFundo.play();
+        $("#player").removeClass("fa-play");
+        $("#player").addClass("fa-pause");
+    } else {
+        musicaFundo.pause();
+        $("#player").removeClass("fa-pause");
+        $("#player").addClass("fa-play");
+    }
+};
+function abaixaVolume() {
+    if (musicaFundo.volume > 0) musicaFundo.volume -= 0.1;
+    $("#mostraVolume").text((musicaFundo.volume).toFixed(1));
 
-// Botão que exclui o histórico de tempo
-$(".lixeira").on("touchstart click", e => {
-    if (e.type == "touchstart") {
-        e.preventDefault();
-        deletarStorage();
-        return;
-    };
-    deletarStorage();
-});
+    setTimeout(() => $("#mostraVolume").text(""), 4000);
+}
+function aumentaVolume() {
+    if (musicaFundo.volume < 1) musicaFundo.volume += 0.1;
+    $("#mostraVolume").text((musicaFundo.volume).toFixed(1));
+
+    setTimeout(() => $("#mostraVolume").text(""), 4000);
+}
 
 // Funções que manipulam os dados do local storage
 // Adiciona
@@ -34,7 +38,7 @@ const atualizarStorage = () => {
     for (dado of dadosLocalStorage) {
         let texto = document.createTextNode(dado);
         let el = document.createElement("li");
-        $(el).append($(texto));
+        $(el).append(texto);
         $(".lista").append($(el));
     };
 };
@@ -49,12 +53,34 @@ const deletarStorage = () => {
 };
 
 $(window).on("load", () => {
+    // Botões do menu de inicio e game-over
     $("#iniciar").click(iniciaJogo);
     $("#reiniciar").click(iniciaJogo);
+
+    // Botão que mostra o histórico de tempo do jogador
+    $(".toggler").on("touchstart click", e => {
+        if (e.type == "touchstart") {
+            $(".pontuacao").toggleClass("clicked");
+            e.preventDefault();
+            return;
+        };
+        $(".pontuacao").toggleClass("clicked");
+    });
+
+    // Botão que exclui o histórico de tempo
+    $(".lixeira").on("touchstart click", e => {
+        if (e.type == "touchstart") {
+            e.preventDefault();
+            deletarStorage();
+            return;
+        };
+        deletarStorage();
+    });
 
     $(obstaculo).css("display", "none");
     atualizarStorage();
 });
+
 
 // Função do pulo e pontuação
 const pulo = () => {
@@ -66,6 +92,7 @@ const pulo = () => {
     setTimeout(() => $(jogador).removeClass("jump"), 500);
 };
 
+let arr = [];
 // Loop que verifica se você perdeu
 const verifyGame = () => {
     let contagem = 0;
@@ -82,8 +109,6 @@ const verifyGame = () => {
             $(obstaculo).css("animation", "none");
             $(jogador).css("bottom", "-10px");
 
-            musicaFundo.pause();
-            musicaFundo.currentTime = 0;
             somGameOver.play();
             somGameOver.loop = false;
 
@@ -94,40 +119,38 @@ const verifyGame = () => {
             clearInterval(contadorTempo);
 
             let el = document.createElement("li");
-            $(el).text(`Tempo: ${contagem - 1} segundos`);
+            $(el).html(`Tempo: ${contagem - 1} segundos`)
             $(".lista").append($(el));
 
-            dadosLocalStorage.push($(el).text());
+            // ---- Verificar o maior número na lista do histórico de tempos 
+            $('.lista').children().each(function () {
+                arr.push($(this).html());
+            });
 
-            const numero = dadosLocalStorage.map(e => {
+            const numero = arr.map(e => {
                 var notmp = e.replace("Tempo: ", "");
                 var nosec = notmp.replace(" segundos", "");
-                var norecord = nosec.replace(" - Maior tempo**", "");
-                return +norecord;
+                return +nosec;
             });
 
             const tempoMaximo = Math.max.apply(null, numero);
-
-            $(".lista li").each((i, element) => {
-                if (element.textContent.includes(tempoMaximo) && !element.textContent.includes(" - Maior tempo**"))
-                    $(element).html($(element).text() + " - Maior tempo**")
-                else
-                    $(element).html($(element).text().replace(" - Maior tempo**", ""));
-            });
-
-            dadosLocalStorage.push($(el).text());
-            salvarStorage();
 
             if ($("#contador").text().includes(tempoMaximo))
                 $("#mostrarTempo").text(`Parábens! ${contagem - 1} segundos é seu novo record!`)
             else
                 $("#mostrarTempo").text(`Seu tempo: ${contagem - 1} segundos`)
+
+            dadosLocalStorage.push($(el).html());
+            salvarStorage();
+
+            $("#contador").text("");
+            // ---- 
         };
     }, 10);
 }
 // Função para iniciar/reiniciar o jogo
 const iniciaJogo = () => {
-    musicaFundo.play();
+    $("#contador").text("Tempo: 0");
 
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
     let personagemSelecionado = jogador.getAttribute('src');
