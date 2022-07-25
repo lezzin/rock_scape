@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Leandro Adrian da Silva">
+    <meta name="description"
+        content="Jogo criado em javascript, com o uso da biblioteca jquery a fins de treinar meus conhecimentos.">
+    <meta name="keywords" content="js, jquery, javascript, css, CSS, projeto, jogo, jogos em javascript">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="./assets/img/mario.gif" />
+    <link rel="stylesheet" href="./assets/style.css">
+
+    <title>Jogo em javascript</title>
+</head>
+
+<body>
+    <div class="sidemenu">
+        <span class="toggler"><i class="fa-solid fa-trophy"></i></span>
+        <ul>
+            <li>
+                <a target="_blank" href="https://instagram.com/leandroadrian_"><i
+                        class="fa-brands fa-instagram"></i></a>
+            </li>
+            <li>
+                <a target="_blank" href="https://t.me/LeandroAdrian"><i class="fa-brands fa-telegram"></i></a>
+            </li>
+            <li>
+                <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
+            </li>
+        </ul>
+        <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
+    </div>
+
+    <div class="pontuacao">
+        <h2>Histórico de tempos</h2>
+        <ul class="lista"></ul>
+        <span class="lixeira"><i class="fa-solid fa-trash"></i></span>
+    </div>
+
+    <!-- Inicio do display do jogo - onde ele vai aparecer -->
+    <section class="display">
+        <div class="game-board">
+
+            <!-- Contador -->
+            <span id="contador"></span>
+
+            <!-- Mensagem que mostra que o personagem foi selecionado -->
+            <span id="msg-personagem">Personagem selecionado!</span>
+
+            <!-- Inicio do menu de inicio do jogo -->
+            <div class="iniciar">
+                <h1>Bem vindo!</h1>
+                <button id="iniciar">Iniciar<br>(ou enter)</button>
+            </div>
+            <!-- Fim do menu de inicio do jogo -->
+
+            <!-- Inicio do menu de game-over -->
+            <div class="game-over">
+                <h1>Voce perdeu!</h1>
+                <span id="mostrarTempo"></span>
+                <button id="reiniciar">Reiniciar<br>(ou space)</button>
+            </div>
+            <!-- Fim do menu de game-over -->
+
+            <!-- Botões para selecionar o personagem -->
+            <div class="botoes">
+                <img src="./assets/img/animation.gif" id="personagem01" loading="lazy">
+                <!-- <img src="./assets/img/mario-yoshi.gif" id="personagem02" loading="lazy"> -->
+            </div>
+
+            <!-- Inicio da div de animações do cenário -->
+            <img src="./assets/img/animation.gif" class="jogador" loading="lazy">
+
+            <img src="./assets/img/pedra.png" class="obstaculo" loading="lazy">
+            <!-- Fim da div de animações do cenário -->
+        </div>
+    </section>
+
+    <!-- Botões mobile -->
+
+    <div class="area-mobile">
+        <p>Clique aqui para pular</p>
+    </div>
+    <div class="botoes-mobile">
+        <button id="iniciar-mobile">Iniciar</button>
+        <button id="reiniciar-mobile">Reiniciar</button>
+    </div>
+    <!-- Fim dos botões mobile -->
+
+    <!-- Fim do display -->
+    <script src="./assets/game.js"></script>
+</body>
+
+</html>
