@@ -29,7 +29,7 @@ body {
     opacity: 0;
 
     transition: .6s;
-    width: 20vw;
+    width: 25vw;
     height: 10vh;
     z-index: 10;
 }
@@ -122,12 +122,12 @@ body {
     }
 
     .player-control {
-        top: 70vh;
+        top: 65vh;
         flex-direction: column;
         justify-content: center !important;
 
         width: 20vw;
-        height: 20vh;
+        height: 25vh;
     }
 
     .player-control.clicked {
@@ -146,7 +146,7 @@ body {
     }
 
     .player-control span {
-        font-size: 1.6em;
+        font-size: 2em;
     }
 
     .togglers {
@@ -214,7 +214,6 @@ i:hover {
 button {
     font-weight: 500;
     font-family: Arial, Helvetica, sans-serif;
-    outline: 0;
     opacity: .7;
     cursor: pointer
 }
@@ -351,7 +350,8 @@ button:hover {
     animation: obstaculo 1.5s infinite linear .6s;
 }
 
-.jogador {
+.jogador,
+#img-gameover {
     z-index: 3;
     left: 0;
     display: none;

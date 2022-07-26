@@ -21,8 +21,8 @@
     <!-- Menu lateral -->
     <div class="sidemenu">
         <div class="togglers">
-            <span class="toggler"><i class="fa-solid fa-trophy"></i></span>
-            <span id="player-toggler"><i class="fa-solid fa-music" id="player-toggler"></i></span>
+            <span class="toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
+            <span id="player-toggler" tabindex="0"><i class="fa-solid fa-music" id="player-toggler"></i></span>
         </div>
         <ul>
             <li>
@@ -44,11 +44,12 @@
     <!-- Player de audio -->
     <div class="player-control">
         <div class="controls">
-            <i class="fa-solid fa-play" onclick="playPause()" id="player"></i>
-            <i class="fa-solid fa-minus" onclick="abaixaVolume()"></i>
-            <i class="fa-solid fa-plus" onclick="aumentaVolume()"></i>
+            <i tabindex="0" class="fa-solid fa-play" id="player" title="iniciar"></i>
+            <i tabindex="0" class="fa-solid fa-minus" title="abaixar volume" id="abaixa-btn"></i>
+            <i tabindex="0" class="fa-solid fa-plus" title="aumentar volume" id="aumenta-btn"></i>
+            <i tabindex="0" class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
         </div>
-        <span id="mostraVolume">Volume: 0.0</span>
+        <span id="mostraVolume">Volume: 1.0</span>
     </div>
     <!-- Fim player de audio -->
 
@@ -57,7 +58,7 @@
         <h2>Histórico de tempos</h2>
 
         <ul class="lista"></ul>
-        <span class="lixeira"><i class="fa-solid fa-trash"></i></span>
+        <span class="lixeira" tabindex="-1"><i class="fa-solid fa-trash"></i></span>
     </div>
     <!-- Fim da lista do histórico de tempos -->
 
@@ -74,7 +75,7 @@
             <!-- Inicio do menu de inicio do jogo -->
             <div class="iniciar">
                 <h1>Bem vindo!</h1>
-                <button id="iniciar">Iniciar<br>(ou enter)</button>
+                <button id="iniciar">Iniciar<br>(ou espaço)</button>
             </div>
             <!-- Fim do menu de inicio do jogo -->
 
@@ -88,7 +89,7 @@
 
             <!-- Botões para selecionar o personagem -->
             <div class="botoes">
-                <img src="./assets/img/animation.gif" id="personagem01" loading="lazy">
+                <img src="./assets/img/animation.gif" id="personagem01" loading="lazy" tabindex="0">
                 <!-- <img src="./assets/img/mario-yoshi.gif" id="personagem02" loading="lazy"> -->
             </div>
 

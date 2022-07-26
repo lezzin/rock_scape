@@ -6,13 +6,29 @@ const somGameOver = new Audio('./assets/audio/hit.wav'); somGameOver.volume = 0.
 const musicaFundo = new Audio('./assets/audio/background.mp3');
 let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [];
 
+// Funções dos botões que controlam a música de background
+function mute() {
+    if ($("#mute-btn").hasClass("fa-volume-xmark")) {
+        musicaFundo.muted = true;
+        $("#mute-btn").attr("title", "desmutar");
+        $("#mute-btn").removeClass("fa-volume-xmark");
+        $("#mute-btn").addClass("fa-volume-high");
+    } else {
+        musicaFundo.muted = false;
+        $("#mute-btn").attr("title", "mutar");
+        $("#mute-btn").removeClass("fa-volume-high");
+        $("#mute-btn").addClass("fa-volume-xmark");
+    }
+};
 function playPause() {
-    if ($("#player").hasClass("fa-play")) {
+    if ($("#player").hasClass("fa-play") || musicaFundo.pause()) {
         musicaFundo.play();
+        $("#player").attr("title", "pausar");
         $("#player").removeClass("fa-play");
         $("#player").addClass("fa-pause");
     } else {
         musicaFundo.pause();
+        $("#player").attr("title", "iniciar");
         $("#player").removeClass("fa-pause");
         $("#player").addClass("fa-play");
     }
@@ -25,6 +41,37 @@ function aumentaVolume() {
     if (musicaFundo.volume < 1) musicaFundo.volume += 0.1;
     $("#mostraVolume").text("Volume: " + (musicaFundo.volume).toFixed(1));
 }
+
+// Botões que ativam as funções
+$("#mute-btn").on("click keydown touchstart", e => {
+    if (e.type == 'touchstart') {
+        e.preventDefault()
+        mute();
+    }
+    if (e.type == 'click' || (e.type == 'keydown' && e.which == 13)) mute()
+})
+$("#player").on("click keydown touchstart", e => {
+    if (e.type == 'touchstart') {
+        e.preventDefault()
+        playPause();
+    }
+    if (e.type == 'click' || (e.type == 'keydown' && e.which == 13)) playPause()
+})
+$("#aumenta-btn").on("click keydown touchstart", e => {
+    if (e.type == 'touchstart') {
+        e.preventDefault()
+        aumentaVolume();
+    }
+    if (e.type == 'click' || (e.type == 'keydown' && e.which == 13)) aumentaVolume()
+})
+
+$("#abaixa-btn").on("click keydown touchstart", e => {
+    if (e.type == 'touchstart') {
+        e.preventDefault()
+        abaixaVolume();
+    }
+    if (e.type == 'click' || (e.type == 'keydown' & e.which == 13)) abaixaVolume()
+})
 
 // Funções que manipulam os dados do local storage
 // Adiciona
@@ -48,39 +95,57 @@ const deletarStorage = () => {
     };
 };
 
+// Função para não deixar o código repetitivo
+const scoreToggler = () => {
+    $(".pontuacao").toggleClass("clicked");
+
+    if ($(".pontuacao").hasClass("clicked"))
+        $(".lixeira").attr("tabindex", "0");
+    else
+        $(".lixeira").attr("tabindex", "-1");
+};
+const playerToggler = () => {
+    $(".player-control").toggleClass("clicked");
+
+    if ($(".player-control").hasClass("clicked"))
+        $("#player-toggler").attr("tabindex", "0");
+    else
+        $("#player-toggler").attr("tabindex", "-1");
+};
+
 $(window).on("load", () => {
     // Botões do menu de inicio e game-over
     $("#iniciar").click(iniciaJogo);
     $("#reiniciar").click(iniciaJogo);
 
     // Botão que mostra o histórico de tempo do jogador
-    $(".toggler").on("touchstart click", e => {
+    $(".toggler").on("touchstart click keydown", e => {
         if (e.type == "touchstart") {
-            $(".pontuacao").toggleClass("clicked");
             e.preventDefault();
-            return;
-        };
-        $(".pontuacao").toggleClass("clicked");
+            scoreToggler();
+        }
+        if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+            scoreToggler();
     });
 
     // Botão que mostra os controles da música de fundo
-    $("#player-toggler").on("touchstart click", e => {
+    $("#player-toggler").on("touchstart click keydown", e => {
         if (e.type == "touchstart") {
-            $(".player-control").toggleClass("clicked");
             e.preventDefault();
-            return;
+            playerToggler();
         };
-        $(".player-control").toggleClass("clicked");
+        if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+            playerToggler();
     });
 
     // Botão que exclui o histórico de tempo
-    $(".lixeira").on("touchstart click", e => {
+    $(".lixeira").on("touchstart click keydown", e => {
         if (e.type == "touchstart") {
             e.preventDefault();
             deletarStorage();
-            return;
         };
-        deletarStorage();
+        if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+            deletarStorage();
     });
 
     $(obstaculo).css("display", "none");
@@ -110,6 +175,7 @@ const verifyGame = () => {
 
         if (margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
             jogador.src = './assets/img/animationCaido.png';
+            $("#personagem01").attr("tabindex", "0");
 
             $(obstaculo).css("left", margemEsquerdaObstaculo);
             $(obstaculo).css("animation", "none");
@@ -156,7 +222,16 @@ const verifyGame = () => {
 }
 // Função para iniciar/reiniciar o jogo
 const iniciaJogo = () => {
+    $("#personagem01").attr("tabindex", "-1");
+
     $("#contador").text("Tempo: 0");
+    if ($(".player-control").hasClass("clicked"))
+        $(".player-control").removeClass("clicked");
+
+    if ($(".pontuacao").hasClass("clicked"))
+        $(".pontuacao").removeClass("clicked");
+
+    playPause()
 
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
     let personagemSelecionado = jogador.getAttribute('src');
@@ -193,9 +268,9 @@ $(document).keydown(function (e) {
     if (e.which === 32 && gameOver.style.visibility === 'hidden') pulo();
     if (e.which === 38 && gameOver.style.visibility === 'hidden') pulo();
 
-    // Teclas enter e espaço iniciam o jogo
-    if (e.which === 13 && gameStart.style.visibility !== 'hidden') iniciaJogo();
-    if (e.which === 32 && gameOver.style.visibility === 'visible') iniciaJogo();
+    // Tecla espaço inicia o jogo
+    if (e.which === 32 && gameStart.style.visibility !== 'hidden' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
+    if (e.which === 32 && gameOver.style.visibility === 'visible' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
 
     // Tecla 1 muda de personagem
     if (e.which === 49 && (gameStart.style.visibility !== "hidden" || gameOver.style.visibility !== "hidden"))
@@ -229,22 +304,22 @@ const mudarPersonagem02 = () => {
 // Otimização de alguns botões em mobile 
 $(".area-mobile").on("touchstart", () => { if (gameOver.style.visibility === 'hidden') pulo() });
 
-$("#personagem01").on("touchstart click", e => {
+$("#personagem01").on("touchstart click keydown", e => {
     if (e.type == "touchstart") {
         e.preventDefault();
         mudarPersonagem01();
-        return;
     };
-    mudarPersonagem01();
+    if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+        mudarPersonagem01();
 });
 
-$("#personagem02").on("touchstart click", (e) => {
+$("#personagem02").on("touchstart click keydown", (e) => {
     if (e.type == "touchstart") {
         e.preventDefault();
         mudarPersonagem02();
-        return;
     };
-    mudarPersonagem02();
+    if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+        mudarPersonagem02();
 });
 
 $("#iniciar-mobile").on("touchstart", iniciaJogo);
