@@ -11,7 +11,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./assets/img/animation.gif" />
+    <link rel="icon" type="image/png" href="./assets/img/boy.gif" />
     <link rel="stylesheet" href="./assets/style.css">
 
     <title>Jogo em javascript</title>
@@ -21,8 +21,9 @@
     <!-- Menu lateral -->
     <div class="sidemenu">
         <div class="togglers">
-            <span class="toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
+            <span id="toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
             <span id="player-toggler" tabindex="0"><i class="fa-solid fa-music" id="player-toggler"></i></span>
+            <span id="command-toggler" tabindex="0"><i class="fa-solid fa-gamepad"></i></span>
         </div>
         <ul>
             <li>
@@ -58,9 +59,48 @@
         <h2>Histórico de tempos</h2>
 
         <ul class="lista"></ul>
-        <span class="lixeira" tabindex="-1"><i class="fa-solid fa-trash"></i></span>
+        <span id="lixeira" tabindex="-1"><i class="fa-solid fa-trash"></i></span>
     </div>
     <!-- Fim da lista do histórico de tempos -->
+
+    <!-- Lista de comandos do jogo -->
+    <div class="comandos">
+        <table>
+            <thead>
+                <th colspan="3">Comandos do jogo </th>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><code>Espaço</code></td>
+                    <td>Inicia/reinicia o jogo</td>
+                    <td>Pula</td>
+                </tr>
+                <tr>
+                    <td><code><i class="fa-solid fa-arrow-up"></i></code></td>
+                    <td colspan="2">Pula</td>
+                </tr>
+                <tr>
+                    <td><code>1</code></td>
+                    <td colspan="2">Muda para o personagem 01</td>
+                </tr>
+                <tr>
+                    <td><code>2</code></td>
+                    <td colspan="2">Muda para o personagem 02</td>
+                </tr>
+                <tr>
+                    <td><code>Tab</code></td>
+                    <td colspan="2">Navega pelos botões da página</td>
+                </tr>
+                <tr>
+                    <td><code>Enter</code></td>
+                    <td colspan="2">Ativa os eventos dos botões</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <!-- Fim da lista de comandos do jogo -->
 
     <!-- Inicio do display do jogo - onde ele vai aparecer -->
     <section class="display">
@@ -72,10 +112,19 @@
             <!-- Mensagem que mostra que o personagem foi selecionado -->
             <span id="msg-personagem">Personagem selecionado!</span>
 
+            <!-- Mensagem que mostra que a dificuldade do jogo foi selecionada -->
+            <span id="msg-dificuldade"></span>
+
             <!-- Inicio do menu de inicio do jogo -->
             <div class="iniciar">
                 <h1>Bem vindo!</h1>
                 <button id="iniciar">Iniciar<br>(ou espaço)</button>
+
+                <div class="dificuldade-container noMobile">
+                    <button class="dificuldade-btn facil">Fácil</button>
+                    <button class="dificuldade-btn medio">Médio</button>
+                    <button class="dificuldade-btn dificil">Difícil</button>
+                </div>
             </div>
             <!-- Fim do menu de inicio do jogo -->
 
@@ -84,17 +133,23 @@
                 <h1>Voce perdeu!</h1>
                 <span id="mostrarTempo"></span>
                 <button id="reiniciar">Reiniciar<br>(ou space)</button>
+
+                <div class="dificuldade-container noMobile">
+                    <button class="dificuldade-btn facil">Fácil</button>
+                    <button class="dificuldade-btn medio">Médio</button>
+                    <button class="dificuldade-btn dificil">Difícil</button>
+                </div>
             </div>
             <!-- Fim do menu de game-over -->
 
             <!-- Botões para selecionar o personagem -->
             <div class="botoes">
-                <img src="./assets/img/animation.gif" id="personagem01" loading="lazy" tabindex="0">
-                <!-- <img src="./assets/img/mario-yoshi.gif" id="personagem02" loading="lazy"> -->
+                <img src="./assets/img/boy.gif" id="personagem01" loading="lazy" tabindex="0">
+                <img src="./assets/img/girl.gif" id="personagem02" loading="lazy" tabindex="0">
             </div>
 
             <!-- Inicio da div de animações do cenário -->
-            <img src="./assets/img/animation.gif" class="jogador" loading="lazy">
+            <img src="./assets/img/boy.gif" class="jogador" loading="lazy">
 
             <img src="./assets/img/pedra.png" class="obstaculo" loading="lazy">
             <!-- Fim da div de animações do cenário -->
@@ -107,8 +162,15 @@
         <p>Clique aqui para pular</p>
     </div>
     <div class="botoes-mobile">
-        <button id="iniciar-mobile">Iniciar</button>
-        <button id="reiniciar-mobile">Reiniciar</button>
+        <div>
+            <button id="iniciar-mobile">Iniciar</button>
+            <button id="reiniciar-mobile">Reiniciar</button>
+        </div>
+        <div class="dificuldade-container-mobile">
+            <button class="dificuldade-btn-mobile facil">Fácil</button>
+            <button class="dificuldade-btn-mobile medio">Médio</button>
+            <button class="dificuldade-btn-mobile dificil">Difícil</button>
+        </div>
     </div>
     <!-- Fim dos botões mobile -->
 
