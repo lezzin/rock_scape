@@ -14,9 +14,9 @@ somGameOverP2.volume = 0.5;
 somPulo.volume = 0.8;
 
 // Variáveis que armazenam as velocidades que o obstáculo pode ter
-const velocidadeFacil = '1.5s';
-const velocidadeMedia = '1.2s';
-const velocidadeDificil = '0.8s';
+const velocidadeFacil = '1.5';
+const velocidadeMedia = '1.2';
+const velocidadeDificil = '0.8';
 
 // Botões de dificuldade
 const btnModoFacil = document.querySelectorAll(".facil");
@@ -107,16 +107,16 @@ const deletarStorage = () => {
 // Função que altera a dificuldade do jogo (velocidade do obstáculo)
 const dificuldadeJogo = () => {
     if ($(btnModoFacil).hasClass("selected"))
-        $(obstaculo).css("animation", `obstaculo ${velocidadeFacil} infinite linear .6s`)
+        $(obstaculo).css("animation", `obstaculo ${velocidadeFacil}s infinite linear .6s`)
 
     else if ($(btnModoMedio).hasClass("selected"))
-        $(obstaculo).css("animation", `obstaculo ${velocidadeMedia} infinite linear .6s`)
+        $(obstaculo).css("animation", `obstaculo ${velocidadeMedia}s infinite linear .6s`)
 
     else if ($(btnModoDificil).hasClass("selected"))
-        $(obstaculo).css("animation", `obstaculo ${velocidadeDificil} infinite linear .6s`)
+        $(obstaculo).css("animation", `obstaculo ${velocidadeDificil}s infinite linear .6s`)
 
     else
-        $(obstaculo).css("animation", `obstaculo ${velocidadeFacil} infinite linear .6s`)
+        $(obstaculo).css("animation", `obstaculo ${velocidadeFacil}s infinite linear .6s`)
 };
 
 
@@ -271,11 +271,11 @@ const verificaJogo = () => {
     this.contadorTempo = setInterval(() => $("#contador").text(`Tempo: ${contagem++} `), 1000);
 
     this.loop = setInterval(() => {
-        const margemEsquerdaObstaculo = obstaculo.offsetLeft;
-        const alturaPulo = +window.getComputedStyle(jogador).bottom.replace("px", "");
+        let margemEsquerdaObstaculo = obstaculo.offsetLeft,
+            alturaPulo = +window.getComputedStyle(jogador).bottom.replace("px", "");
 
-        if (!$(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50
-            || $(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 140 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
+        if (!$(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 90 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50
+            || $(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
             $(document).attr("title", "Game Over...");
 
             let personagemSelecionado = jogador.getAttribute('src');
@@ -337,6 +337,7 @@ const verificaJogo = () => {
 
             $("#contador").text("");
             $(obstaculo).css("animation", "none");
+
         };
     }, 10);
 };
@@ -344,8 +345,11 @@ const verificaJogo = () => {
 
 // Função para iniciar/reiniciar o jogo
 const iniciaJogo = () => {
+    let personagemSelecionado = jogador.getAttribute('src'),
+        imgArray = ['./assets/img/obstaculo1.png', './assets/img/obstaculo2.png', './assets/img/obstaculo3.png'],
+        widthArray = ['6em', '8em', '10em'];
+
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
-    let personagemSelecionado = jogador.getAttribute('src');
     jogador.src = (personagemSelecionado == p1 || personagemSelecionado == p1gameOver) ? p1 : p2;
 
     $(document).attr("title", "Jogando...");
@@ -356,6 +360,10 @@ const iniciaJogo = () => {
     dificuldadeJogo();
 
     $("#contador").text("Tempo: 0");
+
+    // Código que altera a imagem e o tamanho do obstáculo
+    obstaculo.src = imgArray[Math.floor(Math.random() * imgArray.length)];
+    obstaculo.style.width = widthArray[Math.floor(Math.random() * widthArray.length)];
 
     if ($(".player-control").hasClass("clicked")) $(".player-control").removeClass("clicked");
     if ($(".pontuacao").hasClass("clicked")) $(".pontuacao").removeClass("clicked");
@@ -374,7 +382,7 @@ const iniciaJogo = () => {
     // Ativa as animações
     setTimeout(() => {
         $(jogador).css("animation", "");
-        dificuldadeJogo();
+        dificuldadeJogo(); // Animação do obstáculo
     }, 10);
 };
 
