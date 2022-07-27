@@ -8,29 +8,32 @@ const somPulo = new Audio('./assets/audio/jump.wav');
 const somGameOverP1 = new Audio('./assets/audio/boyShout.wav');
 const somGameOverP2 = new Audio('./assets/audio/girlShout.wav');
 const musicaFundo = new Audio('./assets/audio/background.mp3');
-somPulo.volume = 1;
+musicaFundo.loop = true;
 somGameOverP1.volume = 0.5;
 somGameOverP2.volume = 0.5;
+somPulo.volume = 0.8;
 
 // Variáveis que armazenam as velocidades que o obstáculo pode ter
 const velocidadeFacil = '1.5s';
 const velocidadeMedia = '1.2s';
-const velocidadeDificil = '.8s';
+const velocidadeDificil = '0.8s';
 
 // Botões de dificuldade
 const btnModoFacil = document.querySelectorAll(".facil");
 const btnModoMedio = document.querySelectorAll(".medio");
 const btnModoDificil = document.querySelectorAll(".dificil");
 
-// Variáveis para os personagens do jogo
-let p1gameOver = "./assets/img/falledBoy.png";
-let p2gameOver = "./assets/img/falledGirl.png";
-let p1 = "./assets/img/boy.gif";
-let p2 = "./assets/img/girl.gif";
+// Variáveis para os personagens do jogo - armazenam a pasta em que as imagens estão
+const p1gameOver = "./assets/img/falledBoy.png";
+const p2gameOver = "./assets/img/falledGirl.png";
+const p1 = "./assets/img/boy.gif";
+const p2 = "./assets/img/girl.gif";
 
 // Dados do local storage em um array
 let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [];
+// Array que armazena o conteúdo dos itens da lista do histórico de tempo (na função verificaJogo)
 let arr = [];
+
 
 // Funções dos botões que controlam a música de background
 function mute() {
@@ -96,6 +99,7 @@ const deletarStorage = () => {
     };
 };
 
+
 const dificuldadeJogo = () => {
     if ($(btnModoFacil).hasClass("selected"))
         $(obstaculo).css("animation", `obstaculo ${velocidadeFacil} infinite linear .6s`)
@@ -153,7 +157,7 @@ const pulo = () => {
 
 
 // Loop que verifica se você perdeu
-const verifyGame = () => {
+const verificaJogo = () => {
     let contagem = 1;
     this.contadorTempo = setInterval(() => $("#contador").text(`Tempo: ${contagem++} `), 1000);
 
@@ -162,6 +166,7 @@ const verifyGame = () => {
         const alturaPulo = +window.getComputedStyle(jogador).bottom.replace("px", "");
 
         if (margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
+            $(document).attr("title", "Game Over...");
 
             let personagemSelecionado = jogador.getAttribute('src');
             jogador.src = (personagemSelecionado == p1) ? p1gameOver : p2gameOver;
@@ -173,7 +178,6 @@ const verifyGame = () => {
 
             $(jogador).css("bottom", "-10px");
             $(obstaculo).css("left", margemEsquerdaObstaculo);
-            $(obstaculo).css("animation", "none");
 
             $(".botoes").css("display", "flex");
             $(gameOver).css("visibility", "visible");
@@ -222,6 +226,7 @@ const verifyGame = () => {
             salvarStorage();
 
             $("#contador").text("");
+            $(obstaculo).css("animation", "none");
         };
     }, 10);
 };
@@ -230,10 +235,14 @@ const verifyGame = () => {
 // Função para iniciar/reiniciar o jogo
 const iniciaJogo = () => {
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
-
     let personagemSelecionado = jogador.getAttribute('src');
     jogador.src = (personagemSelecionado == p1 || personagemSelecionado == p1gameOver) ? p1 : p2;
 
+    $(document).attr("title", "Jogando...");
+
+    // Função que contém o loop que verifica quando o jogador perde
+    verificaJogo();
+    // Função que determina a velocidade do obstáculo de acordo com a escolha do jogador 
     dificuldadeJogo();
 
     $("#contador").text("Tempo: 0");
@@ -257,9 +266,6 @@ const iniciaJogo = () => {
         $(jogador).css("animation", "");
         dificuldadeJogo();
     }, 10);
-
-    // Função que contém o loop que verifica quando o jogador perde
-    verifyGame();
 };
 
 
@@ -335,8 +341,7 @@ function modoDificil() {
         $(btnModoMedio).removeClass("selected");
 };
 
-
-// Ativa os eventos de clique, keydown e touchstart quando o documento estiver pronto
+// Ativa os eventos de clique, keydown e touchstart quando a janela estiver pronta
 $(document).ready(() => {
     // Mostra/oculta o botão de inicio e reinicio do jogo no mobile
     if ($(window).width() <= 991.98) {
@@ -426,15 +431,16 @@ $(document).ready(() => {
             if ($(".pontuacao").hasClass("clicked")) $(".pontuacao").removeClass("clicked");
             if ($(".comandos").hasClass("clicked")) $(".comandos").removeClass("clicked");
         }
-        if (e.type = 'click') iniciaJogo;
+        if (e.type = 'click') iniciaJogo();
     });
+
     $("#reiniciar").on("click focusin", e => {
         if (e.type == 'focusin') {
             if ($(".player-control").hasClass("clicked")) $(".player-control").removeClass("clicked");
             if ($(".pontuacao").hasClass("clicked")) $(".pontuacao").removeClass("clicked");
             if ($(".comandos").hasClass("clicked")) $(".comandos").removeClass("clicked");
         }
-        if (e.type == 'click') iniciaJogo;
+        if (e.type == 'click') iniciaJogo();
     });
 
     // Botão que mostra o histórico de tempo do jogador
