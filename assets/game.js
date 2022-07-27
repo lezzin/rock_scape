@@ -29,6 +29,10 @@ const p2gameOver = "./assets/img/falledGirl.png";
 const p1 = "./assets/img/boy.gif";
 const p2 = "./assets/img/girl.gif";
 
+// Variáveis que armazenam os ícones de tamanho da tela
+const iconeAumentaTela = "fa-up-right-and-down-left-from-center";
+const iconeDiminuiTela = "fa-down-left-and-up-right-to-center";
+
 // Dados do local storage em um array
 let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [];
 // Array que armazena o conteúdo dos itens da lista do histórico de tempo (na função verificaJogo)
@@ -100,6 +104,7 @@ const deletarStorage = () => {
 };
 
 
+// Função que altera a dificuldade do jogo (velocidade do obstáculo)
 const dificuldadeJogo = () => {
     if ($(btnModoFacil).hasClass("selected"))
         $(obstaculo).css("animation", `obstaculo ${velocidadeFacil} infinite linear .6s`)
@@ -112,6 +117,27 @@ const dificuldadeJogo = () => {
 
     else
         $(obstaculo).css("animation", `obstaculo ${velocidadeFacil} infinite linear .6s`)
+};
+
+
+//Função que altera o tamanho da tela do jogo
+const alteraTela = () => {
+    $(".game-board").toggleClass("resized");
+    $(jogador).toggleClass("resized");
+    $(obstaculo).toggleClass("resized");
+
+    if ($("#alterarTela i").hasClass(iconeAumentaTela)) {
+        $("#alterarTela i").removeClass(iconeAumentaTela);
+        $("#alterarTela i").addClass(iconeDiminuiTela);
+    } else {
+        $("#alterarTela i").removeClass(iconeDiminuiTela);
+        $("#alterarTela i").addClass(iconeAumentaTela);
+    }
+
+    if (!$(".game-board").hasClass("resized"))
+        $(".sidemenu").fadeIn(200);
+    else
+        $(".sidemenu").fadeOut(200);
 };
 
 
@@ -136,10 +162,93 @@ const commandsToggler = () => {
 const playerToggler = () => {
     $(".player-control").toggleClass("clicked");
 
+    if ($(".player-control").hasClass("clicked")) {
+        $(".controls").children().each(function () {
+            $(this).attr("tabindex", "0");
+        })
+    }
+    else {
+        $(".controls").children().each(function () {
+            $(this).attr("tabindex", "-1");
+        })
+    };
+
     if ($(".pontuacao").hasClass("clicked")) $(".pontuacao").removeClass("clicked");
     if ($(".comandos").hasClass("clicked")) $(".comandos").removeClass("clicked");
 };
 
+
+// Funções para mudar de personagem
+const mudarPersonagem01 = () => {
+    if ($(obstaculo).css("display", "flex")) $(obstaculo).css("display", "none");
+
+    $(jogador).prop("src", p1);
+    $("#msg-personagem").css("opacity", "1");
+    $("#personagem01").addClass("selecionado");
+    setTimeout(() => {
+        $("#msg-personagem").css("opacity", "0");
+        $("#personagem01").removeClass("selecionado");
+    }, 1000);
+};
+
+const mudarPersonagem02 = () => {
+    if ($(obstaculo).css("display", "flex")) $(obstaculo).css("display", "none");
+
+    $(jogador).prop("src", p2);
+    $("#msg-personagem").css("opacity", "1");
+    $("#personagem02").addClass("selecionado");
+    setTimeout(() => {
+        $("#msg-personagem").css("opacity", "0");
+        $("#personagem02").removeClass("selecionado");
+    }, 1000);
+};
+
+
+// Exibir mensagem quando clica em algum botão de dificuldade
+const mensagemDificuldade = () => {
+    $("#msg-dificuldade").css("opacity", "1");
+    setTimeout(() => {
+        $("#msg-dificuldade").css("opacity", "0");
+    }, 1000);
+};
+
+
+// Funções para exibir a mensagem de dificuldade
+function modoFacil() {
+    $("#msg-dificuldade").html("Dificuldade fácil selecionada!");
+    mensagemDificuldade();
+
+    $(btnModoFacil).addClass("selected");
+
+    if ($(btnModoMedio).hasClass("selected"))
+        $(btnModoMedio).removeClass("selected");
+    if ($(btnModoDificil).hasClass("selected"))
+        $(btnModoDificil).removeClass("selected");
+};
+
+function modoMedio() {
+    $("#msg-dificuldade").html("Dificuldade média selecionada!");
+    mensagemDificuldade();
+
+    $(btnModoMedio).addClass("selected");
+
+    if ($(btnModoFacil).hasClass("selected"))
+        $(btnModoFacil).removeClass("selected");
+    if ($(btnModoDificil).hasClass("selected"))
+        $(btnModoDificil).removeClass("selected");
+};
+
+function modoDificil() {
+    $("#msg-dificuldade").html("Dificuldade difícil selecionada!");
+    mensagemDificuldade();
+
+    $(btnModoDificil).addClass("selected");
+
+    if ($(btnModoFacil).hasClass("selected"))
+        $(btnModoFacil).removeClass("selected");
+    if ($(btnModoMedio).hasClass("selected"))
+        $(btnModoMedio).removeClass("selected");
+};
 
 // Função do pulo do personagem
 const pulo = () => {
@@ -165,7 +274,8 @@ const verificaJogo = () => {
         const margemEsquerdaObstaculo = obstaculo.offsetLeft;
         const alturaPulo = +window.getComputedStyle(jogador).bottom.replace("px", "");
 
-        if (margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
+        if (!$(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 120 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50
+            || $(".game-board").hasClass("resized") && margemEsquerdaObstaculo <= 140 && margemEsquerdaObstaculo > 0 && alturaPulo <= 50) {
             $(document).attr("title", "Game Over...");
 
             let personagemSelecionado = jogador.getAttribute('src');
@@ -180,7 +290,7 @@ const verificaJogo = () => {
             $(obstaculo).css("left", margemEsquerdaObstaculo);
 
             $(".botoes").css("display", "flex");
-            $(gameOver).css("visibility", "visible");
+            $(gameOver).css("display", "flex");
 
             clearInterval(loop);
             clearInterval(contadorTempo);
@@ -258,8 +368,8 @@ const iniciaJogo = () => {
 
     // Oculta
     $(".botoes").css("display", "none");
-    $(".game-over").css("visibility", "hidden");
-    $(".iniciar").css("visibility", "hidden");
+    $(gameOver).css("display", "none");
+    $(gameStart).css("display", "none");
 
     // Ativa as animações
     setTimeout(() => {
@@ -269,78 +379,6 @@ const iniciaJogo = () => {
 };
 
 
-// Funções para mudar de personagem
-const mudarPersonagem01 = () => {
-    if ($(obstaculo).css("display", "flex")) $(obstaculo).css("display", "none");
-
-    $(jogador).prop("src", p1);
-    $("#msg-personagem").css("opacity", "1");
-    $("#personagem01").addClass("selecionado");
-    setTimeout(() => {
-        $("#msg-personagem").css("opacity", "0");
-        $("#personagem01").removeClass("selecionado");
-    }, 1000);
-};
-
-const mudarPersonagem02 = () => {
-    if ($(obstaculo).css("display", "flex")) $(obstaculo).css("display", "none");
-
-    $(jogador).prop("src", p2);
-    $("#msg-personagem").css("opacity", "1");
-    $("#personagem02").addClass("selecionado");
-    setTimeout(() => {
-        $("#msg-personagem").css("opacity", "0");
-        $("#personagem02").removeClass("selecionado");
-    }, 1000);
-};
-
-
-// Exibir mensagem quando clica em algum botão de dificuldade
-const mensagemDificuldade = () => {
-    $("#msg-dificuldade").css("opacity", "1");
-    setTimeout(() => {
-        $("#msg-dificuldade").css("opacity", "0");
-    }, 1000);
-};
-
-
-// Funções para exibir a mensagem de dificuldade
-function modoFacil() {
-    $("#msg-dificuldade").html("Dificuldade fácil selecionada!");
-
-    mensagemDificuldade();
-    $(btnModoFacil).addClass("selected");
-
-    if ($(btnModoMedio).hasClass("selected"))
-        $(btnModoMedio).removeClass("selected");
-    if ($(btnModoDificil).hasClass("selected"))
-        $(btnModoDificil).removeClass("selected");
-};
-
-function modoMedio() {
-    $("#msg-dificuldade").html("Dificuldade média selecionada!");
-
-    mensagemDificuldade();
-    $(btnModoMedio).addClass("selected");
-
-    if ($(btnModoFacil).hasClass("selected"))
-        $(btnModoFacil).removeClass("selected");
-    if ($(btnModoDificil).hasClass("selected"))
-        $(btnModoDificil).removeClass("selected");
-};
-
-function modoDificil() {
-    $("#msg-dificuldade").html("Dificuldade difícil selecionada!");
-    mensagemDificuldade();
-
-    $(btnModoDificil).addClass("selected");
-
-    if ($(btnModoFacil).hasClass("selected"))
-        $(btnModoFacil).removeClass("selected");
-    if ($(btnModoMedio).hasClass("selected"))
-        $(btnModoMedio).removeClass("selected");
-};
-
 // Ativa os eventos de clique, keydown e touchstart quando a janela estiver pronta
 $(document).ready(() => {
     // Mostra/oculta o botão de inicio e reinicio do jogo no mobile
@@ -348,17 +386,17 @@ $(document).ready(() => {
         $(".noMobile").css("display", "none");
 
         setInterval(() => {
-            if (gameStart.style.visibility !== 'hidden')
+            if (gameStart.style.display !== 'none')
                 $("#iniciar-mobile").css("display", "flex")
             else
                 $("#iniciar-mobile").css("display", "none");
 
-            if (gameOver.style.visibility === 'visible')
+            if (gameOver.style.display === 'flex')
                 $("#reiniciar-mobile").css("display", "flex");
             else
                 $("#reiniciar-mobile").css("display", "none");
 
-            if (gameStart.style.visibility !== 'hidden' || gameOver.style.visibility === 'visible')
+            if (gameStart.style.display !== 'none' || gameOver.style.display === 'flex')
                 $(".dificuldade-container-mobile").css("display", "flex");
             else
                 $(".dificuldade-container-mobile").css("display", "none");
@@ -431,7 +469,7 @@ $(document).ready(() => {
             if ($(".pontuacao").hasClass("clicked")) $(".pontuacao").removeClass("clicked");
             if ($(".comandos").hasClass("clicked")) $(".comandos").removeClass("clicked");
         }
-        if (e.type = 'click') iniciaJogo();
+        if (e.type == 'click') iniciaJogo();
     });
 
     $("#reiniciar").on("click focusin", e => {
@@ -441,6 +479,15 @@ $(document).ready(() => {
             if ($(".comandos").hasClass("clicked")) $(".comandos").removeClass("clicked");
         }
         if (e.type == 'click') iniciaJogo();
+    });
+
+    // Mostrar o sidemenu com o mouse
+    $(window).mousemove(e => {
+        if (e.pageX <= 65 && $(".game-board").hasClass("resized") || $(".pontuacao").hasClass("clicked") ||
+            $(".comandos").hasClass("clicked") || $(".player-control").hasClass("clicked"))
+            $(".sidemenu").fadeIn(200);
+        else if (e.pageX > 65 && $(".game-board").hasClass("resized"))
+            $(".sidemenu").fadeOut(200);
     });
 
     // Botão que mostra o histórico de tempo do jogador
@@ -473,6 +520,7 @@ $(document).ready(() => {
             playerToggler();
     });
 
+
     // Botão que exclui os itens do histórico de tempo
     $("#lixeira").on("touchstart click keydown", e => {
         if (e.type == "touchstart") {
@@ -483,8 +531,18 @@ $(document).ready(() => {
             deletarStorage();
     });
 
+    // Botão que altera o tamanho da tela do jogo
+    $("#alterarTela").on("touchstart click keydown", e => {
+        if (e.type == "touchstart") {
+            e.preventDefault();
+            alteraTela();
+        };
+        if (e.type == 'click' || (e.type == 'keydown' && e.which == 13))
+            alteraTela();
+    });
+
     // Pulo do personagem em mobiles
-    $(".area-mobile").on("touchstart", () => { if (gameOver.style.visibility === 'hidden') pulo() });
+    $(".area-mobile").on("touchstart", () => { if (gameOver.style.display === 'none') pulo() });
 
     // Botões de inicio e reinicio mobile
     $("#iniciar-mobile").on("touchstart", iniciaJogo);
@@ -517,18 +575,20 @@ $(document).ready(() => {
 // Eventos de pressionamento de teclas do teclado
 $(document).keydown(e => {
     // Barra de espaço e seta para cima ativam a função de pulo
-    if (e.which === 32 && gameOver.style.visibility === 'hidden') pulo();
-    if (e.which === 38 && gameOver.style.visibility === 'hidden') pulo();
+    if (e.which === 32 && gameOver.style.display === 'none') pulo();
+    if (e.which === 38 && gameOver.style.display === 'none') pulo();
 
     // Tecla espaço inicia o jogo
-    if (e.which === 32 && gameStart.style.visibility !== 'hidden' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
-    if (e.which === 32 && gameOver.style.visibility === 'visible' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
+    if (e.which === 32 && gameStart.style.display !== 'none' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
+    if (e.which === 32 && gameOver.style.display === 'flex' && !$(".player-control").hasClass("clicked") && !$(".pontuacao").hasClass("clicked")) iniciaJogo();
 
     // Tecla 1 muda de personagem
-    if (e.which === 49 && (gameStart.style.visibility !== "hidden" || gameOver.style.visibility !== "hidden"))
-        mudarPersonagem01();
+    if (e.which === 49 && (gameStart.style.display !== "none" || gameOver.style.display !== "none"))
+         mudarPersonagem01();
 
     // Tecla 2 muda de personagem
-    if (e.which === 50 && (gameStart.style.visibility !== "hidden" || gameOver.style.visibility !== "hidden"))
+    if (e.which === 50 && (gameStart.style.display !== "none" || gameOver.style.display !== "none"))
         mudarPersonagem02();
+
+    if (e.which === 84) alteraTela();
 });

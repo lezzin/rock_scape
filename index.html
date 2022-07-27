@@ -45,10 +45,10 @@
     <!-- Player de audio -->
     <div class="player-control">
         <div class="controls">
-            <i tabindex="0" class="fa-solid fa-play" id="player" title="iniciar"></i>
-            <i tabindex="0" class="fa-solid fa-minus" title="abaixar volume" id="abaixa-btn"></i>
-            <i tabindex="0" class="fa-solid fa-plus" title="aumentar volume" id="aumenta-btn"></i>
-            <i tabindex="0" class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
+            <i class="fa-solid fa-play" id="player" title="iniciar"></i>
+            <i class="fa-solid fa-minus" title="abaixar volume" id="abaixa-btn"></i>
+            <i class="fa-solid fa-plus" title="aumentar volume" id="aumenta-btn"></i>
+            <i class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
         </div>
         <span id="mostraVolume">Volume: 1.0</span>
     </div>
@@ -59,7 +59,7 @@
         <h2>Histórico de tempos</h2>
 
         <ul class="lista"></ul>
-        <span id="lixeira" tabindex="-1"><i class="fa-solid fa-trash"></i></span>
+        <span id="lixeira"><i class="fa-solid fa-trash"></i></span>
     </div>
     <!-- Fim da lista do histórico de tempos -->
 
@@ -96,6 +96,10 @@
                     <td><code>Enter</code></td>
                     <td colspan="2">Ativa os eventos dos botões</td>
                 </tr>
+                <tr>
+                    <td><code>T</code></td>
+                    <td colspan="2">Tela cheia</td>
+                </tr>
             </tbody>
 
         </table>
@@ -105,6 +109,10 @@
     <!-- Inicio do display do jogo - onde ele vai aparecer -->
     <section class="display">
         <div class="game-board">
+
+            <!-- Botão que deixa o jogo em tela cheia -->
+            <span id="alterarTela" tabindex="0"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
+            <!-- <i class="fa-solid fa-down-left-and-up-right-to-center"></i> -->
 
             <!-- Contador -->
             <span id="contador">Tempo: 0</span>

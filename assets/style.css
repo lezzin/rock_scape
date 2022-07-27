@@ -20,7 +20,7 @@ body {
     top: 0;
     left: 0;
     background: #101010;
-    z-index: 5;
+    z-index: 8;
 
     display: flex;
     flex-direction: column;
@@ -84,7 +84,6 @@ body {
 
     width: 25vw;
     height: 10vh;
-    z-index: 4;
 }
 
 .player-control,
@@ -103,6 +102,8 @@ body {
 
     transition: .6s;
     opacity: 0;
+
+    z-index: 7;
 }
 
 .pontuacao {
@@ -115,7 +116,6 @@ body {
     width: 50vw;
     height: 100vh;
 
-    z-index: 4;
     overflow-y: auto;
 }
 
@@ -154,8 +154,6 @@ body {
     height: 100vh;
 
     left: -100%;
-
-    z-index: 4;
 }
 
 .comandos table {
@@ -184,7 +182,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 80vh
+    height: 80vh;
 }
 
 .game-board {
@@ -201,6 +199,24 @@ body {
     border: 5px solid #363636;
 }
 
+.game-board.resized {
+    margin-top: 20vh !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 6;
+}
+
+#alterarTela {
+    display: flex;
+    z-index: 7;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    font-size: 1.6em;
+    cursor: pointer;
+}
+
 #contador {
     display: flex;
     z-index: 2;
@@ -208,7 +224,7 @@ body {
     top: 0;
     left: 0;
     margin: 10px;
-    font-size: 1.5rem;
+    font-size: 1.5em;
 }
 
 #msg-personagem,
@@ -229,7 +245,6 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -238,6 +253,7 @@ body {
 }
 
 .iniciar {
+    display: flex;
     background-image: url('./img/mainBackground.png');
     background-size: cover;
     visibility: visible;
@@ -262,8 +278,8 @@ body {
 }
 
 .game-over {
+    display: none;
     font-size: 2rem;
-    visibility: hidden;
 }
 
 #mostrarTempo {
@@ -335,10 +351,15 @@ button {
 .jogador {
     position: absolute;
     display: none;
-    width: 150px;
+    width: 10em;
     z-index: 3;
     left: 20px;
     bottom: 0;
+}
+
+.jogador.resized {
+    width: 12em;
+    left: 30px;
 }
 
 .obstaculo {
@@ -346,7 +367,11 @@ button {
     bottom: 0;
     right: -90px;
     z-index: 2;
-    width: 65px;
+    width: 4em;
+}
+
+.obstaculo.resized {
+    width: 5em;
 }
 
 .jump {
@@ -382,7 +407,7 @@ button {
 }
 
 .botoes-mobile button {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
@@ -531,12 +556,62 @@ button {
     }
 
     .area-mobile,
-    .botoes-mobile {
+    .botoes-mobile,
+    .botoes-mobile button {
         display: flex;
     }
 
     #iniciar,
-    #reiniciar {
+    #reiniciar,
+    #alterarTela {
         visibility: hidden;
+    }
+}
+
+@media (max-width:992.92px) and (orientation: landscape) {
+    .display {
+        height: 100vh !important;
+    }
+
+    .botoes-mobile,
+    .area-mobile {
+        position: absolute;
+        z-index: 10;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .area-mobile {
+        width: auto;
+        height: auto;
+        left: 90%;
+        top: 75vh;
+    }
+
+    .area-mobile p {
+        padding: 2%;
+        font-size: 1.5em;
+    }
+
+    .game-board {
+        width: 100%;
+        height: 100%;
+        margin-top: 0 !important;
+    }
+
+    .botoes-mobile {
+        top: 22vh;
+    }
+
+    .botoes-mobile button {
+        width: 10vw;
+        height: 6vh;
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    .sidemenu,
+    .game-board h1 {
+        display: none;
     }
 }
