@@ -396,11 +396,13 @@ $(document).ready(() => {
             else
                 $("#reiniciar-mobile").css("display", "none");
 
-            if (gameStart.style.display !== 'none' || gameOver.style.display === 'flex')
+            if (gameStart.style.display !== 'none' || gameOver.style.display === 'flex') {
                 $(".dificuldade-container-mobile").css("display", "flex");
-            else
+                $(".area-mobile").css("display", "none");
+            } else {
                 $(".dificuldade-container-mobile").css("display", "none");
-
+                $(".area-mobile").css("display", "flex");
+            };
         }, 100);
     };
 
@@ -584,7 +586,7 @@ $(document).keydown(e => {
 
     // Tecla 1 muda de personagem
     if (e.which === 49 && (gameStart.style.display !== "none" || gameOver.style.display !== "none"))
-         mudarPersonagem01();
+        mudarPersonagem01();
 
     // Tecla 2 muda de personagem
     if (e.which === 50 && (gameStart.style.display !== "none" || gameOver.style.display !== "none"))
