@@ -11,39 +11,41 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./assets/img/boy.gif" />
-    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="icon" type="image/png" href="./assets/img/logo.png" />
+    <link rel=" stylesheet" href="./assets/style.css">
 
-    <title>Jogo em javascript</title>
+    <title>Jogo em javascript - Rock Scape</title>
 </head>
 
 <body>
     <!-- Menu lateral -->
     <div class="sidemenu">
         <div class="togglers">
-            <span id="toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
+            <span id="score-toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
             <span id="player-toggler" tabindex="0"><i class="fa-solid fa-music" id="player-toggler"></i></span>
             <span id="command-toggler" tabindex="0"><i class="fa-solid fa-gamepad"></i></span>
         </div>
-        <ul>
-            <li>
-                <a target="_blank" href="https://instagram.com/leandroadrian_"><i
-                        class="fa-brands fa-instagram"></i></a>
-            </li>
-            <li>
-                <a target="_blank" href="https://t.me/LeandroAdrian"><i class="fa-brands fa-telegram"></i></a>
-            </li>
-            <li>
-                <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
-            </li>
-        </ul>
+        <nav>
+            <ul>
+                <li>
+                    <a target="_blank" href="https://instagram.com/leandroadrian_"><i
+                            class="fa-brands fa-instagram"></i></a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://t.me/LeandroAdrian"><i class="fa-brands fa-telegram"></i></a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
+                </li>
+            </ul>
+        </nav>
         <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
     </div>
 
     <!-- Fim do menu lateral -->
 
     <!-- Player de audio -->
-    <div class="player-control">
+    <section class="player-control">
         <div class="controls">
             <i class="fa-solid fa-play" id="player" title="iniciar"></i>
             <i class="fa-solid fa-minus" title="abaixar volume" id="abaixa-btn"></i>
@@ -51,25 +53,23 @@
             <i class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
         </div>
         <span id="mostraVolume">Volume: 1.0</span>
-    </div>
+    </section>
     <!-- Fim player de audio -->
 
     <!-- Lista do histórico de tempos -->
-    <div class="pontuacao">
+    <section class="pontuacao">
         <h2>Histórico de tempos</h2>
-
         <ul class="lista"></ul>
         <span id="lixeira"><i class="fa-solid fa-trash"></i></span>
-    </div>
+    </section>
     <!-- Fim da lista do histórico de tempos -->
 
     <!-- Lista de comandos do jogo -->
-    <div class="comandos">
+    <section class="comandos">
         <table>
             <thead>
                 <th colspan="3">Comandos do jogo </th>
             </thead>
-
             <tbody>
                 <tr>
                     <td><code>Espaço</code></td>
@@ -101,85 +101,100 @@
                     <td colspan="2">Tela cheia</td>
                 </tr>
             </tbody>
-
         </table>
-    </div>
+    </section>
     <!-- Fim da lista de comandos do jogo -->
 
-    <!-- Inicio do display do jogo - onde ele vai aparecer -->
-    <section class="display">
-        <div class="game-board">
+    <main>
+        <!-- Inicio do display do jogo - onde ele vai aparecer -->
+        <section class="display">
+            <div class="game-board">
 
-            <!-- Botão que deixa o jogo em tela cheia -->
-            <span id="alterarTela" tabindex="0"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
-            <!-- <i class="fa-solid fa-down-left-and-up-right-to-center"></i> -->
+                <!-- Obstáculo, imagem de fundo e personagem -->
+                <div class="dark-screen"></div>
+                <div class="bg"></div>
+                <img src="./assets/img/boy.gif" class="jogador" loading="lazy">
+                <img src="./assets/img/obstaculo1.png" class="obstaculo" loading="lazy">
+                <!-- /Obstáculo, imagem de fundo e personagem -->
 
-            <!-- Contador -->
-            <span id="contador">Tempo: 0</span>
+                <span id="alterarTela" tabindex="0">
+                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
+                <span id="contador">Tempo: 0</span>
+                <span id="msg-personagem">Personagem selecionado!</span>
+                <span id="msg-dificuldade"></span>
 
-            <!-- Mensagem que mostra que o personagem foi selecionado -->
-            <span id="msg-personagem">Personagem selecionado!</span>
+                <!-- Inicio do menu de inicio do jogo -->
+                <section class="home-container">
+                    <div class="home-content">
+                        <button id="iniciar">Iniciar (ou espaço)</button>
+                        <button class="toggleConfig">Configurações</button>
+                    </div>
+                    <img src="./assets/img/logo.png" alt="Logo do jogo">
+                </section>
+                <!-- Fim do menu de inicio do jogo -->
 
-            <!-- Mensagem que mostra que a dificuldade do jogo foi selecionada -->
-            <span id="msg-dificuldade"></span>
+                <!-- Dificuldade -->
+                <section class="container-config">
+                    <div class="config-content">
+                        <div class="dificulty-container noMobile">
+                            <h3>Dificuldade</h3>
+                            <button class="dificuldade-btn facil">Fácil</button>
+                            <button class="dificuldade-btn medio">Médio</button>
+                            <button class="dificuldade-btn dificil">Difícil</button>
+                        </div>
 
-            <!-- Inicio do menu de inicio do jogo -->
-            <div class="iniciar">
-                <h1>Bem vindo!</h1>
-                <button id="iniciar">Iniciar<br>(ou espaço)</button>
+                        <div class="characters-container">
+                            <h3>Personagem</h3>
+                            <div class="imgs">
+                                <img src="./assets/img/boy.gif" id="personagem01" loading="lazy" tabindex="0">
+                                <img src="./assets/img/girl.gif" id="personagem02" loading="lazy" tabindex="0">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnVolta">Voltar</button>
+                </section>
+                <!-- Fim da dificuldade -->
 
-                <div class="dificuldade-container noMobile">
-                    <button class="dificuldade-btn facil">Fácil</button>
-                    <button class="dificuldade-btn medio">Médio</button>
-                    <button class="dificuldade-btn dificil">Difícil</button>
-                </div>
+                <!-- Inicio do menu de game-over -->
+                <section class="game-over">
+                    <h1>Voce perdeu!</h1>
+                    <span id="mostrarTempo"></span>
+                    <button id="reiniciar">Reiniciar<br>(ou space)</button>
+                    <button class="toggleConfig">Configurações</button>
+                </section>
+                <!-- Fim do menu de game-over -->
             </div>
-            <!-- Fim do menu de inicio do jogo -->
-
-            <!-- Inicio do menu de game-over -->
-            <div class="game-over">
-                <h1>Voce perdeu!</h1>
-                <span id="mostrarTempo"></span>
-                <button id="reiniciar">Reiniciar<br>(ou space)</button>
-
-                <div class="dificuldade-container noMobile">
-                    <button class="dificuldade-btn facil">Fácil</button>
-                    <button class="dificuldade-btn medio">Médio</button>
-                    <button class="dificuldade-btn dificil">Difícil</button>
-                </div>
-            </div>
-            <!-- Fim do menu de game-over -->
-
-            <!-- Botões para selecionar o personagem -->
-            <div class="botoes">
-                <img src="./assets/img/boy.gif" id="personagem01" loading="lazy" tabindex="0">
-                <img src="./assets/img/girl.gif" id="personagem02" loading="lazy" tabindex="0">
-            </div>
-
-            <!-- Inicio da div de animações do cenário -->
-            <img src="./assets/img/boy.gif" class="jogador" loading="lazy">
-
-            <img src="./assets/img/obstaculo1.png" class="obstaculo" loading="lazy">
-            <!-- Fim da div de animações do cenário -->
-        </div>
-    </section>
-    <!-- Fim do display do jogo -->
+        </section>
+        <!-- Fim do display do jogo -->
+    </main>
 
     <!-- Botões mobile -->
-    <div class="area-mobile">
-        <p>Clique aqui para pular</p>
-    </div>
-    <div class="botoes-mobile">
-        <div>
-            <button id="iniciar-mobile">Iniciar</button>
-            <button id="reiniciar-mobile">Reiniciar</button>
+    <section>
+        <div class="area-mobile">
+            <p>Clique aqui para pular</p>
         </div>
-        <div class="dificuldade-container-mobile">
-            <button class="dificuldade-btn-mobile facil">Fácil</button>
-            <button class="dificuldade-btn-mobile medio">Médio</button>
-            <button class="dificuldade-btn-mobile dificil">Difícil</button>
+        <div class="botoes-mobile">
+            <div>
+                <button id="iniciar-mobile">Iniciar</button>
+                <button id="reiniciar-mobile">Reiniciar</button>
+            </div>
+            <div class="dificulty-container-mobile">
+                <h3>Dificuldade</h3>
+                <div class="dificulty-content-mobile">
+                    <button class="dificuldade-btn-mobile facil">Fácil</button>
+                    <button class="dificuldade-btn-mobile medio">Médio</button>
+                    <button class="dificuldade-btn-mobile dificil">Difícil</button>
+                </div>
+                <div class="characters-container">
+                    <h3>Personagem</h3>
+                    <div class="imgs">
+                        <img src="./assets/img/boy.gif" id="personagem01" loading="lazy" tabindex="0">
+                        <img src="./assets/img/girl.gif" id="personagem02" loading="lazy" tabindex="0">
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
     <!-- Fim dos botões mobile -->
 
     <script src="./assets/game.js"></script>
