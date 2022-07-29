@@ -12,57 +12,85 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="icon" type="image/png" href="./assets/img/logo.png" />
-    <link rel=" stylesheet" href="./assets/style.css">
+    <link rel=" stylesheet" href="./assets/css/style.css">
+    <link rel=" stylesheet" href="./assets/css/preloader.css">
 
-    <title>Jogo em javascript - Rock Scape</title>
+    <title>Rock Scape</title>
 </head>
 
 <body>
+    <!-- preloader -->
+    <div id="preloader">
+        <div class="inner">
+            <div class="bolas">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <p>Carregando</p>
+            <img src="./assets/img/boy.gif" alt="Garoto correndo - gif">
+        </div>
+    </div>
+    <!-- /preloader -->
+
     <!-- Menu lateral -->
     <div class="sidemenu">
         <div class="togglers">
-            <span id="score-toggler" tabindex="0"><i class="fa-solid fa-trophy"></i></span>
-            <span id="player-toggler" tabindex="0"><i class="fa-solid fa-music" id="player-toggler"></i></span>
-            <span id="command-toggler" tabindex="0"><i class="fa-solid fa-gamepad"></i></span>
+            <span id="score-toggler" tabindex="0"><i class="fa-solid fa-trophy" title="Abrir histórico"></i></span>
+            <span id="player-toggler" tabindex="0"><i class="fa-solid fa-music" id="player-toggler"
+                    title="Abrir os controles da música de fundo"></i></span>
+            <span id="command-toggler" tabindex="0"><i class="fa-solid fa-gamepad"
+                    title="Abrir a lista de comandos"></i></span>
         </div>
         <nav>
             <ul>
                 <li>
-                    <a target="_blank" href="https://instagram.com/leandroadrian_"><i
-                            class="fa-brands fa-instagram"></i></a>
+                    <a target="_blank" href="https://instagram.com/leandroadrian_" title="Acessar Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
                 </li>
                 <li>
-                    <a target="_blank" href="https://t.me/LeandroAdrian"><i class="fa-brands fa-telegram"></i></a>
+                    <a target="_blank" href="https://t.me/LeandroAdrian" title="Acessar LinkedIn">
+                        <i class="fa-brands fa-telegram"></i>
+                    </a>
                 </li>
                 <li>
-                    <a target="_blank" href="https://github.com/lezzin"><i class="fa-brands fa-github"></i></a>
+                    <a target="_blank" href="https://github.com/lezzin" title="Acessar GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://github.com/lezzin/Jogo-em-javascript"
+                        title="Acessar pasta do projeto">
+                        <i class="fa-solid fa-folder"></i>
+                    </a>
                 </li>
             </ul>
         </nav>
-        <a href="https://lezzin.github.io"><i class="fa-solid fa-house"></i></a>
+        <a href="https://lezzin.github.io"><i class="fa-solid fa-house" title="Voltar para o portfólio"></i></a>
+        <p>&copy by: <a href="htts://github.com/lezzin" title="Meu GitHub">Lezzin</a></p>
     </div>
-
     <!-- Fim do menu lateral -->
-
-    <!-- Player de audio -->
-    <section class="player-control">
-        <div class="controls">
-            <i class="fa-solid fa-play" id="player" title="iniciar"></i>
-            <i class="fa-solid fa-minus" title="abaixar volume" id="abaixa-btn"></i>
-            <i class="fa-solid fa-plus" title="aumentar volume" id="aumenta-btn"></i>
-            <i class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
-        </div>
-        <span id="mostraVolume">Volume: 1.0</span>
-    </section>
-    <!-- Fim player de audio -->
 
     <!-- Lista do histórico de tempos -->
     <section class="pontuacao">
         <h2>Histórico de tempos</h2>
         <ul class="lista"></ul>
-        <span id="lixeira"><i class="fa-solid fa-trash"></i></span>
+        <span id="lixeira" title="Apagar histórico"><i class="fa-solid fa-trash"></i></span>
     </section>
     <!-- Fim da lista do histórico de tempos -->
+
+    <!-- Player de audio -->
+    <section class="player-control">
+        <div class="controls">
+            <i class="fa-solid fa-play" id="player" title="iniciar"></i>
+            <i class="fa-solid fa-minus" id="abaixa-btn" title="abaixar volume"></i>
+            <i class="fa-solid fa-plus" id="aumenta-btn" title=" aumentar volume"></i>
+            <i class="fa-solid fa-volume-xmark" id="mute-btn" title="mutar"></i>
+        </div>
+        <span id="mostraVolume" title="Volume da música de fundo">Volume: 1.0</span>
+    </section>
+    <!-- Fim player de audio -->
 
     <!-- Lista de comandos do jogo -->
     <section class="comandos">
@@ -97,31 +125,46 @@
                     <td colspan="2">Ativa os eventos dos botões</td>
                 </tr>
                 <tr>
+                    <td><code>C</code></td>
+                    <td colspan="2">Abre a lista de comandos</td>
+                </tr>
+                <tr>
+                    <td><code>P</code></td>
+                    <td colspan="2">Abre o histórico de pontuação</td>
+                </tr>
+                <tr>
                     <td><code>T</code></td>
                     <td colspan="2">Tela cheia</td>
+                </tr>
+                <tr>
+                    <td><code>Delete</code></td>
+                    <td colspan="2">Limpa o histórico de tempos</td>
                 </tr>
             </tbody>
         </table>
     </section>
     <!-- Fim da lista de comandos do jogo -->
-
     <main>
         <!-- Inicio do display do jogo - onde ele vai aparecer -->
         <section class="display">
             <div class="game-board">
 
+                <span id="alterarTela" tabindex="0" title="Redimensionar tela do jogo">
+                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                </span>
+                <span id="contador">Tempo: 0</span>
+
+                <div class="span-container">
+                    <span id="msg-personagem"></span>
+                    <span id="msg-dificuldade"></span>
+                </div>
+
                 <!-- Obstáculo, imagem de fundo e personagem -->
                 <div class="dark-screen"></div>
                 <div class="bg"></div>
-                <img src="./assets/img/boy.gif" class="jogador" loading="lazy">
-                <img src="./assets/img/obstaculo1.png" class="obstaculo" loading="lazy">
+                <img src="./assets/img/boy.gif" class="jogador" loading="lazy" alt="Imagem do jogador">
+                <img src="./assets/img/obstaculo1.png" class="obstaculo" loading="lazy" alt="Imagem do obstáculo">
                 <!-- /Obstáculo, imagem de fundo e personagem -->
-
-                <span id="alterarTela" tabindex="0">
-                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i></span>
-                <span id="contador">Tempo: 0</span>
-                <span id="msg-personagem">Personagem selecionado!</span>
-                <span id="msg-dificuldade"></span>
 
                 <!-- Inicio do menu de inicio do jogo -->
                 <section class="home-container">
@@ -129,7 +172,7 @@
                         <button id="iniciar">Iniciar (ou espaço)</button>
                         <button class="toggleConfig">Configurações</button>
                     </div>
-                    <img src="./assets/img/logo.png" alt="Logo do jogo">
+                    <img src="./assets/img/logo.png" alt="Logo do jogo" height="280">
                 </section>
                 <!-- Fim do menu de inicio do jogo -->
 
@@ -197,7 +240,7 @@
     </section>
     <!-- Fim dos botões mobile -->
 
-    <script src="./assets/game.js"></script>
+    <script src="./assets/js/main.js"></script>
 </body>
 
 </html>
