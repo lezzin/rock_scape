@@ -13,6 +13,15 @@ body {
     overflow-x: hidden;
 }
 
+header {
+    background: #101010;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 5vh;
+    font-size: 1rem;
+}
+
 .sidemenu {
     position: absolute;
     top: 0;
@@ -73,10 +82,6 @@ body {
 
 .togglers span {
     padding: .6em 0;
-}
-
-.sidemenu p {
-    text-align: center;
 }
 
 .player-control {
@@ -249,18 +254,14 @@ body {
 
 .span-container {
     position: absolute;
-    background: #d2291ad1;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 1em 3em;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 20vw;
-    height: 10vh;
     z-index: 8;
     border-radius: 0 0 5px 5px;
 }
@@ -677,12 +678,11 @@ button {
         flex-direction: row;
     }
 
-    .sidemenu ul {
+    .sidemenu nav ul {
         border-right: 1px solid #363636;
         border-left: 1px solid #363636;
         border-top: none !important;
         border-bottom: none !important;
-        width: 20% !important;
         flex-direction: row !important;
     }
 
@@ -770,7 +770,8 @@ button {
 
 @media (max-width:992.92px) and (orientation: landscape) {
     body {
-        overflow-y: hidden;
+        max-height: 100vh !important;
+        overflow: hidden !important;
     }
 
     .display {
@@ -782,7 +783,7 @@ button {
         position: absolute;
         z-index: 10;
         left: 50%;
-        transform: translate(-50%, 0);
+        transform: translateX(-50%);
     }
 
     .area-mobile {
@@ -800,7 +801,7 @@ button {
     .game-board {
         width: 100%;
         height: 100%;
-        margin-top: 0 !important;
+        margin-top: 0;
     }
 
     .botoes-mobile {
@@ -821,6 +822,7 @@ button {
         top: 10vh;
     }
 
+    header,
     .sidemenu,
     .game-board h1 {
         display: none;

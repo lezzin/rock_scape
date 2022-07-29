@@ -254,7 +254,7 @@ const configToggler = () => {
     }
 };
 
-const esconderItensSideMenu = () => {
+const esconderContainers = () => {
     if ($(playerContainer).hasClass("clicked"))
         $(playerContainer).removeClass("clicked");
 
@@ -263,13 +263,16 @@ const esconderItensSideMenu = () => {
 
     if ($(commandsContainer).hasClass("clicked"))
         $(commandsContainer).removeClass("clicked");
+    
+    if ($(configContainer).hasClass("clicked"))
+        $(configContainer).removeClass("clicked");
 };
 
 const darkScreenAnimation = (vel, time) => {
     $(darkScreen).css({ "z-index": "4", "display": "flex", "animation": "none" });
     setInterval(() => {
         $(darkScreen).css("animation", `${vel}s blink2`);
-        setTimeout(() => $(darkScreen).css("animation", "none"), 8000);
+        $(darkScreen).on("animationend", () => $(darkScreen).css("animation", "none"));
     }, time);
     setInterval(() => {
         if (gameOver.style.display == 'flex')
@@ -278,7 +281,6 @@ const darkScreenAnimation = (vel, time) => {
 };
 
 
-// Funções para mudar de personagem
 const mudarPersonagem01 = () => {
     $(btnSelectP1).addClass("active");
     $(msgDificuldadeSelecionada).html("");
@@ -311,29 +313,30 @@ const mensagemDificuldade = () => {
 };
 
 
-const btnClass = (btn1, btn2, btn3) => {
+const checarClasseBtn = (btn1, btn2, btn3) => {
     $(btn1).addClass("selected");
 
     if ($(btn2).hasClass("selected")) $(btn2).removeClass("selected");
     if ($(btn3).hasClass("selected")) $(btn3).removeClass("selected");
 };
 
+
 const modoFacil = () => {
     $(msgDificuldadeSelecionada).html("Dificuldade fácil selecionada!");
     mensagemDificuldade();
-    btnClass(btnModoFacil, btnModoMedio, btnModoDificil);
+    checarClasseBtn(btnModoFacil, btnModoMedio, btnModoDificil);
 };
 
 const modoMedio = () => {
     $(msgDificuldadeSelecionada).html("Dificuldade média selecionada!");
     mensagemDificuldade();
-    btnClass(btnModoMedio, btnModoFacil, btnModoDificil);
+    checarClasseBtn(btnModoMedio, btnModoFacil, btnModoDificil);
 };
 
 const modoDificil = () => {
     $(msgDificuldadeSelecionada).html("Dificuldade difícil selecionada!");
     mensagemDificuldade();
-    btnClass(btnModoDificil, btnModoFacil, btnModoMedio);
+    checarClasseBtn(btnModoDificil, btnModoFacil, btnModoMedio);
 };
 
 
@@ -360,13 +363,12 @@ const dificuldadeJogo = () => {
 
 // Função do pulo do personagem
 const pulo = () => {
-    $(jogador).addClass("jump");
-    $(jogador).css("width", `${+$(jogador).css("width").replace("px", "") + 20}px`);
+    $(jogador).addClass("jump").
+        css("width", `${+$(jogador).css("width").replace("px", "") + 20}px`);
     setTimeout(() => $(jogador).css("width", ""), 200);
 
     if ($(jogador).hasClass("jump")) {
-        somPulo.play();
-        somPulo.loop = false;
+        somPulo.play(); somPulo.loop = false;
     };
 
     setTimeout(() => {
@@ -444,8 +446,9 @@ const verificaJogo = () => {
             else
                 $(el).html(`Tempo: ${contagem - 1} segundos - dificuldade: fácil`);
 
-            $(listaDeTempos).append($(el));
-            $(listaDeTempos).children().each((e, element) => conteudoLi.push($(element).removeClass("recorde").html()));
+            $(listaDeTempos).
+                append($(el)).
+                children().each((e, element) => conteudoLi.push($(element).removeClass("recorde").html()));
 
             let numero, tempoMaximo;
             numero = conteudoLi.map(e => { return +e.replace(/[^0-9]/g, ''); });// retorna uma nova array com os números da array conteudoLi
@@ -472,14 +475,15 @@ const iniciaJogo = () => {
     $(document).attr("title", "Jogando...");
 
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
-    if ($(btnSelectP1).hasClass("active")) $(jogador).prop("src", p1);
-    else if ($(btnSelectP2).hasClass("active")) $(jogador).prop("src", p2);
-    else $(jogador).prop("src", p1);
+    if ($(btnSelectP1).hasClass("active"))
+        $(jogador).prop("src", p1);
+    else if ($(btnSelectP2).hasClass("active"))
+        $(jogador).prop("src", p2);
+    else
+        $(jogador).prop("src", p1);
 
-    obstaculo.src = imgArray[Math.floor(Math.random() * imgArray.length)];
-    obstaculo.style.width = widthArray[Math.floor(Math.random() * widthArray.length)];
-
-    $(configContainer).fadeOut();
+    $(obstaculo).prop("src", `${imgArray[Math.floor(Math.random() * imgArray.length)]}`);
+    $(obstaculo).css("width", `${widthArray[Math.floor(Math.random() * widthArray.length)]}`);
 
     verificaJogo();
     dificuldadeJogo();
@@ -494,7 +498,7 @@ const iniciaJogo = () => {
     $(gameOver).css("display", "none");
     $(gameStart).css("display", "none");
     // Oculta os itens do menu, caso estejam aparentes
-    esconderItensSideMenu();
+    esconderContainers();
 
     // Ativa as animações
     setTimeout(() => {
@@ -609,12 +613,12 @@ $(window).on('load', () => {
 
     // Botões do menu de inicio e game-over
     $(btnInicio).on("click focusin", e => {
-        if (e.type == 'focusin') esconderItensSideMenu();
+        if (e.type == 'focusin') esconderContainers();
         if (e.type == 'click') iniciaJogo();
     });
 
     $(btnReinicio).on("click focusin", e => {
-        if (e.type == 'focusin') esconderItensSideMenu();
+        if (e.type == 'focusin') esconderContainers();
         if (e.type == 'click') iniciaJogo();
     });
 
