@@ -3,7 +3,12 @@ const
     somPulo = new Audio('./assets/audio/jump.wav'),
     somGameOverP1 = new Audio('./assets/audio/boyShout.wav'),
     somGameOverP2 = new Audio('./assets/audio/girlShout.wav'),
+
     musicaFundo = new Audio('./assets/audio/background.mp3'),
+    btnPlayPause = document.querySelector("#player"),
+    btnMuta = document.querySelector("#mute-btn"),
+    btnAumenta = document.querySelector("#aumenta-btn"),
+    btnDiminui = document.querySelector("#abaixa-btn"),
 
     jogador = document.querySelector(".jogador"),
     obstaculo = document.querySelector(".obstaculo"),
@@ -42,12 +47,6 @@ const
     btnModoMedio = document.querySelectorAll(".medio"),
     btnModoDificil = document.querySelectorAll(".dificil"),
 
-    // Botões do player de música
-    btnPlayPause = document.querySelector("#player"),
-    btnMuta = document.querySelector("#mute-btn"),
-    btnAumenta = document.querySelector("#aumenta-btn"),
-    btnDiminui = document.querySelector("#abaixa-btn"),
-
     // Botões dos menus
     btnInicio = document.querySelector("#iniciar"),
     btnReinicio = document.querySelector("#reiniciar"),
@@ -83,7 +82,9 @@ let dadosLocalStorage = JSON.parse(localStorage.getItem('pontuacao')) || [],
     conteudoLi = [],
     imgArray = ['./assets/img/obstaculo1.png', './assets/img/obstaculo2.png', './assets/img/obstaculo3.png'],
     widthArray = ['6em', '8em', '10em', '12em'],
-    darkScreenInterval;
+    darkScreenInterval,
+    personagemSelecionado,
+    obstacleAnimation;
 
 musicaFundo.loop = true;
 somGameOverP1.volume = 0.5;
@@ -92,14 +93,13 @@ somPulo.volume = 0.8;
 
 
 const mute = () => {
+    musicaFundo.muted = !musicaFundo.muted;
     if ($(btnMuta).hasClass("fa-volume-xmark")) {
-        musicaFundo.muted = true;
         $(btnMuta).
             attr("title", "desmutar").
             removeClass("fa-volume-xmark").
             addClass("fa-volume-high");
     } else {
-        musicaFundo.muted = false;
         $(btnMuta).
             attr("title", "mutar").
             removeClass("fa-volume-high").
@@ -108,7 +108,7 @@ const mute = () => {
 };
 
 const playPause = () => {
-    if ($(btnPlayPause).hasClass("fa-play") || musicaFundo.pause()) {
+    if ($(btnPlayPause).hasClass("fa-play")) {
         musicaFundo.play();
         $(btnPlayPause).
             attr("title", "pausar").
@@ -127,7 +127,6 @@ const abaixaVolume = () => {
     if (musicaFundo.volume > 0) musicaFundo.volume -= 0.1;
     $(mostraVolume).text("Volume: " + (musicaFundo.volume).toFixed(1));
 };
-
 const aumentaVolume = () => {
     if (musicaFundo.volume < 1) musicaFundo.volume += 0.1;
     $(mostraVolume).text("Volume: " + (musicaFundo.volume).toFixed(1));
@@ -178,6 +177,7 @@ const alteraTelaCheia = () => {
     $(gameBoard).toggleClass("resized");
     $(obstaculo).toggleClass("resized");
     $(jogador).toggleClass("resized");
+    $("header").toggleClass("resized");
 
     if ($(btnResize).hasClass(iconeAumentaTela))
         $(btnResize).
@@ -263,7 +263,7 @@ const esconderContainers = () => {
 
     if ($(commandsContainer).hasClass("clicked"))
         $(commandsContainer).removeClass("clicked");
-    
+
     if ($(configContainer).hasClass("clicked"))
         $(configContainer).removeClass("clicked");
 };
@@ -348,18 +348,17 @@ const dificuldadeJogo = () => {
     }
     else if ($(btnModoMedio).hasClass("selected")) {
         $(obstaculo).css("animation", `obstaculo ${velocidadeMedia}s infinite linear .6s`);
-        $(darkScreen).css({ "display": "flex", "animation": "8s ease 15s blink2" });
+        darkScreenInterval = darkScreenAnimation(6, 22000);
     }
     else if ($(btnModoDificil).hasClass("selected")) {
         $(obstaculo).css("animation", `obstaculo ${velocidadeDificil}s infinite linear .6s`);
-        $(darkScreen).css({ "display": "flex", "animation": "10s ease 10s blink2" });
+        darkScreenInterval = darkScreenAnimation(5, 15000);
     }
     else {
         $(obstaculo).css("animation", `obstaculo ${velocidadeFacil}s infinite linear .6s`);
         $(darkScreen).css({ "display": "none", "z-index": "0" });
     };
 };
-
 
 // Função do pulo do personagem
 const pulo = () => {
@@ -380,6 +379,7 @@ const pulo = () => {
 
 
 const verificaJogo = () => {
+    personagemSelecionado = jogador.getAttribute('src');
     let contagem = 1;
     this.contadorTempo = setInterval(() => $(contador).text(`Tempo: ${contagem++}`), 1000);
 
@@ -391,15 +391,6 @@ const verificaJogo = () => {
             $(obstaculo).css("width", `${widthArray[Math.floor(Math.random() * widthArray.length)]}`);
         };
     }, 10);
-
-    if ($(btnModoFacil).hasClass("selected"))
-        $(darkScreen).css({ "display": "none", "z-index": "0" });
-    else if ($(btnModoMedio).hasClass("selected"))
-        darkScreenInterval = darkScreenAnimation(6, 22000);
-    else if ($(btnModoDificil).hasClass("selected"))
-        darkScreenInterval = darkScreenAnimation(5, 15000);
-    else
-        $(darkScreen).css({ "display": "none", "z-index": "0" });
 
     // Loop que verifica se você perdeu
     this.loopVerifica = setInterval(() => {
@@ -413,8 +404,7 @@ const verificaJogo = () => {
             $(btnReinicio).attr("disabled", "");
             setTimeout(() => $(btnReinicio).removeAttr("disabled"), 1000);
 
-            let personagemSelecionado = jogador.getAttribute('src');
-            jogador.src = (personagemSelecionado == p1) ? p1gameOver : p2gameOver;
+            jogador.src = personagemSelecionado == p1 ? p1gameOver : p2gameOver;
 
             if ((personagemSelecionado == p1)) {
                 somGameOverP1.play(); somGameOverP1.loop = false;
@@ -432,8 +422,7 @@ const verificaJogo = () => {
             clearInterval(imgWidthInterval);
             clearInterval(darkScreenInterval);
 
-            let el = document.createElement("li"),
-                obstacleAnimation = window.getComputedStyle(obstaculo).animation;
+            let el = document.createElement("li");
 
             dificuldadeJogo();
 
@@ -469,9 +458,9 @@ const verificaJogo = () => {
     }, 10);
 };
 
-
 // Função para iniciar/reiniciar o jogo
 const iniciaJogo = () => {
+    obstacleAnimation = window.getComputedStyle(obstaculo).animation;
     $(document).attr("title", "Jogando...");
 
     // Muda a imagem do jogador de acordo com a sua escolha de personagem
