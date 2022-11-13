@@ -1,3 +1,5 @@
+@import './preloader.css';
+
 * {
     letter-spacing: 2px;
     margin: 0;
@@ -335,6 +337,12 @@ header.resized {
 
 #mostrarTempo {
     font-size: 1.3rem;
+    text-align: center;
+    text-shadow: #ff0000 -1px 0, #00ffff 1px 0;
+}
+
+.username {
+    font-size: 2rem;
     text-align: center;
     text-shadow: #ff0000 -1px 0, #00ffff 1px 0;
 }

@@ -92,6 +92,17 @@ somGameOverP2.volume = 0.5;
 somPulo.volume = 0.8;
 
 
+const setUsername = () => {
+    username = localStorage.getItem('name');
+
+    document.querySelectorAll('.username').forEach((element) => {
+        if (username) return element.innerHTML = "Olá, " + username;
+
+        element.innerHTML = "Olá, Jogador";
+    });
+}
+
+
 const mute = () => {
     musicaFundo.muted = !musicaFundo.muted;
     if ($(btnMuta).hasClass("fa-volume-xmark")) {
@@ -502,6 +513,7 @@ $(window).on('load', () => {
     $('#preloader').delay(350).fadeOut('slow');
     $('body').delay(350).css("overflow", "visible");
 
+    setUsername();
     atualizarRecorde();
     $(obstaculo).css("display", "none");
     $(spanAlert).css("display", "none");
