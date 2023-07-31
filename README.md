@@ -10,7 +10,7 @@
 
 Projeto criado em jquery e um pouco de javascript puro.<br>
 Inicialmente, esse jogo era apenas uma cópia de um video que vi no youtube, mas com o passar do tempo, fui adquirindo mais conhecimentos e resolvi criá-lo do zero, chegando assim, a como está hoje.<br>
-🎮 <a href="https://lezzin.github.io/pages/Jogo%20em%20js/index.html">Clique aqui para jogar</a>
+🎮 <a href="https://rockscape.vercel.app/">Clique aqui para jogar</a>
 
 ## Jogo antigo x atual
 <div style="display: inline_block"><br>
