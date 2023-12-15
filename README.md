@@ -1,4 +1,4 @@
-# Rock Scape - jogo em JS
+![Foto do projeto](https://github.com/lezzin/rock_scape/assets/103830032/9c80f6b8-0757-4b28-9208-1d51d8c18ac0)
 
 <div style="display: inline_block"><br>
     <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"  alt="Javascript Logo" align="center" />
