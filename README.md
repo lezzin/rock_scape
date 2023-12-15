@@ -21,7 +21,6 @@ Inicialmente, esse jogo era apenas uma cópia de um video que vi no youtube, mas
 Os comandos do jogo podem ser acessados na tela do projeto (menu)
 - em dispositivos móveis, embaixo.
 - em desktops, na lateral esquerda.
-<br>
 
 #### Contato
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/leandroadrian_/)
