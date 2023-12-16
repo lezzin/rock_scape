@@ -1,9 +1,11 @@
 ![Foto do projeto](https://github.com/lezzin/rock_scape/assets/103830032/9c80f6b8-0757-4b28-9208-1d51d8c18ac0)
+ 
+# Rock Scape
 
 Projeto criado em jquery e um pouco de javascript puro.<br>
 Inicialmente, esse jogo era apenas uma cópia de um video que vi no youtube, mas com o passar do tempo, fui adquirindo mais conhecimentos e resolvi criá-lo do zero, chegando assim, a como está hoje.<br>
 
-## Começando
+## Guia de instalação
 
 Para usar o aplicativo de lista de tarefas:
 
