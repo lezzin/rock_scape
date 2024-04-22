@@ -24,6 +24,41 @@
     }
 }
 
+@keyframes movement {
+
+    0%,
+    100% {
+        transform: translateX(0) rotate(0);
+    }
+
+    25% {
+        transform: translateX(-.1rem) rotate(.1deg);
+    }
+
+    50% {
+        transform: translateX(.1rem) rotate(-.1deg);
+    }
+
+    75% {
+        transform: translateX(-.1rem) rotate(.1deg);
+    }
+}
+
+:root {
+    --primary-color: #324D69;
+    --danger-color: hsl(0, 80%, 60%);
+
+    --background-primary: #111;
+    --background-secondary: #222;
+    --background-tertiary: #333;
+    --border-color: #444;
+
+    --font-color: #fff;
+    --font-family: "Archivo", sans-serif;
+
+    --radius: 5px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -31,10 +66,10 @@
 }
 
 body {
-    background: #111;
-    color: #fff;
     overflow-x: hidden;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: var(--font-family), sans-serif;
+    background: var(--background-primary);
+    color: var(--font-color);
 }
 
 button {
@@ -43,9 +78,45 @@ button {
     background: transparent;
     transition: all .3s ease;
     color: inherit;
+    font: inherit;
 
     &:hover {
         filter: brightness(80%);
+    }
+
+    &.button-primary,
+    &.button-danger {
+        padding: .35rem 1rem;
+        border-radius: var(--radius);
+        color: var(--font-color);
+    }
+
+    &.button-primary {
+        background-color: var(--primary-color);
+    }
+
+    &.button-danger {
+        background-color: var(--danger-color);
+    }
+}
+
+table {
+    border-collapse: collapse;
+    background-color: var(--background-tertiary);
+    text-align: left;
+    width: 100%;
+
+    td {
+        font-weight: 500;
+        padding: .3rem .5rem;
+        border: 1px solid var(--border-color);
+        font-variant-numeric: tabular-nums;
+
+        code {
+            background: var(--primary-color);
+            padding: .25rem .5rem;
+            border-radius: var(--radius);
+        }
     }
 }
 
@@ -61,7 +132,6 @@ button {
     font-size: 1.2rem;
 }
 
-.volume-control-wrapper,
 .pontuation-wrapper,
 .commands-wrapper {
     position: absolute;
@@ -70,13 +140,12 @@ button {
     z-index: 7;
     display: flex;
     align-items: center;
-    border-radius: 5px;
-    background: #222;
+    border-radius: var(--radius);
+    background: var(--background-secondary);
     pointer-events: none;
 }
 
 .pontuation-wrapper.selected-screen,
-.volume-control-wrapper.selected-screen,
 .commands-wrapper.selected-screen {
     pointer-events: all;
     opacity: 1;
@@ -87,13 +156,13 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    background: #222;
+    background: var(--background-secondary);
     z-index: 8;
 
     display: flex;
     align-items: start;
     justify-content: center;
-    border-right: 1px solid #333;
+    border-right: 1px solid var(--border-color);
 
     padding: 1rem 0;
     width: 4vw;
@@ -104,6 +173,7 @@ button {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 0.6rem;
 
         button {
             padding: .6rem;
@@ -140,46 +210,12 @@ button {
 
             li {
                 &.recorde {
-                    color: #f73d3d;
+                    color: var(--primary-color);
                     font-weight: 600;
                 }
             }
         }
     }
-}
-
-.commands-wrapper {
-    header {
-        text-align: center;
-    }
-
-    table {
-        border-collapse: collapse;
-        background-color: #333;
-        text-align: left;
-        width: 100%;
-
-        td {
-            font-weight: 500;
-            padding: .3rem .5rem;
-            border: 1px solid #444;
-
-            code {
-                background: #666;
-                padding: .1em .15em;
-                border-radius: 4px;
-            }
-        }
-    }
-}
-
-.volume-control-wrapper {
-    top: 7.5%;
-    border-radius: 0 5px 5px 0;
-    padding: 1rem 2rem;
-
-    justify-content: space-around;
-    gap: 2rem;
 }
 
 .display {
@@ -188,13 +224,14 @@ button {
     align-items: center;
     width: 100vw;
     height: 100vh;
+    user-select: none;
 
     .game-board {
-        border-radius: 10px;
+        border-radius: calc(var(--radius) * 2);
         width: 854px;
         height: 480px;
         position: relative;
-        border: 5px solid #363636;
+        border: 5px solid var(--border-color);
         overflow: hidden;
 
         .game-screen {
@@ -215,6 +252,7 @@ button {
                 padding-top: 5rem;
                 background: url('../img/mainBackground.png') no-repeat;
                 background-size: cover;
+                display: block;
 
                 img {
                     margin-top: auto;
@@ -231,15 +269,27 @@ button {
                 background-size: cover;
 
                 &.selected-screen {
-                    display: initial;
+                    display: block;
                 }
 
                 #game-config-message {
                     position: absolute;
-                    padding: 1rem 2rem;
-                    top: 0;
                     left: 50%;
-                    transform: translateX(-50%);
+                    top: 0;
+                    padding: .5rem 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.6rem;
+                    border: 2px solid var(--border-color);
+                    border-top: unset;
+                    background-color: var(--primary-color);
+                    border-radius: 0 0 var(--radius) var(--radius);
+                    transform: translateX(-50%) translateY(-100%);
+                    transition: transform .3s ease;
+
+                    &.active {
+                        transform: translateX(-50%) translateY(0%);
+                    }
                 }
 
                 .screen-content {
@@ -251,18 +301,28 @@ button {
                         justify-content: space-evenly;
                         width: 100%;
 
+                        h3 {
+                            font-weight: 100;
+                            margin-bottom: 1rem;
+                        }
+
                         .options {
                             display: flex;
                             justify-content: center;
                             align-items: center;
                             flex-direction: column;
+                            gap: .6rem;
 
-                            h3 {
-                                margin-bottom: 2rem;
-                            }
+                            .screen-buttons {
+                                width: 100%;
 
-                            &.characters-container .imgs {
-                                display: flex;
+                                &.images button {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    width: 100%;
+                                    gap: 0.3rem;
+                                }
                             }
                         }
                     }
@@ -294,6 +354,10 @@ button {
         }
 
         .game {
+            &.running .background {
+                animation: movement 1s ease infinite;
+            }
+
             .background {
                 position: absolute;
                 width: 100%;
@@ -302,11 +366,34 @@ button {
                 background-size: cover;
             }
 
+            #jump-area-mobile {
+                position: absolute;
+                right: 2rem;
+                bottom: 2rem;
+                z-index: 3;
+
+                display: none;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--primary-color);
+                border-radius: var(--radius);
+                width: 5rem;
+                aspect-ratio: 1;
+
+                &.hidden {
+                    display: none;
+                }
+
+                @media(width<=768px) {
+                    display: flex;
+                }
+            }
 
             #time-counter {
                 position: absolute;
                 top: .8rem;
                 left: .8rem;
+                z-index: 3;
             }
 
             #character {
@@ -348,19 +435,4 @@ button {
         z-index: 5;
         padding: .6rem;
     }
-}
-
-#jump-area-mobile {
-    position: absolute;
-    right: 2rem;
-    bottom: 2rem;
-    z-index: 9;
-
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color: #324D69;
-    border-radius: 5px;
-    width: 5rem;
-    aspect-ratio: 1;
 }

@@ -2,19 +2,13 @@ const EASY_SPEED = '1.4';
 const MEDIUM_SPEED = '1.2';
 const HARD_SPEED = '0.8';
 const OBSTACLE_IMAGES = ['./assets/img/obstacle1.png', './assets/img/obstacle2.png', './assets/img/obstacle3.png'];
-const OBSTACLE_WIDTHS = ['6em', '8em', '10em', '12em'];
+const OBSTACLE_WIDTHS = ['6rem', '8rem', '10rem', '12rem'];
 const STORAGE_PONTUATION_KEY = "pontuacao";
 const STORAGE_RECORD_KEY = "recordTime";
 
 const jumpSound = new Audio('./assets/audio/jump.wav');
 const gameOverSoundP1 = new Audio('./assets/audio/boyShout.wav');
 const gameOverSoundP2 = new Audio('./assets/audio/girlShout.wav');
-
-const backgroundMusic = new Audio('./assets/audio/background.mp3');
-const playPauseSoundButton = document.querySelector("#player");
-const muteSoundButton = document.querySelector("#mute-btn");
-const increaseSoundButton = document.querySelector("#increase-btn");
-const decreaseSoundButton = document.querySelector("#decrease-btn");
 
 const character = document.querySelector("#character");
 const obstacle = document.querySelector("#obstacle");
@@ -27,8 +21,8 @@ const gameOverScreen = document.querySelector(".game-over-screen");
 const sideMenuScreen = document.querySelector(".sidemenu-wrapper");
 const scorePanel = document.querySelector(".pontuation-wrapper");
 const commandsPanel = document.querySelector(".commands-wrapper");
-const musicControlScreen = document.querySelector(".volume-control-wrapper");
 
+const gameScreen = document.querySelector(".game");
 const generalConfigScreen = document.querySelector(".game-config-screen");
 const gameAlert = document.querySelector("#game-config-message");
 
@@ -50,9 +44,9 @@ const backButton = document.querySelectorAll(".btn-back-screen");
 // Botões togglers
 const scoreToggleBtn = document.querySelector("#score-toggler-btn");
 const cmdToggleBtn = document.querySelector("#command-toggler-btn");
-const musicControlToggleBtn = document.querySelector("#music-controls-toggler-btn");
+const muteToggleBtn = document.querySelector("#music-controls-toggler-btn");
 const configToggleBtn = document.querySelectorAll(".config-toggler-btn");
-const resizeBtn = document.querySelector("#resize-screen-btn i");
+const resizeBtn = document.querySelector("#resize-screen-btn");
 
 const trashBtn = document.querySelector("#list-trash-btn");
 
@@ -68,67 +62,21 @@ const char2Image = "./assets/img/girl.gif";
 const enlargeIcon = "fa-up-right-and-down-left-from-center";
 const shrinkIcon = "fa-down-left-and-up-right-to-center";
 
-const userPontuationList = document.querySelector("#pontuations-list");
+const pontuationTable = document.querySelector("#pontuations-table tbody");
 
+let userInteractedWithScreen = false;
 let localStoragePontuation = JSON.parse(localStorage.getItem(STORAGE_PONTUATION_KEY)) || [];
 let selectedCharacter = "p1";
 let selectedDifficulty = "easy";
 let configMessageTimeout;
 let jumpTimeout;
 
-backgroundMusic.loop = true;
 gameOverSoundP1.volume = 0.5;
 gameOverSoundP2.volume = 0.5;
 jumpSound.volume = 0.8;
 
-const toggleMute = () => {
-    backgroundMusic.muted = !backgroundMusic.muted;
-    updateMuteButton();
-};
-
-const updateMuteButton = () => {
-    const isMuted = backgroundMusic.muted;
-    const iconClass = isMuted ? "fa-volume-xmark" : "fa-volume-high";
-    const title = isMuted ? "Desmutar" : "Mutar";
-
-    $(muteSoundButton).attr("title", title).removeClass("fa-volume-xmark fa-volume-high").addClass(iconClass);
-};
-
-const togglePlayPause = () => {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-    } else {
-        backgroundMusic.pause();
-    }
-    updatePlayPauseButton();
-};
-
-const updatePlayPauseButton = () => {
-    const isPaused = backgroundMusic.paused;
-    const iconClass = isPaused ? "fa-play" : "fa-pause";
-    const title = isPaused ? "Iniciar" : "Pausar";
-
-    $(playPauseSoundButton).attr("title", title).removeClass("fa-play fa-pause").addClass(iconClass);
-};
-
-const adjustVolume = (increment) => {
-    backgroundMusic.volume = Math.max(0, Math.min(1, backgroundMusic.volume + increment));
-    updateVolumeDisplay();
-};
-
-const updateVolumeDisplay = () => {
-    $(musicVolumeDisplay).text("Volume: " + (backgroundMusic.volume).toFixed(1));
-};
-
-const updateUserPontuationList = () => {
-    $(userPontuationList).empty();
-
-    $.each(localStoragePontuation, (index, dado) => {
-        $(userPontuationList).append(`<li>${dado}</li>`);
-    });
-};
-
-const saveStorage = () => {
+const saveStorage = (timeSeconds, difficulty) => {
+    localStoragePontuation.push(`Tempo: ${timeSeconds} segundo(s) - dificuldade: ${difficulty}`);
     localStorage.setItem(STORAGE_PONTUATION_KEY, JSON.stringify(localStoragePontuation));
 };
 
@@ -141,44 +89,54 @@ const clearStorage = () => {
     }
 };
 
+const populatePontuationTable = () => {
+    $(pontuationTable).empty();
+
+    if (localStoragePontuation.length === 0) {
+        $(pontuationTable).append(`<tr><td>Nenhuma pontuação cadastrada</td></tr>`);
+        return;
+    }
+
+    localStoragePontuation.forEach((item, index) => {
+        $(pontuationTable).append(`<tr><td>${index + 1}) <span>${item}</span></td></tr>`);
+    });
+};
+
 const updateRecord = () => {
-    updateUserPontuationList();
+    populatePontuationTable();
 
-    let number, maxTime;
+    let maxTime = 0;
+    let maxIndex = -1;
 
-    if ($(userPontuationList).children().length > 0) {
-        number = $(userPontuationList)
-            .children()
-            .map((_index, element) => Number($(element).find('span').text().replace(/\D/g, '')))
-            .toArray();
-        maxTime = Math.max(...number);
+    localStoragePontuation.forEach((item, index) => {
+        const timeSeconds = parseInt(item.match(/\d+/)[0]);
+        if (timeSeconds > maxTime) {
+            maxTime = timeSeconds;
+            maxIndex = index;
+        }
+    });
 
-        $(userPontuationList).children().each((_index, element) => {
-            if (Number($(element).find('span').text().replace(/\D/g, '')) === maxTime) {
-                $(element).addClass('recorde');
-            } else {
-                $(element).removeClass('recorde');
-            }
-        });
+    if (maxIndex !== -1) {
+        $(pontuationTable).children().removeClass("recorde").eq(maxIndex).addClass("recorde");
     }
 };
 
-const toggleFullScreen = () => {
+const toggleFullscreen = () => {
     $(obstacle).toggleClass("resized");
     $(character).toggleClass("resized");
 
     if (!document.fullscreenElement) {
-        $(resizeBtn).removeClass(enlargeIcon).addClass(shrinkIcon);
+        $(resizeBtn).children("i").removeClass(enlargeIcon).addClass(shrinkIcon);
         gameBoard.requestFullscreen();
 
         return;
     }
 
-    $(resizeBtn).removeClass(shrinkIcon).addClass(enlargeIcon);
+    $(resizeBtn).children("i").removeClass(shrinkIcon).addClass(enlargeIcon);
     document.exitFullscreen();
 };
 
-const toggleScore = () => {
+const toggleScoreScreen = () => {
     $(scorePanel).toggleClass("selected-screen");
 
     if ($(gameBoard).hasClass("resized")) {
@@ -186,47 +144,26 @@ const toggleScore = () => {
     };
 
     $(trashBtn).attr("tabindex", $(scorePanel).hasClass("selected-screen") ? 0 : -1);
-    $(musicControlScreen).removeClass("selected-screen");
     $(commandsPanel).removeClass("selected-screen");
 };
 
-const toggleCommands = () => {
+const toggleCommandsScreen = () => {
     $(commandsPanel).toggleClass("selected-screen");
 
-    if ($(gameBoard).hasClass("resized"))
+    if ($(gameBoard).hasClass("resized")) {
         $(sideMenuScreen).fadeIn(200);
+    }
 
-    if ($(musicControlScreen).hasClass("selected-screen"))
-        $(musicControlScreen).removeClass("selected-screen");
-    if ($(scorePanel).hasClass("selected-screen"))
+    if ($(scorePanel).hasClass("selected-screen")) {
         $(scorePanel).removeClass("selected-screen");
+    }
 };
 
-const toggleSoundControls = () => {
-    $(musicControlScreen).toggleClass("selected-screen");
-
-    if ($(gameBoard).hasClass("resized"))
-        $(sideMenuScreen).fadeIn(200);
-
-    if ($(musicControlScreen).hasClass("selected-screen"))
-        $(".controls").children().each((e, element) => $(element).attr("tabindex", "0"));
-    else
-        $(".controls").children().each((e, element) => $(element).attr("tabindex", "-1"))
-
-    if ($(scorePanel).hasClass("selected-screen"))
-        $(scorePanel).removeClass("selected-screen");
-    if ($(commandsPanel).hasClass("selected-screen"))
-        $(commandsPanel).removeClass("selected-screen");
-};
-
-const toggleGameConfig = () => {
+const toggleGameConfigScreen = () => {
     $(generalConfigScreen).toggleClass("selected-screen");
 };
 
-const hideScreens = () => {
-    if ($(musicControlScreen).hasClass("selected-screen"))
-        $(musicControlScreen).removeClass("selected-screen");
-
+const hideAllScreens = () => {
     if ($(scorePanel).hasClass("selected-screen"))
         $(scorePanel).removeClass("selected-screen");
 
@@ -245,28 +182,26 @@ const toggleCharacter = (character) => {
 const showConfigMessage = message => {
     clearTimeout(configMessageTimeout);
 
-    $(gameAlert).html(`<p>${message}</p>`);
-    $(gameAlert).fadeIn();
-
-    configMessageTimeout = setTimeout(() => $(gameAlert).fadeOut(), 1000)
+    $(gameAlert).html(`<p><i class="fa-solid fa-exclamation-circle"></i> ${message}</p>`).addClass("active");
+    configMessageTimeout = setTimeout(() => $(gameAlert).removeClass("active"), 1000)
 }
 
-const toggleEasyMode = () => {
+const chooseEasyGameMode = () => {
     showConfigMessage("Dificuldade fácil selecionada!");
     selectedDifficulty = "easy";
 };
 
-const toggleMediumMode = () => {
+const chooseMediumGameMode = () => {
     showConfigMessage("Dificuldade média selecionada!");
     selectedDifficulty = "medium";
 };
 
-const toggleHardMode = () => {
+const chooseHardGameMode = () => {
     showConfigMessage("Dificuldade difícil selecionada!");
     selectedDifficulty = "hard";
 };
 
-const initGameDifficulty = () => {
+const startGameModeConfig = () => {
     const animations = {
         "easy": `obstacle-running ${EASY_SPEED}s infinite linear .6s`,
         "medium": `obstacle-running ${MEDIUM_SPEED}s infinite linear .6s`,
@@ -276,29 +211,35 @@ const initGameDifficulty = () => {
     $(obstacle).css("animation", animations[selectedDifficulty]);
 };
 
-const jump = () => {
-    clearTimeout(jumpTimeout);
-
-    $(character).addClass("jump");
-    jumpSound.play();
-    jumpSound.loop = false;
-
-    jumpTimeout = setTimeout(() => $(character).removeClass("jump"), 400);
-};
-
 const generateRandomObstacle = () => {
     $(obstacle).prop("src", `${OBSTACLE_IMAGES[Math.floor(Math.random() * OBSTACLE_IMAGES.length)]}`);
     $(obstacle).css("width", `${OBSTACLE_WIDTHS[Math.floor(Math.random() * OBSTACLE_WIDTHS.length)]}`);
 };
 
+const jumpCharacter = () => {
+    if (gameOverScreen.style.display === 'none') {
+        clearTimeout(jumpTimeout);
+
+        $(character).addClass("jump");
+        jumpSound.play();
+        jumpSound.loop = false;
+
+        jumpTimeout = setTimeout(() => $(character).removeClass("jump"), 400);
+    }
+};
+
 const verifyGame = () => {
+    const gameWidth = $(gameScreen).width();
+    let obstacleGenerated = false;
     let counter = 1;
+
     const counterInterval = setInterval(() => $(gameCounter).text(`Tempo: ${counter++}`), 1000);
     const randomObstacleInterval = setInterval(() => {
-        const obstacleOffsetRight = +window.getComputedStyle(obstacle).right.replace("px", "");
-        if (obstacleOffsetRight < -90) generateRandomObstacle();
+        const obstacleRight = obstacle.offsetLeft + obstacle.offsetWidth;
+        if (obstacleRight < 0 || obstacle.offsetLeft > gameWidth) {
+            generateRandomObstacle();
+        }
     }, 10);
-
     const verifierLoop = setInterval(() => {
         const obstacleOffSetLeft = obstacle.offsetLeft;
         const jumpHeight = +window.getComputedStyle(character).bottom.replace("px", "");
@@ -324,9 +265,10 @@ const verifyGame = () => {
             $(restartBtn).attr("disabled", false);
 
             $(obstacle).css("left", obstacleOffSetLeft);
+            $(gameScreen).removeClass("running");
             $(gameOverScreen).show();
             if (innerWidth <= 768) {
-                $(mobileJumpArea).hide();
+                $(mobileJumpArea).addClass("hidden");
             }
 
             const translatedDifficulties = {
@@ -341,31 +283,27 @@ const verifyGame = () => {
 
             if (timeSeconds > recordTime) {
                 localStorage.setItem(STORAGE_RECORD_KEY, timeSeconds);
+                $(pontuationTable).append(`<tr><td>${$(pontuationTable).children().length}) <span>Tempo: ${timeSeconds} segundo(s) - dificuldade: ${difficulty}</span></td></tr>`);
                 $(gameOverTimeDisplay).text(`Parabéns! ${timeSeconds} segundo(s) é seu novo recorde!`);
             } else {
                 $(gameOverTimeDisplay).text(`Seu tempo: ${timeSeconds} segundo(s)`);
             }
 
-            if (timeSeconds != recordTime) {
-                const liElement = document.createElement("li");
-                const html = `Tempo: ${timeSeconds} segundo(s) - dificuldade: ${difficulty}`
-                $(liElement).html(html);
-                localStoragePontuation.push(html);
-                $(userPontuationList).append($(liElement));
-            }
+            saveStorage(timeSeconds, difficulty);
 
-            const userPontuations = $(userPontuationList).children().map((_index, element) => {
-                return parseInt($(element).text().match(/\d+/)[0]);
+            const userPontuations = $(pontuationTable).children().map((_index, element) => {
+                return parseInt($(element).text().match(/\d+/));
             }).get();
 
             const maxTime = Math.max(...userPontuations);
-            $(userPontuationList).children().removeClass("recorde").filter((_index, element) => {
+            $(pontuationTable).children().removeClass("recorde").filter((_index, element) => {
                 return $(element).text().includes(maxTime);
             }).addClass("recorde");
 
-            saveStorage();
-            $(counter).text("");
             $(obstacle).css("animation", "none");
+        } else if (!obstacleGenerated && obstacleOffSetLeft <= gameWidth) {
+            generateRandomObstacle();
+            obstacleGenerated = true;
         }
     }, 10);
 };
@@ -374,7 +312,8 @@ const startGame = () => {
     const playerImage = selectedCharacter === "p1" ? char1Image : char2Image;
     $(character).prop("src", playerImage);
 
-    $(gameCounter).text("Tempo: 0");
+    $(gameCounter).empty();
+    $(gameScreen).addClass("running");
 
     $(obstacle).css({ "display": "flex", "left": "" });
     $(character).css({ "display": "flex" });
@@ -383,12 +322,11 @@ const startGame = () => {
     $(gameStartScreen).hide();
 
     if (innerWidth <= 768) {
-        $(mobileJumpArea).show();
+        $(mobileJumpArea).removeClass("hidden");
     }
 
-    hideScreens();
-    generateRandomObstacle();
-    initGameDifficulty();
+    hideAllScreens();
+    startGameModeConfig();
     verifyGame();
 };
 
@@ -409,50 +347,60 @@ const handleButtonClicked = (event, callback) => {
 $(window).on('load', () => {
     hidePreloader();
     updateRecord();
+
     $(obstacle).hide();
-    $(gameAlert).hide();
 
     // Botões de dificuldade
-    $(easyModeBtn).on("click touchstart", event => handleButtonClicked(event, toggleEasyMode));
-    $(mediumModeBtn).on("click touchstart", event => handleButtonClicked(event, toggleMediumMode));
-    $(hardModeBtn).on("click touchstart", event => handleButtonClicked(event, toggleHardMode));
-
-    $(muteSoundButton).on("click touchstart", event => handleButtonClicked(event, toggleMute));
-    $(playPauseSoundButton).on("click touchstart", event => handleButtonClicked(event, togglePlayPause));
-    $(increaseSoundButton).on("click touchstart", event => handleButtonClicked(event, adjustVolume(0.1)));
-    $(decreaseSoundButton).on("click touchstart", event => handleButtonClicked(event, adjustVolume(-0.1)));
+    $(easyModeBtn).on("click touchstart", event => handleButtonClicked(event, chooseEasyGameMode));
+    $(mediumModeBtn).on("click touchstart", event => handleButtonClicked(event, chooseMediumGameMode));
+    $(hardModeBtn).on("click touchstart", event => handleButtonClicked(event, chooseHardGameMode));
 
     // Botões do menu de inicio e game-over
     $(startBtn).on("click touchstart", event => handleButtonClicked(event, startGame));
     $(restartBtn).on("click touchstart", event => handleButtonClicked(event, startGame));
 
-    $(scoreToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleScore));
-    $(cmdToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleCommands));
-    $(musicControlToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleSoundControls));
-    $(configToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleGameConfig));
-    $(backButton).on("click touchstart", event => handleButtonClicked(event, toggleGameConfig));
+    $(scoreToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleScoreScreen));
+
+    $(cmdToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleCommandsScreen));
+    $(configToggleBtn).on("click touchstart", event => handleButtonClicked(event, toggleGameConfigScreen));
+    $(backButton).on("click touchstart", event => handleButtonClicked(event, toggleGameConfigScreen));
 
     $(trashBtn).on("click touchstart", event => handleButtonClicked(event, clearStorage));
 
-    $(resizeBtn).on("click touchstart", event => handleButtonClicked(event, toggleFullScreen));
+    $(resizeBtn).on("click touchstart", event => handleButtonClicked(event, toggleFullscreen));
 
     $(selectCharBtnP1).on("click touchstart", event => handleButtonClicked(event, toggleCharacter("p1")));
     $(selectCharBtnP2).on("click touchstart", event => handleButtonClicked(event, toggleCharacter("p2")));
 
-    $(mobileJumpArea).on("touchstart", () => { if (gameOverScreen.style.display === 'none') jump() });
+    $(mobileJumpArea).on("touchstart", jumpCharacter);
 
     // Eventos de pressionamento de teclas do teclado
-    $(document).keydown(e => {
-        if (e.which === 32 && gameOverScreen.style.display === 'none') jump();
-        if (e.which === 38 && gameOverScreen.style.display === 'none') jump();
+    $(document).keydown(event => {
+        const pressedKey = event.which;
 
-        if (e.which === 32 && gameStartScreen.style.display !== 'none') startGame();
-        if (e.which === 32 && gameOverScreen.style.display === 'flex') startGame();
+        if (pressedKey === 32 || pressedKey === 38) jumpCharacter();
 
-        if (e.which === 84) toggleFullScreen();
+        if (pressedKey === 32 && (gameStartScreen.style.display === 'block' || gameOverScreen.style.display === 'block')) startGame();
 
-        if (e.which === 46) trashBtn.click();
-        if (e.which === 67) cmdToggleBtn.click();
-        if (e.which === 80) scoreToggleBtn.click();
+        if (pressedKey === 84) toggleFullscreen();
+
+        if (pressedKey === 46) clearStorage();
+        if (pressedKey === 67) toggleCommandsScreen();
+        if (pressedKey === 80) toggleScoreScreen();
     });
+
+    $(document).click(event => {
+        const clickedElement = event.target;
+
+        if (cmdToggleBtn.contains(clickedElement) || scoreToggleBtn.contains(clickedElement)) return;
+
+        if (!scorePanel.contains(clickedElement) && $(scorePanel).hasClass('selected-screen')) {
+            $(scorePanel).removeClass('selected-screen');
+        }
+
+        if (!commandsPanel.contains(clickedElement) && $(commandsPanel).hasClass('selected-screen')) {
+            $(commandsPanel).removeClass('selected-screen');
+        }
+    });
+
 });
