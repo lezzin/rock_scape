@@ -57,6 +57,7 @@
     --font-family: "Archivo", sans-serif;
 
     --radius: 5px;
+    --border-width: 2px;
 
     --side-width: 5vw;
     --side-height: 10vh;
@@ -71,11 +72,18 @@
     box-sizing: border-box;
 }
 
+i {
+    font-size: 1.2rem;
+    vertical-align: middle;
+    margin-bottom: 0.09rem;
+}
+
 body {
     font-family: var(--font-family), sans-serif;
     font-weight: 500;
     background: var(--background-primary);
     color: var(--font-color);
+    user-select: none;
 }
 
 button {
@@ -86,6 +94,11 @@ button {
     color: inherit;
     font: inherit;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
     &:hover {
         filter: brightness(80%);
     }
@@ -93,9 +106,13 @@ button {
     &.button-primary,
     &.button-danger,
     &.button-outline-primary {
-        padding: .35rem 1rem;
+        padding: .4rem .8rem;
         border-radius: var(--radius);
-        border: 2px solid;
+        border: var(--border-width) solid;
+
+        &:active {
+            border-style: inset;
+        }
     }
 
     &.button-primary {
@@ -118,11 +135,11 @@ button {
 }
 
 .size-1 {
-    font-size: 2rem;
+    font-size: 1.6rem;
 }
 
 .size-2 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .size-3 {
@@ -155,7 +172,7 @@ button {
             gap: 2rem;
             height: 100%;
             background-color: var(--background-secondary);
-            border-right: 1px solid var(--border-color);
+            border-right: var(--border-width) solid var(--border-color);
             padding: 1rem;
         }
 
@@ -208,7 +225,7 @@ button {
 
                     td {
                         padding: .5rem;
-                        border: 1px solid var(--border-color);
+                        border: var(--border-width) solid var(--border-color);
                         font-variant-numeric: tabular-nums;
 
                         code {
@@ -231,7 +248,6 @@ button {
     .display {
         display: grid;
         place-items: center;
-        user-select: none;
 
         .game-board {
             position: relative;
@@ -240,7 +256,7 @@ button {
             max-width: 854px;
             aspect-ratio: 16/9;
             border-radius: calc(var(--radius) * 2);
-            border: 5px solid var(--border-color);
+            border: calc(var(--border-width) * 2) solid var(--border-color);
             box-shadow: 0 0 5rem var(--background-tertiary);
 
             .background {
@@ -254,12 +270,13 @@ button {
                 text-align: center;
                 inset: 0;
                 z-index: var(--game-index);
+                padding: 4rem;
 
                 &.start-game-screen {
-                    padding-top: 5rem;
                     display: block;
                     background: url('../img/mainBackground.png') no-repeat;
                     background-size: cover;
+                    padding-bottom: 0rem;
 
                     img {
                         margin-top: auto;
@@ -279,11 +296,14 @@ button {
                         position: absolute;
                         left: 50%;
                         top: 0;
+                        width: 90%;
+                        max-width: 600px;
                         padding: .5rem 1rem;
                         display: flex;
                         align-items: center;
+                        justify-content: center;
                         gap: 0.6rem;
-                        border: 2px solid var(--border-color);
+                        border: var(--border-width) solid var(--border-color);
                         border-top: unset;
                         background-color: var(--primary-color);
                         border-radius: 0 0 var(--radius) var(--radius);
@@ -293,17 +313,22 @@ button {
                         &.active {
                             transform: translateX(-50%) translateY(0%);
                         }
+
+                        i {
+                            font-size: 1rem;
+                        }
                     }
 
                     .screen-content {
                         justify-content: space-evenly;
+                        align-items: flex-start;
 
                         .options-container {
                             display: flex;
                             align-items: flex-start;
                             justify-content: space-evenly;
                             width: 100%;
-                            gap: 2rem;
+                            gap: 4rem;
 
                             h3 {
                                 margin-bottom: 1rem;
@@ -313,20 +338,17 @@ button {
                                 flex: 1;
                                 display: flex;
                                 justify-content: center;
-                                align-items: center;
                                 flex-direction: column;
+                                align-items: center;
                                 gap: .6rem;
 
                                 .screen-buttons {
                                     width: 100%;
 
-                                    &.images button {
-                                        display: flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                        width: 100%;
-                                        gap: 0.3rem;
+                                    button {
+                                        width: inherit;
                                     }
+
                                 }
                             }
                         }
@@ -339,12 +361,12 @@ button {
                     justify-content: space-evenly;
                     align-items: center;
                     height: 100%;
-                    padding: 2rem;
                     gap: 2rem;
 
                     .screen-texts,
                     .screen-buttons {
                         display: flex;
+                        align-items: center;
                         flex-direction: column;
                     }
 
@@ -390,7 +412,7 @@ button {
                     justify-content: center;
                     align-items: center;
                     background-color: var(--primary-color);
-                    border: 2px solid var(--primary-color-dark);
+                    border: var(--border-width) solid var(--primary-color-dark);
                     border-radius: var(--radius);
                     width: 5rem;
                     aspect-ratio: 1;
@@ -411,8 +433,8 @@ button {
                     z-index: var(--game-index);
 
                     padding: .5rem 1rem;
-                    border-right: 2px solid var(--border-color);
-                    border-bottom: 2px solid var(--border-color);
+                    border-right: var(--border-width) solid var(--border-color);
+                    border-bottom: var(--border-width) solid var(--border-color);
                     background-color: var(--primary-color);
                     border-radius: 0 0 var(--radius) 0;
                 }
@@ -453,7 +475,7 @@ button {
             .score-wrapper {
                 height: 10vh;
                 border-right: unset;
-                border-bottom: 1px solid var(--border-color);
+                border-bottom: var(--border-width) solid var(--border-color);
             }
 
             .sidemenu-wrapper .container {

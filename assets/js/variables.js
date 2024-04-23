@@ -27,14 +27,14 @@ const GAME_PLAYERS = {
 }
 
 const GAME_MESSAGES = {
-    emptyScore: "<tr><td>Nenhuma pontuação cadastrada</td></tr>",
+    emptyScore: "<tr><td>Nenhuma pontuação existente</td></tr>",
     scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time} segundo(s)`,
     scoreTable: (index, html) => `<tr><td>${index}) <span>${html}</span></td></tr>`,
     selectedCharacter: (character) => `<p>Personagem ${character} selecionado!</p>`,
     config: (message) => `<p><i class="fa-solid fa-exclamation-circle"></i> ${message}</p>`,
-    timeCounterInitial: "Tempo: 0",
-    timeCounter: (time) => `Tempo: ${time}`,
-    newRecord: (record) => `Uau! ${record} segundo(s) é seu novo recorde de corrida!`,
+    timeCounterInitial: "Tempo: 0s",
+    timeCounter: (time) => `Tempo: ${time}s`,
+    newRecord: (record) => `Uau! Você desbloqueou um novo recorde: ${record} segundos!`,
     runFeedback: (seconds) => `Você correu por ${seconds} segundo(s)`,
 };
 
