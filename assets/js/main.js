@@ -146,8 +146,8 @@ const hideAllScreens = () => {
 };
 
 const toggleCharacter = (character) => {
-    selectedPlayer = character;
     const characterText = character === "p1" ? "masculino" : "feminino";
+    selectedPlayer = character;
     showConfigMessage(`<p>Personagem ${characterText} selecionado!</p>`);
 }
 
