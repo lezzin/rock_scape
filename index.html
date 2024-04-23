@@ -24,172 +24,178 @@
     </div>
     <!-- /preloader -->
 
-    <!-- Menu lateral -->
-    <aside class="sidemenu-wrapper">
-        <div class="togglers">
-            <button id="score-toggler-btn" class="button-primary">
-                <i class="fa-solid fa-trophy" title="Abrir histórico"></i>
-            </button>
-            <button id="command-toggler-btn" class="button-primary">
-                <i class="fa-solid fa-gamepad" title="Abrir a lista de comandos"></i>
-            </button>
-        </div>
-    </aside>
-    <!-- Fim do menu lateral -->
-
-    <!-- Lista do histórico de tempos -->
-    <aside class="score-wrapper">
-        <header>
-            <h2>Histórico de tempos</h2>
-            <button id="list-trash-btn" class="button-danger" title="Apagar histórico"><i class="fa-solid fa-trash"></i></button>
-        </header>
-
-        <div class="container">
-            <table id="score-table"><tbody></tbody></table>
-        </div>
-    </aside>
-    <!-- Fim da lista do histórico de tempos -->
-
-    <!-- Lista de comandos do jogo -->
-    <aside class="commands-wrapper">
-        <header>
-            <h2>Comandos do jogo</h2>
-        </header>
-
-        <table>
-            <tbody>
-                <tr>
-                    <td><code>Espaço</code></td>
-                    <td>Inicia/reinicia o jogo</td>
-                    <td>Pula</td>
-                </tr>
-                <tr>
-                    <td><code><i class="fa-solid fa-arrow-up"></i></code></td>
-                    <td colspan="2">Pula</td>
-                </tr>
-                <tr>
-                <tr>
-                    <td><code>Tab</code></td>
-                    <td colspan="2">Navega pelos botões da página</td>
-                </tr>
-                <tr>
-                    <td><code>Enter</code></td>
-                    <td colspan="2">Ativa os eventos dos botões</td>
-                </tr>
-                <tr>
-                    <td><code>C</code></td>
-                    <td colspan="2">Abre a lista de comandos</td>
-                </tr>
-                <tr>
-                    <td><code>P</code></td>
-                    <td colspan="2">Abre o histórico de pontuação</td>
-                </tr>
-                <tr>
-                    <td><code>Delete</code></td>
-                    <td colspan="2">Limpa o histórico de tempos</td>
-                </tr>
-            </tbody>
-        </table>
-    </aside>
-    <!-- Fim da lista de comandos do jogo -->
-
-    <!-- Inicio do display do jogo - onde ele vai aparecer -->
-    <main class="display">
-        <div class="game-board">
-            <section class="game">
-                <div id="jump-area-mobile">P</div>
-
-                <span id="time-counter"></span>
-
-                <img src="./assets/img/boy.gif" id="character" alt="Imagem do jogador">
-                <img src="./assets/img/obstacle1.png" id="obstacle" alt="Imagem do obstáculo">
-
-                <div class="background"></div>
-            </section>
-
-            <!-- Inicio do menu de inicio do jogo -->
-            <section class="game-screen start-game-screen">
-                <div class="background animate-float"></div>
-
-                <div class="screen-content">
-                    <div class="screen-buttons">
-                        <button type="button" class="size-2 button-primary" id="start-game-btn" title="Iniciar jogo">
-                            Iniciar (ou espaço)
-                        </button>
-                        <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
-                            Configurações
-                        </button>
-                    </div>
-                    <img class="animate-float" src="./assets/img/logo.png" alt="Logo do jogo" height="244">
+    <div class="grid-container">
+        <aside class="aside">
+            <!-- Menu lateral -->
+            <section class="sidemenu-wrapper">
+                <div class="container">
+                    <button id="score-toggler-btn" class="button-primary">
+                        <i class="fa-solid fa-trophy" title="Abrir histórico"></i>
+                    </button>
+                    <button id="command-toggler-btn" class="button-primary">
+                        <i class="fa-solid fa-gamepad" title="Abrir a lista de comandos"></i>
+                    </button>
                 </div>
             </section>
-            <!-- Fim do menu de inicio do jogo -->
+            <!-- Fim do menu lateral -->
 
-            <!-- Inicio do menu de game-over -->
-            <section class="game-screen game-over-screen">
-                <div class="screen-content">
-                    <div class="screen-texts">
-                        <h2>Oops! Parece que você caiu...</h2>
-                        <span id="game-over-time-display"></span>
-                    </div>
+            <!-- Lista do histórico de tempos -->
+            <section class="score-wrapper">
+                <header>
+                    <h2>Histórico de tempos</h2>
+                    <button id="list-trash-btn" class="button-danger" title="Apagar histórico"><i class="fa-solid fa-trash"></i></button>
+                </header>
 
-                    <div class="screen-buttons">
-                        <button type="button" class="size-2 button-primary" id="restart-game-btn" title="Jogar novamente">
-                            Reiniciar (ou espaço)
-                        </button>
-                        <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
-                            Configurações
-                        </button>
-                    </div>
+                <div class="table-responsive">
+                    <table id="score-table"><tbody></tbody></table>
                 </div>
             </section>
-            <!-- Fim do menu de game-over -->
+            <!-- Fim da lista do histórico de tempos -->
 
-            <!-- Configurações -->
-            <section class="game-screen game-config-screen">
-                <div class="background animate-float"></div>
+            <!-- Lista de comandos do jogo -->
+            <section class="commands-wrapper">
+                <header>
+                    <h2>Comandos do jogo</h2>
+                </header>
 
-                <div id="game-config-message"></div>
+                <div class="table-responsive">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><code>Espaço</code></td>
+                                <td>Inicia/reinicia o jogo</td>
+                                <td>Pula</td>
+                            </tr>
+                            <tr>
+                                <td><code><i class="fa-solid fa-arrow-up"></i></code></td>
+                                <td colspan="2">Pula</td>
+                            </tr>
+                            <tr>
+                            <tr>
+                                <td><code>Tab</code></td>
+                                <td colspan="2">Navega pelos botões da página</td>
+                            </tr>
+                            <tr>
+                                <td><code>Enter</code></td>
+                                <td colspan="2">Ativa os eventos dos botões</td>
+                            </tr>
+                            <tr>
+                                <td><code>C</code></td>
+                                <td colspan="2">Abre a lista de comandos</td>
+                            </tr>
+                            <tr>
+                                <td><code>P</code></td>
+                                <td colspan="2">Abre o histórico de pontuação</td>
+                            </tr>
+                            <tr>
+                                <td><code>Delete</code></td>
+                                <td colspan="2">Limpa o histórico de tempos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Fim da lista de comandos do jogo -->
+        </aside>
 
-                <div class="screen-content">
-                    <div class="options-container">
-                        <div class="options">
-                            <h3 class="size-1">Dificuldade</h3>
+        <!-- Inicio do display do jogo - onde ele vai aparecer -->
+        <main class="display">
+            <div class="game-board">
+                <section class="game">
+                    <div id="jump-area-mobile">P</div>
 
-                            <div class="screen-buttons">
-                                <button type="button" class="size-3 button-primary easy-mode-btn" title="Selecionar dificuldade fácil">
-                                    Fácil
-                                </button>
-                                <button type="button" class="size-3 button-primary medium-mode-btn"
-                                    title="Selecionar dificuldade média"> Médio
-                                </button>
-                                <button type="button" class="size-3 button-primary hard-mode-btn"
-                                    title="Selecionar dificuldade difícil"> Difícil
-                                </button>
+                    <span id="time-counter"></span>
+
+                    <img src="./assets/img/boy.gif" id="character" alt="Imagem do jogador">
+                    <img src="./assets/img/obstacle1.png" id="obstacle" alt="Imagem do obstáculo">
+
+                    <div class="background"></div>
+                </section>
+
+                <!-- Inicio do menu de inicio do jogo -->
+                <section class="game-screen start-game-screen">
+                    <div class="background animate-float"></div>
+
+                    <div class="screen-content">
+                        <div class="screen-buttons">
+                            <button type="button" class="size-2 button-primary" id="start-game-btn" title="Iniciar jogo">
+                                Iniciar (ou espaço)
+                            </button>
+                            <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
+                                Configurações
+                            </button>
+                        </div>
+                        <img class="animate-float" src="./assets/img/logo.png" alt="Logo do jogo" height="244">
+                    </div>
+                </section>
+                <!-- Fim do menu de inicio do jogo -->
+
+                <!-- Inicio do menu de game-over -->
+                <section class="game-screen game-over-screen">
+                    <div class="screen-content">
+                        <div class="screen-texts">
+                            <h2>Oops! Parece que você caiu...</h2>
+                            <span id="game-over-time-display"></span>
+                        </div>
+
+                        <div class="screen-buttons">
+                            <button type="button" class="size-2 button-primary" id="restart-game-btn" title="Jogar novamente">
+                                Reiniciar (ou espaço)
+                            </button>
+                            <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
+                                Configurações
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <!-- Fim do menu de game-over -->
+
+                <!-- Configurações -->
+                <section class="game-screen game-config-screen">
+                    <div class="background animate-float"></div>
+
+                    <div id="game-config-message"></div>
+
+                    <div class="screen-content">
+                        <div class="options-container">
+                            <div class="options">
+                                <h3 class="size-1">Dificuldade</h3>
+
+                                <div class="screen-buttons">
+                                    <button type="button" class="size-3 button-primary easy-mode-btn" title="Selecionar dificuldade fácil">
+                                        Fácil
+                                    </button>
+                                    <button type="button" class="size-3 button-primary medium-mode-btn"
+                                        title="Selecionar dificuldade média"> Médio
+                                    </button>
+                                    <button type="button" class="size-3 button-primary hard-mode-btn"
+                                        title="Selecionar dificuldade difícil"> Difícil
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="options">
+                                <h3 class="size-1">Personagem</h3>
+
+                                <div class="screen-buttons images">
+                                    <button type="button" class="size-3 character-1-btn button-primary" title="Selecionar personagem 1">
+                                        <img src="./assets/img/boy.gif" alt="Personagem 1 - garoto" width="18" height="18"> Masculino
+                                    </button>
+                                    <button type="button" class="size-3 character-2-btn button-primary" title="Selecionar personagem 2">
+                                        <img src="./assets/img/girl.gif" alt="Personagem 2 - garota" width="18" height="18"> Feminino
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="options">
-                            <h3 class="size-1">Personagem</h3>
-
-                            <div class="screen-buttons images">
-                                <button type="button" class="size-3 character-1-btn button-primary" title="Selecionar personagem 1">
-                                    <img src="./assets/img/boy.gif" alt="Personagem 1 - garoto" width="18" height="18"> Masculino
-                                </button>
-                                <button type="button" class="size-3 character-2-btn button-primary" title="Selecionar personagem 2">
-                                    <img src="./assets/img/girl.gif" alt="Personagem 2 - garota" width="18" height="18"> Feminino
-                                </button>
-                            </div>
-                        </div>
+                        <button type="button" class="btn-back-screen button-danger" title="Voltar para a página inicial">Voltar</button>
                     </div>
-
-                    <button type="button" class="btn-back-screen button-danger" title="Voltar para a página inicial">Voltar</button>
-                </div>
-            </section>
-            <!-- Fim das configurações -->
-        </div>
-    </main>
-    <!-- Fim do display do jogo -->
+                </section>
+                <!-- Fim das configurações -->
+            </div>
+        </main>
+        <!-- Fim do display do jogo -->
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/js/main.js" type="module"></script>
