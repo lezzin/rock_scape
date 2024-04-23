@@ -10,7 +10,7 @@
     40%,
     50%,
     60% {
-        bottom: 120px;
+        bottom: 150px;
     }
 }
 
@@ -44,6 +44,18 @@
     }
 }
 
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(3px);
+    }
+}
+
 :root {
     --primary-color: #324D69;
     --danger-color: hsl(0, 80%, 60%);
@@ -57,6 +69,9 @@
     --font-family: "Archivo", sans-serif;
 
     --radius: 5px;
+
+    --game-index: 3;
+    --side-index: 4;
 }
 
 * {
@@ -66,7 +81,6 @@
 }
 
 body {
-    overflow-x: hidden;
     font-family: var(--font-family), sans-serif;
     background: var(--background-primary);
     color: var(--font-color);
@@ -85,18 +99,26 @@ button {
     }
 
     &.button-primary,
-    &.button-danger {
+    &.button-danger,
+    &.button-outline-primary {
         padding: .35rem 1rem;
         border-radius: var(--radius);
-        color: var(--font-color);
     }
 
     &.button-primary {
         background-color: var(--primary-color);
+        color: var(--font-color);
+    }
+
+    &.button-outline-primary {
+        background-color: var(--font-color);
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
     }
 
     &.button-danger {
         background-color: var(--danger-color);
+        color: var(--font-color);
     }
 }
 
@@ -106,9 +128,13 @@ table {
     text-align: left;
     width: 100%;
 
+    tr.recorde {
+        background-color: var(--primary-color);
+    }
+
     td {
         font-weight: 500;
-        padding: .3rem .5rem;
+        padding: .5rem;
         border: 1px solid var(--border-color);
         font-variant-numeric: tabular-nums;
 
@@ -118,6 +144,10 @@ table {
             border-radius: var(--radius);
         }
     }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
 }
 
 .size-1 {
@@ -132,20 +162,27 @@ table {
     font-size: 1.2rem;
 }
 
-.pontuation-wrapper,
+.score-wrapper,
 .commands-wrapper {
     position: absolute;
     left: -100%;
-    transition: all .3s ease;
-    z-index: 7;
+    width: 40vw;
+    height: 100vh;
+
     display: flex;
     align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+
     border-radius: var(--radius);
     background: var(--background-secondary);
     pointer-events: none;
+    z-index: var(--side-index);
+    transition: all .3s ease;
 }
 
-.pontuation-wrapper.selected-screen,
+.score-wrapper.selected-screen,
 .commands-wrapper.selected-screen {
     pointer-events: all;
     opacity: 1;
@@ -157,7 +194,7 @@ table {
     top: 0;
     left: 0;
     background: var(--background-secondary);
-    z-index: 8;
+    z-index: calc(var(--side-index) + 1);
 
     display: flex;
     align-items: start;
@@ -181,17 +218,7 @@ table {
     }
 }
 
-.pontuation-wrapper,
-.commands-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    height: 100vh;
-    width: 40vw;
-    padding: 2rem;
-}
-
-.pontuation-wrapper {
+.score-wrapper {
     header {
         display: flex;
         justify-content: space-between;
@@ -204,41 +231,35 @@ table {
         overflow-y: auto;
         height: 90%;
         width: 100%;
-
-        #pontuations-list {
-            list-style-type: initial;
-
-            li {
-                &.recorde {
-                    color: var(--primary-color);
-                    font-weight: 600;
-                }
-            }
-        }
     }
 }
 
 .display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
+    display: grid;
+    place-items: center;
+    width: 100%;
     height: 100vh;
     user-select: none;
 
     .game-board {
-        border-radius: calc(var(--radius) * 2);
+        position: relative;
         width: 854px;
         height: 480px;
-        position: relative;
+        border-radius: calc(var(--radius) * 2);
         border: 5px solid var(--border-color);
         overflow: hidden;
+
+        .background {
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+        }
 
         .game-screen {
             position: absolute;
             text-align: center;
             inset: 0;
-            z-index: 3;
+            z-index: var(--game-index);
 
             &::after {
                 content: "";
@@ -250,9 +271,13 @@ table {
 
             &.start-game-screen {
                 padding-top: 5rem;
-                background: url('../img/mainBackground.png') no-repeat;
-                background-size: cover;
                 display: block;
+
+                .background {
+                    background: url('../img/mainBackground.png') no-repeat;
+                    background-size: cover;
+                    scale: 1.05;
+                }
 
                 img {
                     margin-top: auto;
@@ -265,11 +290,11 @@ table {
 
             &.game-config-screen {
                 display: none;
-                background: url('../img/mainBackground.png') no-repeat;
-                background-size: cover;
 
-                &.selected-screen {
-                    display: block;
+                .background {
+                    background: url('../img/mainBackground.png') no-repeat;
+                    background-size: cover;
+                    scale: 1.05;
                 }
 
                 #game-config-message {
@@ -300,6 +325,7 @@ table {
                         align-items: flex-start;
                         justify-content: space-evenly;
                         width: 100%;
+                        gap: 2rem;
 
                         h3 {
                             font-weight: 100;
@@ -307,6 +333,7 @@ table {
                         }
 
                         .options {
+                            flex: 1;
                             display: flex;
                             justify-content: center;
                             align-items: center;
@@ -335,6 +362,7 @@ table {
                 justify-content: space-evenly;
                 align-items: center;
                 height: 100%;
+                padding: 2rem;
                 gap: 2rem;
 
                 .screen-texts,
@@ -354,23 +382,23 @@ table {
         }
 
         .game {
-            &.running .background {
-                animation: movement 1s ease infinite;
-            }
+            position: absolute;
+            inset: 0;
 
             .background {
-                position: absolute;
-                width: 100%;
-                height: 100%;
                 background: url("../img/gameBackground.jpg") no-repeat bottom;
                 background-size: cover;
+            }
+
+            &.running .background {
+                animation: movement 1s ease infinite;
             }
 
             #jump-area-mobile {
                 position: absolute;
                 right: 2rem;
                 bottom: 2rem;
-                z-index: 3;
+                z-index: var(--game-index);
 
                 display: none;
                 justify-content: center;
@@ -391,48 +419,37 @@ table {
 
             #time-counter {
                 position: absolute;
-                top: .8rem;
-                left: .8rem;
-                z-index: 3;
+                top: 0;
+                left: 0;
+                z-index: var(--game-index);
+
+                padding: .5rem 1rem;
+                border-right: 2px solid var(--border-color);
+                border-bottom: 2px solid var(--border-color);
+                background-color: var(--primary-color);
+                border-radius: 0 0 var(--radius) 0;
             }
 
             #character {
                 position: absolute;
                 display: none;
-                width: 10em;
-                z-index: 3;
+                width: 7rem;
+                z-index: var(--game-index);
                 left: 20px;
                 bottom: 10px;
 
-                &.resized {
-                    bottom: 12px;
-                    width: 12em;
-                    left: 30px;
-                }
-
                 &.jump {
-                    animation: jump .5s ease-out;
+                    animation: jump .6s linear;
                 }
             }
 
             #obstacle {
+                display: none;
                 position: absolute;
                 bottom: 15px;
                 right: -120px;
-                z-index: 2;
-
-                &.resized {
-                    bottom: 18px;
-                }
+                z-index: calc(var(--game-index) - 1);
             }
         }
-    }
-
-    #resize-screen-btn {
-        position: absolute;
-        right: .8rem;
-        top: .8rem;
-        z-index: 5;
-        padding: .6rem;
     }
 }

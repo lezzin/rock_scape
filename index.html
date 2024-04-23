@@ -25,7 +25,7 @@
     <!-- /preloader -->
 
     <!-- Menu lateral -->
-    <div class="sidemenu-wrapper">
+    <aside class="sidemenu-wrapper">
         <div class="togglers">
             <button id="score-toggler-btn" class="button-primary">
                 <i class="fa-solid fa-trophy" title="Abrir histórico"></i>
@@ -34,24 +34,24 @@
                 <i class="fa-solid fa-gamepad" title="Abrir a lista de comandos"></i>
             </button>
         </div>
-    </div>
+    </aside>
     <!-- Fim do menu lateral -->
 
     <!-- Lista do histórico de tempos -->
-    <section class="pontuation-wrapper">
+    <aside class="score-wrapper">
         <header>
             <h2>Histórico de tempos</h2>
-            <button id="list-trash-btn" title="Apagar histórico"><i class="fa-solid fa-trash"></i></button>
+            <button id="list-trash-btn" class="button-danger" title="Apagar histórico"><i class="fa-solid fa-trash"></i></button>
         </header>
 
         <div class="container">
-            <table id="pontuations-table"><tbody></tbody></table>
+            <table id="score-table"><tbody></tbody></table>
         </div>
-    </section>
+    </aside>
     <!-- Fim da lista do histórico de tempos -->
 
     <!-- Lista de comandos do jogo -->
-    <section class="commands-wrapper">
+    <aside class="commands-wrapper">
         <header>
             <h2>Comandos do jogo</h2>
         </header>
@@ -85,26 +85,18 @@
                     <td colspan="2">Abre o histórico de pontuação</td>
                 </tr>
                 <tr>
-                    <td><code>T</code></td>
-                    <td colspan="2">Tela cheia</td>
-                </tr>
-                <tr>
                     <td><code>Delete</code></td>
                     <td colspan="2">Limpa o histórico de tempos</td>
                 </tr>
             </tbody>
         </table>
-    </section>
+    </aside>
     <!-- Fim da lista de comandos do jogo -->
 
     <!-- Inicio do display do jogo - onde ele vai aparecer -->
     <main class="display">
         <div class="game-board">
-            <button type="button" id="resize-screen-btn" title="Redimensionar tela do jogo">
-                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-            </button>
-
-            <div class="game">
+            <section class="game">
                 <div id="jump-area-mobile">P</div>
 
                 <span id="time-counter"></span>
@@ -113,20 +105,22 @@
                 <img src="./assets/img/obstacle1.png" id="obstacle" alt="Imagem do obstáculo">
 
                 <div class="background"></div>
-            </div>
+            </section>
 
             <!-- Inicio do menu de inicio do jogo -->
             <section class="game-screen start-game-screen">
+                <div class="background animate-float"></div>
+
                 <div class="screen-content">
                     <div class="screen-buttons">
                         <button type="button" class="size-2 button-primary" id="start-game-btn" title="Iniciar jogo">
                             Iniciar (ou espaço)
                         </button>
-                        <button type="button" class="size-3 config-toggler-btn" title="Acessar configurações">
+                        <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
                             Configurações
                         </button>
                     </div>
-                    <img src="./assets/img/logo.png" alt="Logo do jogo" height="244">
+                    <img class="animate-float" src="./assets/img/logo.png" alt="Logo do jogo" height="244">
                 </div>
             </section>
             <!-- Fim do menu de inicio do jogo -->
@@ -135,15 +129,15 @@
             <section class="game-screen game-over-screen">
                 <div class="screen-content">
                     <div class="screen-texts">
-                        <h2>Você perdeu!</h2>
+                        <h2>Oops! Parece que você caiu...</h2>
                         <span id="game-over-time-display"></span>
                     </div>
 
                     <div class="screen-buttons">
-                        <button type="button" class="size-2 button-primary" id="restart-game-btn" title="Jogar novamente" +>
+                        <button type="button" class="size-2 button-primary" id="restart-game-btn" title="Jogar novamente">
                             Reiniciar (ou espaço)
                         </button>
-                        <button type="button" class="size-3 config-toggler-btn" title="Acessar configurações" +>
+                        <button type="button" class="size-3 button-outline-primary config-toggler-btn" title="Acessar configurações">
                             Configurações
                         </button>
                     </div>
@@ -151,8 +145,10 @@
             </section>
             <!-- Fim do menu de game-over -->
 
-            <!-- Dificuldade -->
+            <!-- Configurações -->
             <section class="game-screen game-config-screen">
+                <div class="background animate-float"></div>
+
                 <div id="game-config-message"></div>
 
                 <div class="screen-content">
@@ -190,7 +186,7 @@
                     <button type="button" class="btn-back-screen button-danger" title="Voltar para a página inicial">Voltar</button>
                 </div>
             </section>
-            <!-- Fim da dificuldade -->
+            <!-- Fim das configurações -->
         </div>
     </main>
     <!-- Fim do display do jogo -->
