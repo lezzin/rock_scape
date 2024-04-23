@@ -1,24 +1,26 @@
-const EASY_SPEED = '1.4';
-const MEDIUM_SPEED = '1.2';
-const HARD_SPEED = '0.8';
-const OBSTACLE_IMAGES = ['./assets/img/obstacle1.png', './assets/img/obstacle2.png', './assets/img/obstacle3.png'];
-const OBSTACLE_WIDTHS = ['3rem', '3.5rem', '4rem', '4.5rem'];
-const STORAGE_PONTUATION_KEY = "pontuacao";
-const STORAGE_RECORD_KEY = "recordTime";
-
-const GAME_OVER_IMAGE_P1 = "./assets/img/falledBoy.png";
-const GAME_OVER_IMAGE_P2 = "./assets/img/falledGirl.png";
-const IMAGE_P1 = "./assets/img/boy.gif";
-const IMAGE_P2 = "./assets/img/girl.gif";
-
-const JUMP_SOUND = new Audio('./assets/audio/jump.wav');
-const DAMAGE_SOUND_P1 = new Audio('./assets/audio/boyShout.wav');
-const DAMAGE_SOUND_P2 = new Audio('./assets/audio/girlShout.wav');
+import {
+    EASY_SPEED,
+    MEDIUM_SPEED,
+    HARD_SPEED,
+    OBSTACLE_IMAGES,
+    OBSTACLE_WIDTHS,
+    STORAGE_PONTUATION_KEY,
+    STORAGE_RECORD_KEY,
+    GAME_OVER_IMAGE_P1,
+    GAME_OVER_IMAGE_P2,
+    IMAGE_P1,
+    IMAGE_P2,
+    JUMP_SOUND,
+    DAMAGE_SOUND_P1,
+    DAMAGE_SOUND_P2,
+    GAME_DIFICULTIES,
+    GAME_PLAYERS,
+    GAME_MESSAGES
+} from "./variables.js";
 
 const character = $("#character");
 const obstacle = $("#obstacle");
 
-const gameBoard = $(".game-board");
 const gameScreen = $(".game");
 const gameCounter = $("#time-counter");
 const mobileJumpArea = $("#jump-area-mobile");
@@ -28,7 +30,6 @@ const gameOverTimeDisplay = $("#game-over-time-display");
 const gameConfigScreen = $(".game-config-screen");
 const gameConfigAlert = $("#game-config-message");
 
-const sideMenuPanel = $(".sidemenu-wrapper");
 const scorePanel = $(".score-wrapper");
 const scoreTable = $("#score-table tbody");
 const commandsPanel = $(".commands-wrapper");
@@ -49,38 +50,33 @@ const backButton = $(".btn-back-screen");
 
 const scoreToggleBtn = $("#score-toggler-btn");
 const cmdToggleBtn = $("#command-toggler-btn");
-const muteToggleBtn = $("#music-controls-toggler-btn");
 const configToggleBtn = $(".config-toggler-btn");
 
 const trashBtn = $("#list-trash-btn");
 
-const musicVolumeDisplay = $("#volume-display");
+let userScores = JSON.parse(localStorage.getItem(STORAGE_PONTUATION_KEY)) || [];
 
-const enlargeIcon = "fa-up-right-and-down-left-from-center";
-const shrinkIcon = "fa-down-left-and-up-right-to-center";
-
-
-let userScore = JSON.parse(localStorage.getItem(STORAGE_PONTUATION_KEY)) || [];
-let selectedPlayer = "p1";
-let selectedDifficulty = "easy";
 let configMessageTimeout;
 let jumpTimeout;
+
+let selectedPlayer = GAME_PLAYERS.boy;
+let selectedDifficulty = GAME_DIFICULTIES.easy;
 
 DAMAGE_SOUND_P1.volume = 0.5;
 DAMAGE_SOUND_P2.volume = 0.5;
 JUMP_SOUND.volume = 0.8;
 
 const saveScoreStorage = (time, difficulty) => {
-    const pontuationEntry = `Tempo correndo na dificuldade ${difficulty}: ${time} segundo(s)`;
-    userScore.push(pontuationEntry);
-    localStorage.setItem(STORAGE_PONTUATION_KEY, JSON.stringify(userScore));
+    const pontuationEntry = GAME_MESSAGES.scoreLocalStorage(time, difficulty);
+    userScores.push(pontuationEntry);
+    localStorage.setItem(STORAGE_PONTUATION_KEY, JSON.stringify(userScores));
 };
 
 const clearStorage = () => {
     if (confirm('Confirmar a remoção de todos os dados do histórico?')) {
         localStorage.removeItem(STORAGE_PONTUATION_KEY);
         localStorage.removeItem(STORAGE_RECORD_KEY);
-        userScore = [];
+        userScores = [];
         updateRecord();
     }
 };
@@ -88,14 +84,14 @@ const clearStorage = () => {
 const populatePontuationTable = () => {
     scoreTable.empty();
 
-    if (userScore.length === 0) {
-        scoreTable.append(`<tr><td>Nenhuma pontuação cadastrada</td></tr>`);
+    if (userScores.length === 0) {
+        scoreTable.append(GAME_MESSAGES.emptyScore);
         return;
     }
 
-    userScore.forEach((scoreHTML, index) => {
+    userScores.forEach((scoreHTML, index) => {
         const pontuationIndex = index + 1;
-        scoreTable.append(`<tr><td>${pontuationIndex}) <span>${scoreHTML}</span></td></tr>`);
+        scoreTable.append(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
     });
 };
 
@@ -105,7 +101,7 @@ const updateRecord = () => {
     let maxTime = 0;
     let indexOfMaxTime = -1;
 
-    userScore.forEach((item, index) => {
+    userScores.forEach((item, index) => {
         const timeSeconds = parseInt(item.match(/\d+/)[0]);
         if (timeSeconds > maxTime) {
             maxTime = timeSeconds;
@@ -146,15 +142,15 @@ const hideAllScreens = () => {
 };
 
 const toggleCharacter = (character) => {
-    const characterText = character === "p1" ? "masculino" : "feminino";
     selectedPlayer = character;
-    showConfigMessage(`<p>Personagem ${characterText} selecionado!</p>`);
+    const characterText = character === GAME_PLAYERS.boy ? "masculino" : "feminino";
+    showConfigMessage(GAME_MESSAGES.selectedCharacter(characterText));
 }
 
 const showConfigMessage = (message) => {
     clearTimeout(configMessageTimeout);
 
-    gameConfigAlert.html(`<p><i class="fa-solid fa-exclamation-circle"></i> ${message}</p>`).addClass("active");
+    gameConfigAlert.html(GAME_MESSAGES.config(message)).addClass("active");
     configMessageTimeout = setTimeout(() => gameConfigAlert.removeClass("active"), 1000);
 };
 
@@ -185,7 +181,7 @@ const startGameModeConfig = () => {
     obstacle.css("animation", animations[selectedDifficulty]);
 };
 
-const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)]; 
+const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
 
 const generateRandomObstacle = () => {
     const randomImage = getRandomElement(OBSTACLE_IMAGES);
@@ -196,7 +192,7 @@ const generateRandomObstacle = () => {
 };
 
 const jumpCharacter = () => {
-    const isGameScreenVisible = gameScreen.css("display") !== 'none';
+    const isGameScreenVisible = gameScreen.css("display") === 'block';
 
     if (!isGameScreenVisible) return;
 
@@ -212,7 +208,7 @@ const jumpCharacter = () => {
 const verifyGame = () => {
     let counter = 1;
 
-    const counterLoop = setInterval(() => gameCounter.text(`Tempo: ${counter++}`), 1000);
+    const counterLoop = setInterval(() => gameCounter.text(GAME_MESSAGES.timeCounter(counter++)), 1000);
 
     const checkCollisionAndGenerateObstacle = () => {
         const characterBox = {
@@ -248,7 +244,7 @@ const verifyGame = () => {
     const verifierLoop = setInterval(checkCollisionAndGenerateObstacle, 10);
 
     const handleGameOver = () => {
-        const selectedCharacterIsP1 = selectedPlayer === "p1";
+        const selectedCharacterIsP1 = selectedPlayer === GAME_PLAYERS.boy;
         const gameOverSound = selectedCharacterIsP1 ? DAMAGE_SOUND_P1 : DAMAGE_SOUND_P2;
         character.prop("src", selectedCharacterIsP1 ? GAME_OVER_IMAGE_P1 : GAME_OVER_IMAGE_P2);
         obstacle.css("animation", "none");
@@ -258,6 +254,8 @@ const verifyGame = () => {
 
         gameScreen.removeClass("running");
         gameOverScreen.fadeIn();
+        gameCounter.hide();
+
         if (innerWidth <= 768) {
             mobileJumpArea.addClass("hidden");
         }
@@ -271,33 +269,24 @@ const verifyGame = () => {
         const timeSeconds = counter - 1;
         const difficulty = translatedDifficulties[selectedDifficulty];
         const recordTime = localStorage.getItem(STORAGE_RECORD_KEY) || 0;
-        
-        saveScoreStorage(timeSeconds, difficulty);
 
         if (timeSeconds > recordTime) {
-            gameOverTimeDisplay.text(`Uau! ${timeSeconds} segundo(s) é seu novo recorde de corrida!`);
+            gameOverTimeDisplay.text(GAME_MESSAGES.newRecord(timeSeconds));
             localStorage.setItem(STORAGE_RECORD_KEY, timeSeconds);
-            populatePontuationTable();
         } else {
-            gameOverTimeDisplay.text(`Você correu por ${timeSeconds} segundo(s)`);
+            gameOverTimeDisplay.text(GAME_MESSAGES.runFeedback(timeSeconds));
         }
-
-        const userPontuations = scoreTable.children().map((_index, element) => {
-            return parseInt($(element).text().match(/\d+/));
-        }).get();
-
-        const maxTime = Math.max(...userPontuations);
-        scoreTable.children().removeClass("recorde").filter((_index, element) => {
-            return $(element).text().includes(maxTime);
-        }).addClass("recorde");
+        
+        saveScoreStorage(timeSeconds, difficulty);
+        updateRecord();
     };
 };
 
 const startGame = () => {
-    const playerImage = selectedPlayer === "p1" ? IMAGE_P1 : IMAGE_P2;
+    const playerImage = selectedPlayer === GAME_PLAYERS.boy ? IMAGE_P1 : IMAGE_P2;
     character.prop("src", playerImage);
 
-    gameCounter.text("Tempo: 0");
+    gameCounter.text(GAME_MESSAGES.timeCounterInitial).show();
     gameScreen.addClass("running");
 
     obstacle.show();
@@ -375,8 +364,8 @@ backButton.on("click touchstart", event => handleButtonClick(event, toggleGameCo
 
 trashBtn.on("click touchstart", event => handleButtonClick(event, clearStorage));
 
-selectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter("p1")));
-selectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter("p2")));
+selectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_PLAYERS.boy)));
+selectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_PLAYERS.girl)));
 
 mobileJumpArea.on("touchstart", jumpCharacter);
 
