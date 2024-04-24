@@ -6,18 +6,23 @@ import {
     OBSTACLE_WIDTHS,
     STORAGE_PONTUATION_KEY,
     STORAGE_RECORD_KEY,
+    MESSAGE_TIMER,
+
     GAME_OVER_IMAGE_P1,
     GAME_OVER_IMAGE_P2,
+
     IMAGE_P1,
     IMAGE_P2,
+
     JUMP_SOUND,
+    STEP_SOUND,
     DAMAGE_SOUND_P1,
     DAMAGE_SOUND_P2,
+    RECORD_SOUND,
+
     GAME_DIFICULTIES,
     GAME_CHARACTERS,
-    GAME_MESSAGES,
-    MESSAGE_TIMER,
-    RECORD_SOUND,
+    GAME_MESSAGES
 } from "./variables.js";
 
 const $character = $("[data-character]");
@@ -58,14 +63,9 @@ let selectedCharacter = GAME_CHARACTERS.boy;
 let selectedDifficulty = GAME_DIFICULTIES.easy;
 let canJump = true;
 
-let activeTimeouts = [];
+let activeIntervals = [];
 let configMessageTimeout;
 let characterJumpTimeout;
-
-DAMAGE_SOUND_P1.volume = 0.5;
-DAMAGE_SOUND_P2.volume = 0.5;
-RECORD_SOUND.volume = 0.5;
-JUMP_SOUND.volume = 0.8;
 
 const saveScoreStorage = (time, difficulty) => {
     const pontuationEntry = GAME_MESSAGES.scoreLocalStorage(time, difficulty);
@@ -144,7 +144,14 @@ const hideAllScreens = () => {
     });
 };
 
-const toggleCharacter = (character) => {
+const toggleCharacter = (character, clickedButton) => {
+    activateButton(clickedButton);
+
+    if (selectedCharacter === character) {
+        showConfigMessage(GAME_MESSAGES.characterIsSelected);
+        return;
+    };
+
     selectedCharacter = character;
     const characterText = character === GAME_CHARACTERS.boy ? "masculino" : "feminino";
     showConfigMessage(GAME_MESSAGES.selectedCharacter(characterText));
@@ -157,21 +164,33 @@ const showConfigMessage = (message) => {
     configMessageTimeout = setTimeout(() => $gameConfigScreenAlert.removeClass("active"), MESSAGE_TIMER);
 };
 
-const setGameDifficulty = (difficulty, message) => {
-    showConfigMessage(message);
+const activateButton = (target) => {
+    $(target).addClass("button-active");
+    $(target).siblings().removeClass("button-active");
+}
+
+const setGameDifficulty = (difficulty, message, clickedButton) => {
+    activateButton(clickedButton);
+
+    if (selectedDifficulty === difficulty) {
+        showConfigMessage(GAME_MESSAGES.difficultyIsSelected);
+        return;
+    }
+
     selectedDifficulty = difficulty;
+    showConfigMessage(message);
 };
 
-const chooseEasyGameMode = () => {
-    setGameDifficulty("easy", "Dificuldade fácil selecionada!");
+const chooseEasyGameMode = (clickedButton) => {
+    setGameDifficulty("easy", "Dificuldade fácil selecionada!", clickedButton);
 };
 
-const chooseMediumGameMode = () => {
-    setGameDifficulty("medium", "Dificuldade média selecionada!");
+const chooseMediumGameMode = (clickedButton) => {
+    setGameDifficulty("medium", "Dificuldade média selecionada!", clickedButton);
 };
 
-const chooseHardGameMode = () => {
-    setGameDifficulty("hard", "Dificuldade difícil selecionada!");
+const chooseHardGameMode = (clickedButton) => {
+    setGameDifficulty("hard", "Dificuldade difícil selecionada!", clickedButton);
 };
 
 const startGameModeConfig = () => {
@@ -196,14 +215,12 @@ const generateRandomObstacle = () => {
 
 const jumpCharacter = () => {
     const isGameScreenVisible = $gameScreen.css("display") === 'block';
-
     if (!isGameScreenVisible || !canJump) return;
 
     clearTimeout(characterJumpTimeout);
 
     $character.addClass("jump");
     JUMP_SOUND.play();
-    JUMP_SOUND.loop = false;
 
     canJump = false;
 
@@ -214,15 +231,15 @@ const jumpCharacter = () => {
 };
 
 const clearActiveTimeouts = () => {
-    activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-    activeTimeouts = [];
+    activeIntervals.forEach(intervalId => clearInterval(intervalId));
+    activeIntervals = [];
 };
 
 const verifyGame = () => {
     let counter = 1;
 
     const counterLoop = setInterval(() => $gameScreenCounter.text(GAME_MESSAGES.timeCounter(counter++)), 1000);
-    activeTimeouts.push(counterLoop);
+    activeIntervals.push(counterLoop);
 
     const checkCollisionAndGenerateObstacle = () => {
         const characterBox = {
@@ -256,7 +273,7 @@ const verifyGame = () => {
     };
 
     const verifierLoop = setInterval(checkCollisionAndGenerateObstacle, 10);
-    activeTimeouts.push(verifierLoop);
+    activeIntervals.push(verifierLoop);
 
     const handleGameOver = () => {
         const selectedCharacterIsP1 = selectedCharacter === GAME_CHARACTERS.boy;
@@ -264,6 +281,7 @@ const verifyGame = () => {
         $character.prop("src", selectedCharacterIsP1 ? GAME_OVER_IMAGE_P1 : GAME_OVER_IMAGE_P2);
         $obstacle.css("animation", "none");
 
+        STEP_SOUND.pause();
         gameOverSound.play();
         gameOverSound.loop = false;
 
@@ -286,10 +304,11 @@ const verifyGame = () => {
         const recordTime = localStorage.getItem(STORAGE_RECORD_KEY) || 0;
 
         if (timeSeconds > recordTime) {
-            RECORD_SOUND.play();
-            RECORD_SOUND.loop = false;
+            setTimeout(() => {
+                RECORD_SOUND.play();
+                $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(timeSeconds));
+            }, 500);
 
-            $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(timeSeconds));
             localStorage.setItem(STORAGE_RECORD_KEY, timeSeconds);
         } else {
             $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(timeSeconds));
@@ -301,14 +320,21 @@ const verifyGame = () => {
 };
 
 const startGame = () => {
+    canJump = false;
+
     const playerImage = selectedCharacter === GAME_CHARACTERS.boy ? IMAGE_P1 : IMAGE_P2;
     $character.prop("src", playerImage);
 
     $gameScreenCounter.text(GAME_MESSAGES.timeCounterInitial).show();
+    $gameOverCounterDisplay.text("---");
+
     $gameScreen.addClass("running");
 
     $obstacle.show();
     $character.show();
+    STEP_SOUND.play();
+    STEP_SOUND.loop = true;
+    STEP_SOUND.playbackRate = 1.3;
 
     $gameOverScreen.fadeOut();
     $gameStartScreen.fadeOut();
@@ -316,6 +342,10 @@ const startGame = () => {
     if (innerWidth <= 768) {
         $mobileJumpArea.show();
     }
+
+    setTimeout(() => {
+        canJump = true;
+    }, 500);
 
     hideAllScreens();
     clearActiveTimeouts();
@@ -384,17 +414,17 @@ const handleDocumentClick = ({
 };
 
 const initializeEventListeners = () => {
-    $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode));
-    $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode));
-    $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode));
+    $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode(event.target)));
+    $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode(event.target)));
+    $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode(event.target)));
     $startGameBtn.on("click touchstart", event => handleButtonClick(event, startGame));
     $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreScreen));
     $cmdToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
     backToStartBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
     $clearScoreBtn.on("click touchstart", event => handleButtonClick(event, clearStorage));
-    $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy)));
-    $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl)));
+    $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
+    $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl, event.target)));
     $mobileJumpArea.on("touchstart", jumpCharacter);
     $(document).keydown(handleKeyPress);
     $(document).click(handleDocumentClick);

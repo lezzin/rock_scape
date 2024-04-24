@@ -52,6 +52,16 @@ button {
         background-color: var(--primary-color);
         border-color: var(--primary-color-dark);
         color: var(--font-color);
+
+        &.button-active {
+            background-color: var(--primary-color-dark);
+
+            &::before {
+                font-family: FontAwesome;
+                content: "\f0da";
+                font-size: .8rem;
+            }
+        }
     }
 
     &.button-outline-primary {

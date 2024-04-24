@@ -13,6 +13,7 @@ const IMAGE_P1 = "./assets/img/boy.gif";
 const IMAGE_P2 = "./assets/img/girl.gif";
 
 const JUMP_SOUND = new Audio('./assets/audio/jump.wav');
+const STEP_SOUND = new Audio('./assets/audio/step.wav');
 const DAMAGE_SOUND_P1 = new Audio('./assets/audio/boy-shout.wav');
 const DAMAGE_SOUND_P2 = new Audio('./assets/audio/girl-shout.wav');
 const RECORD_SOUND = new Audio('./assets/audio/new-record.wav');
@@ -28,17 +29,27 @@ const GAME_CHARACTERS = {
     girl: "p2",
 };
 
+const exclamationIcon = '<i class="fa-solid fa-exclamation-circle"></i>';
+
 const GAME_MESSAGES = {
     emptyScore: "<tr><td>Nenhuma pontuação existente</td></tr>",
     scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time + (time === 1 ? ' segundo' : ' segundos')}`,
     scoreTable: (index, html) => `<tr><td>${index}) <span>${html}</span></td></tr>`,
-    selectedCharacter: (character) => `<p>Personagem ${character} selecionado!</p>`,
-    config: (message) => `<p><i class="fa-solid fa-exclamation-circle"></i> ${message}</p>`,
+    characterIsSelected: `<p>${exclamationIcon} Personagem já selecionado<p>`,
+    difficultyIsSelected: `<p>${exclamationIcon} Dificuldade já selecionada<p>`,
+    selectedCharacter: (character) => `<p>${exclamationIcon} Personagem ${character} selecionado!</p>`,
+    config: (message) => `<p> ${message}</p>`,
     timeCounterInitial: "Tempo: 0s",
     timeCounter: (time) => `Tempo: ${time}s`,
     newRecord: (record) => `Uau! Você desbloqueou um novo recorde: ${record + (record === 1 ? ' segundo' : ' segundos')}!`,
     runFeedback: (seconds) => `Você correu por ${seconds} segundo(s)`,
 };
+
+JUMP_SOUND.volume = 0.5;
+STEP_SOUND.volume = 0.3;
+RECORD_SOUND.volume = 0.5;
+DAMAGE_SOUND_P1.volume = 0.4;
+DAMAGE_SOUND_P2.volume = 0.4;
 
 export {
     EASY_SPEED,
@@ -57,6 +68,7 @@ export {
     IMAGE_P2,
 
     JUMP_SOUND,
+    STEP_SOUND,
     DAMAGE_SOUND_P1,
     DAMAGE_SOUND_P2,
     RECORD_SOUND,
