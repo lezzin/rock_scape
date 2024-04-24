@@ -5,6 +5,7 @@ const OBSTACLE_IMAGES = ['./assets/img/obstacle1.png', './assets/img/obstacle2.p
 const OBSTACLE_WIDTHS = ['3rem', '3.5rem', '4rem', '4.5rem'];
 const STORAGE_PONTUATION_KEY = "pontuacao";
 const STORAGE_RECORD_KEY = "recordTime";
+const MESSAGE_TIMER = 2000;
 
 const GAME_OVER_IMAGE_P1 = "./assets/img/falledBoy.png";
 const GAME_OVER_IMAGE_P2 = "./assets/img/falledGirl.png";
@@ -19,12 +20,12 @@ const GAME_DIFICULTIES = {
     easy: "easy",
     medium: "medium",
     hard: "hard",
-}
+};
 
-const GAME_PLAYERS = {
+const GAME_CHARACTERS = {
     boy: "p1",
     girl: "p2",
-}
+};
 
 const GAME_MESSAGES = {
     emptyScore: "<tr><td>Nenhuma pontuação existente</td></tr>",
@@ -46,6 +47,7 @@ export {
     OBSTACLE_WIDTHS,
     STORAGE_PONTUATION_KEY,
     STORAGE_RECORD_KEY,
+    MESSAGE_TIMER,
     GAME_OVER_IMAGE_P1,
     GAME_OVER_IMAGE_P2,
     IMAGE_P1,
@@ -54,6 +56,6 @@ export {
     DAMAGE_SOUND_P1,
     DAMAGE_SOUND_P2,
     GAME_DIFICULTIES,
-    GAME_PLAYERS,
+    GAME_CHARACTERS,
     GAME_MESSAGES
 }

@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Bangers');
+@import url('https://fonts.googleapis.com/css?family=Archivo');
+
+:root {
+    --primary-color: hsl(211, 35%, 30%);
+    --primary-color-light: hsl(211, 35%, 90%);
+    --primary-color-dark: hsl(211, 30%, 20%);
+    
+    --danger-color: hsl(0, 80%, 60%);
+    --danger-color-light: hsl(0, 80%, 90%);
+    --danger-color-dark: hsl(0, 40%, 30%);
+
+    --background-primary: #111;
+    --background-secondary: #222;
+    --background-tertiary: #333;
+    --border-color: #444;
+
+    --font-color: #fff;
+    --button-font-family: "Bangers", sans-serif;
+    --normal-font-family: "Archivo", sans-serif;
+
+    --radius: 5px;
+    --border-width: 2px;
+
+    --side-width: calc(5vw + 2rem);
+
+    --game-index: 3;
+    --side-index: 4;
+}

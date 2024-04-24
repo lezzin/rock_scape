@@ -1,0 +1,43 @@
+@keyframes jump {
+
+    0%,
+    100% {
+        bottom: 10px;
+    }
+
+    40%,
+    50%,
+    60% {
+        bottom: 150px;
+    }
+}
+
+@keyframes obstacle-running {
+    from {
+        right: -120px;
+    }
+
+    to {
+        right: 110%;
+    }
+}
+
+@keyframes movement {
+
+    0%,
+    100% {
+        transform: translateX(0) rotate(0);
+    }
+
+    25% {
+        transform: translateX(-.1rem) rotate(.1deg);
+    }
+
+    50% {
+        transform: translateX(.1rem) rotate(-.1deg);
+    }
+
+    75% {
+        transform: translateX(-.1rem) rotate(.1deg);
+    }
+}
