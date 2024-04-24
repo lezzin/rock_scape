@@ -22,7 +22,7 @@
     --radius: 5px;
     --border-width: 2px;
 
-    --side-width: calc(5vw + 2rem);
+    --side-width: calc(5vw + 1rem);
 
     --game-index: 3;
     --side-index: 4;
