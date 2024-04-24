@@ -210,7 +210,11 @@ button {
             .table-responsive {
                 width: 100%;
                 height: 90%;
-                overflow: auto;
+                overflow: hidden auto;
+
+                @media(width<=768px) {
+                    overflow: auto;
+                }
 
                 table {
                     border-collapse: collapse;

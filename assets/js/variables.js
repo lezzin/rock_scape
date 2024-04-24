@@ -13,8 +13,9 @@ const IMAGE_P1 = "./assets/img/boy.gif";
 const IMAGE_P2 = "./assets/img/girl.gif";
 
 const JUMP_SOUND = new Audio('./assets/audio/jump.wav');
-const DAMAGE_SOUND_P1 = new Audio('./assets/audio/boyShout.wav');
-const DAMAGE_SOUND_P2 = new Audio('./assets/audio/girlShout.wav');
+const DAMAGE_SOUND_P1 = new Audio('./assets/audio/boy-shout.wav');
+const DAMAGE_SOUND_P2 = new Audio('./assets/audio/girl-shout.wav');
+const RECORD_SOUND = new Audio('./assets/audio/new-record.wav');
 
 const GAME_DIFICULTIES = {
     easy: "easy",
@@ -48,13 +49,18 @@ export {
     STORAGE_PONTUATION_KEY,
     STORAGE_RECORD_KEY,
     MESSAGE_TIMER,
+
     GAME_OVER_IMAGE_P1,
     GAME_OVER_IMAGE_P2,
+
     IMAGE_P1,
     IMAGE_P2,
+
     JUMP_SOUND,
     DAMAGE_SOUND_P1,
     DAMAGE_SOUND_P2,
+    RECORD_SOUND,
+
     GAME_DIFICULTIES,
     GAME_CHARACTERS,
     GAME_MESSAGES

@@ -16,7 +16,8 @@ import {
     GAME_DIFICULTIES,
     GAME_CHARACTERS,
     GAME_MESSAGES,
-    MESSAGE_TIMER
+    MESSAGE_TIMER,
+    RECORD_SOUND,
 } from "./variables.js";
 
 const $character = $("[data-character]");
@@ -55,12 +56,15 @@ let userScores = JSON.parse(localStorage.getItem(STORAGE_PONTUATION_KEY)) || [];
 
 let selectedCharacter = GAME_CHARACTERS.boy;
 let selectedDifficulty = GAME_DIFICULTIES.easy;
+let canJump = true;
 
+let activeTimeouts = [];
 let configMessageTimeout;
 let characterJumpTimeout;
 
 DAMAGE_SOUND_P1.volume = 0.5;
 DAMAGE_SOUND_P2.volume = 0.5;
+RECORD_SOUND.volume = 0.5;
 JUMP_SOUND.volume = 0.8;
 
 const saveScoreStorage = (time, difficulty) => {
@@ -193,7 +197,7 @@ const generateRandomObstacle = () => {
 const jumpCharacter = () => {
     const isGameScreenVisible = $gameScreen.css("display") === 'block';
 
-    if (!isGameScreenVisible) return;
+    if (!isGameScreenVisible || !canJump) return;
 
     clearTimeout(characterJumpTimeout);
 
@@ -201,13 +205,24 @@ const jumpCharacter = () => {
     JUMP_SOUND.play();
     JUMP_SOUND.loop = false;
 
-    characterJumpTimeout = setTimeout(() => $character.removeClass("jump"), 600);
+    canJump = false;
+
+    characterJumpTimeout = setTimeout(() => {
+        $character.removeClass("jump");
+        canJump = true;
+    }, 600);
+};
+
+const clearActiveTimeouts = () => {
+    activeTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+    activeTimeouts = [];
 };
 
 const verifyGame = () => {
     let counter = 1;
 
     const counterLoop = setInterval(() => $gameScreenCounter.text(GAME_MESSAGES.timeCounter(counter++)), 1000);
+    activeTimeouts.push(counterLoop);
 
     const checkCollisionAndGenerateObstacle = () => {
         const characterBox = {
@@ -241,6 +256,7 @@ const verifyGame = () => {
     };
 
     const verifierLoop = setInterval(checkCollisionAndGenerateObstacle, 10);
+    activeTimeouts.push(verifierLoop);
 
     const handleGameOver = () => {
         const selectedCharacterIsP1 = selectedCharacter === GAME_CHARACTERS.boy;
@@ -270,6 +286,9 @@ const verifyGame = () => {
         const recordTime = localStorage.getItem(STORAGE_RECORD_KEY) || 0;
 
         if (timeSeconds > recordTime) {
+            RECORD_SOUND.play();
+            RECORD_SOUND.loop = false;
+
             $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(timeSeconds));
             localStorage.setItem(STORAGE_RECORD_KEY, timeSeconds);
         } else {
@@ -299,6 +318,7 @@ const startGame = () => {
     }
 
     hideAllScreens();
+    clearActiveTimeouts();
     startGameModeConfig();
     verifyGame();
 };
@@ -380,7 +400,7 @@ const initializeEventListeners = () => {
     $(document).click(handleDocumentClick);
 }
 
-$(window).on("load", function() {
+$(window).on("load", function () {
     initializeEventListeners();
     updateRecord();
     hidePreloader();
