@@ -29,13 +29,13 @@ const GAME_CHARACTERS = {
 
 const GAME_MESSAGES = {
     emptyScore: "<tr><td>Nenhuma pontuação existente</td></tr>",
-    scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time} segundo(s)`,
+    scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time + (time === 1 ? ' segundo' : ' segundos')}`,
     scoreTable: (index, html) => `<tr><td>${index}) <span>${html}</span></td></tr>`,
     selectedCharacter: (character) => `<p>Personagem ${character} selecionado!</p>`,
     config: (message) => `<p><i class="fa-solid fa-exclamation-circle"></i> ${message}</p>`,
     timeCounterInitial: "Tempo: 0s",
     timeCounter: (time) => `Tempo: ${time}s`,
-    newRecord: (record) => `Uau! Você desbloqueou um novo recorde: ${record} segundos!`,
+    newRecord: (record) => `Uau! Você desbloqueou um novo recorde: ${record + (record === 1 ? ' segundo' : ' segundos')}!`,
     runFeedback: (seconds) => `Você correu por ${seconds} segundo(s)`,
 };
 
