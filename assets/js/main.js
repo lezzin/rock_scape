@@ -80,9 +80,11 @@ const clearStorage = () => {
 
 const populatePontuationTable = () => {
     $scorePanelTable.empty();
+    $clearScoreBtn.show();
 
     if (userScores.length === 0) {
         $scorePanelTable.append(GAME_MESSAGES.emptyScore);
+        $clearScoreBtn.hide();
         return;
     }
 
