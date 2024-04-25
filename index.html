@@ -27,11 +27,17 @@
             <!-- Menu lateral -->
             <section class="sidemenu-wrapper">
                 <div class="container">
-                    <button class="button-primary" data-score-toggler-btn>
-                        <i class="fa-solid fa-trophy" title="Abrir histórico"></i>
+                    <button class="button-primary" data-score-toggler-btn title="Abrir histórico">
+                        <i class="fas fa-trophy" ></i>
                     </button>
-                    <button class="button-primary" data-command-toggler-btn>
-                        <i class="fa-solid fa-gamepad" title="Abrir a lista de comandos"></i>
+                    <button class="button-primary" data-command-toggler-btn title="Abrir a lista de comandos">
+                        <i class="fas fa-gamepad" ></i>
+                    </button>
+                    <button class="button-primary" data-google-login title="Login com Google">
+                        <i class="fab fa-google" ></i>
+                    </button>
+                    <button class="button-danger" data-google-logout title="Logout com Google">
+                        <i class="fas fa-sign-out-alt" ></i>
                     </button>
                 </div>
             </section>
@@ -40,16 +46,23 @@
             <!-- Lista do histórico de tempos -->
             <section class="score-wrapper" data-score-wrapper>
                 <header>
-                    <h2>Histórico de pontuação</h2>
+                    <h2>Lista de pontuações</h2>
                     <div class="header-buttons">
                         <button type="button" class="button-outline-danger" title="Fechar pontuação" data-score-toggler-btn>
                             <i class="fas fa-xmark"></i>
                         </button>
-                        <button type="button" class="button-danger" title="Apagar histórico" data-score-trash-btn>
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
                     </div>
                 </header>
+                
+                <div class="score-form">
+                    <div class="select-score">
+                        <select data-select-scores>
+                            <option value="easy">Filtrar dificuldade: fácil</option>
+                            <option value="medium">Filtrar dificuldade: médio</option>
+                            <option value="hard">Filtrar dificuldade: difícil</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="table-responsive">
                     <table><tbody data-score-table></tbody></table>
@@ -75,7 +88,7 @@
                                 <td>Pula</td>
                             </tr>
                             <tr>
-                                <td><code><i class="fa-solid fa-arrow-up"></i></code></td>
+                                <td><code><i class="fas fa-arrow-up"></i></code></td>
                                 <td colspan="2">Pula</td>
                             </tr>
                             <tr>
@@ -123,7 +136,7 @@
                 <!-- Inicio do menu de inicio do jogo -->
                 <section class="game-screen start-game-screen" data-start-game-screen>
                     <div class="screen-content">
-                        <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="480">
+                        <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="360">
 
                         <div class="screen-buttons">
                             <button type="button" class="size-2 button-primary" title="Iniciar jogo" data-start-game-btn>
@@ -132,10 +145,10 @@
                             <button type="button" class="size-3 button-outline-primary" title="Acessar configurações" data-config-toggler-btn>
                                 <i class="fas fa-gear"></i> Configurações
                             </button>
-                            <button type="button" class="only-sm size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
+                            <button type="button" class="size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
                                 <i class="fas fa-trophy"></i> Pontuação
                             </button>
-                            <button type="button" class="only-sm size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
+                            <button type="button" class="size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
                                 <i class="fas fa-gamepad"></i> Comandos
                             </button>
                         </div>
@@ -158,10 +171,10 @@
                             <button type="button" class="size-3 button-outline-primary" title="Acessar configurações" data-config-toggler-btn>
                                 <i class="fas fa-gear"></i> Configurações
                             </button>
-                            <button type="button" class="only-sm size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
+                            <button type="button" class="size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
                                 <i class="fas fa-trophy"></i> Pontuação
                             </button>
-                            <button type="button" class="only-sm size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
+                            <button type="button" class="size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
                                 <i class="fas fa-gamepad"></i> Comandos
                             </button>
                         </div>
@@ -216,7 +229,10 @@
         <!-- Fim do display do jogo -->
     </div>
 
-    <script src="https://kit.fontawesome.com/1614cc0d63.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth-compat.js" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics-compat.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/js/main.js" type="module"></script>
 </body>

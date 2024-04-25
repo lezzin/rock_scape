@@ -1,29 +1,30 @@
+import { auth, db, provider } from "./firebase.js";
 import {
     EASY_SPEED,
     MEDIUM_SPEED,
     HARD_SPEED,
     OBSTACLE_IMAGES,
     OBSTACLE_WIDTHS,
-    STORAGE_PONTUATION_KEY,
-    STORAGE_RECORD_KEY,
     MESSAGE_TIMER,
-
     GAME_OVER_IMAGE_P1,
     GAME_OVER_IMAGE_P2,
-
     IMAGE_P1,
     IMAGE_P2,
-
     JUMP_SOUND,
     STEP_SOUND,
     DAMAGE_SOUND_P1,
     DAMAGE_SOUND_P2,
     RECORD_SOUND,
-
     GAME_DIFICULTIES,
     GAME_CHARACTERS,
     GAME_MESSAGES
 } from "./variables.js";
+
+const scoreboardRef = db.collection('scoreboard').doc('scoreboard_users');
+
+const $loginGoogleBtn = $("[data-google-login]");
+const $logoutGoogleBtn = $("[data-google-logout]");
+let loggedUser = null;
 
 const $character = $("[data-character]");
 const $obstacle = $("[data-obstacle]");
@@ -39,6 +40,8 @@ const $gameConfigScreenAlert = $("[data-game-config-message]");
 
 const $scorePanel = $("[data-score-wrapper]");
 const $scorePanelTable = $("[data-score-table]");
+const $scoreSelect = $("[data-select-scores]");
+
 const $commandsPanel = $("[data-commands-wrapper]");
 
 const $configSelectP1Btn = $("[data-select-char1-btn]");
@@ -50,15 +53,15 @@ const $configHardModeBtn = $("[data-hard-mode-btn]");
 const $startGameBtn = $("[data-start-game-btn]");
 const backToStartBtn = $("[data-back-start-btn]");
 const $scoreToggleBtn = $("[data-score-toggler-btn]");
-const $cmdToggleBtn = $("[data-command-toggler-btn]");
+const $commandsToggleBtn = $("[data-command-toggler-btn]");
 const $configToggleBtn = $("[data-config-toggler-btn]");
-const $clearScoreBtn = $("[data-score-trash-btn]");
 
 const $gameWidth = $gameScreen.width();
 const $gameOffset = $gameScreen.offset();
 
-let userScores = JSON.parse(localStorage.getItem(STORAGE_PONTUATION_KEY)) || [];
+let scoreboard = [];
 
+let selectedScoreDifficulty = $scoreSelect.val();
 let selectedCharacter = GAME_CHARACTERS.boy;
 let selectedDifficulty = GAME_DIFICULTIES.easy;
 let canJump = true;
@@ -74,43 +77,32 @@ RECORD_SOUND.volume = 0.5;
 DAMAGE_SOUND_P1.volume = 0.4;
 DAMAGE_SOUND_P2.volume = 0.4;
 
-/**
- * Saves score to local storage.
- * @param {number} time - Time elapsed.
- * @param {string} difficulty - Game difficulty.
- */
-const saveScoreStorage = (time, difficulty) => {
-    const pontuationEntry = GAME_MESSAGES.scoreLocalStorage(time, difficulty);
-    userScores.push(pontuationEntry);
-    localStorage.setItem(STORAGE_PONTUATION_KEY, JSON.stringify(userScores));
-};
-
-/**
- * Clears local storage.
-*/
-const clearStorage = () => {
-    if (confirm('Confirmar a remoção de todos os dados do histórico?')) {
-        localStorage.removeItem(STORAGE_PONTUATION_KEY);
-        localStorage.removeItem(STORAGE_RECORD_KEY);
-        userScores = [];
-        updateRecord();
-    }
-};
+const toggleScoreDifficulty = ({ target: { value } }) => {
+    selectedScoreDifficulty = value;
+    updateRecord();
+}
 
 /**
  * Populates pontuation table.
  */
-const populatePontuationTable = () => {
+const populatePontuationTable = (data) => {
     $scorePanelTable.empty();
-    $clearScoreBtn.show();
 
-    if (userScores.length === 0) {
+    if (data.length === 0) {
         $scorePanelTable.append(GAME_MESSAGES.emptyScore);
-        $clearScoreBtn.hide();
         return;
     }
 
-    userScores.forEach((scoreHTML, index) => {
+    data.forEach((user, index) => {
+        const { username, score, difficulty } = user;
+
+        const translatedDifficulties = {
+            easy: "fácil",
+            medium: "média",
+            hard: "difícil",
+        }
+
+        const scoreHTML = `${username} - ${score}s na dificuldade ${translatedDifficulties[difficulty]}`
         const pontuationIndex = index + 1;
         $scorePanelTable.append(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
     });
@@ -120,22 +112,27 @@ const populatePontuationTable = () => {
  * Updates record.
  */
 const updateRecord = () => {
-    populatePontuationTable();
+    scoreboardRef.get().then((doc) => {
+        const scoreboardData = doc.data()?.scores;
+        scoreboard = scoreboardData ? scoreboardData.filter((score, index) => score.difficulty === selectedScoreDifficulty && index < 10) : [];
 
-    let maxTime = 0;
-    let indexOfMaxTime = -1;
+        populatePontuationTable(scoreboard);
 
-    userScores.forEach((item, index) => {
-        const timeSeconds = +(item.match(/\d+/)[0]);
-        if (timeSeconds > maxTime) {
-            maxTime = timeSeconds;
-            indexOfMaxTime = index;
+        let maxTime = 0;
+        let indexOfMaxTime = -1;
+
+        scoreboard.forEach((item, index) => {
+            const timeSeconds = +(item.score);
+            if (timeSeconds > maxTime) {
+                maxTime = timeSeconds;
+                indexOfMaxTime = index;
+            }
+        });
+
+        if (indexOfMaxTime !== -1) {
+            $scorePanelTable.children().removeClass("recorde").eq(indexOfMaxTime).addClass("recorde");
         }
     });
-
-    if (indexOfMaxTime !== -1) {
-        $scorePanelTable.children().removeClass("recorde").eq(indexOfMaxTime).addClass("recorde");
-    }
 };
 
 /**
@@ -150,6 +147,7 @@ const toggleScreen = (screenToToggle) => {
  * Toggles score screen.
  */
 const toggleScoreScreen = () => {
+    if (!loggedUser) return;
     toggleScreen($scorePanel);
     $commandsPanel.removeClass("selected-screen");
 };
@@ -291,7 +289,7 @@ const generateRandomObstacle = () => {
  * Makes the character jump.
  */
 const jumpCharacter = () => {
-    const isGameScreenVisible = $gameScreen.css("display") === 'block';
+    const isGameScreenVisible = $gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none';
     if (!isGameScreenVisible || !canJump) return;
 
     clearTimeout(characterJumpTimeout);
@@ -376,29 +374,54 @@ const verifyGame = () => {
             $mobileJumpArea.hide();
         }
 
-        const translatedDifficulties = {
-            "easy": "fácil",
-            "medium": "média",
-            "hard": "difícil"
-        };
+        const currentScore = counter - 1;
 
-        const timeSeconds = counter - 1;
-        const difficulty = translatedDifficulties[selectedDifficulty];
-        const recordTime = localStorage.getItem(STORAGE_RECORD_KEY) || 0;
+        if (loggedUser) {
+            const newScore = {
+                user_id: loggedUser.uid,
+                username: loggedUser.displayName,
+                score: currentScore,
+                difficulty: selectedDifficulty
+            };
 
-        if (timeSeconds > recordTime) {
-            setTimeout(() => {
-                RECORD_SOUND.play();
-                $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(timeSeconds));
-            }, 500);
+            scoreboardRef.get().then((doc) => {
+                const currentScoreboard = doc.data() || {};
+                const scoresFilteredByDifficulty = (currentScoreboard.scores || []).filter(score => score.difficulty === selectedDifficulty);
+                const recordScoreInCurrentDifficulty = scoresFilteredByDifficulty.reduce((max, score) => Math.max(max, score.score), 0);
+                const isNewRecord = currentScore > recordScoreInCurrentDifficulty;
 
-            localStorage.setItem(STORAGE_RECORD_KEY, timeSeconds);
-        } else {
-            $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(timeSeconds));
+                if (isNewRecord) {
+                    setTimeout(() => {
+                        RECORD_SOUND.play();
+                        $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(currentScore));
+                    }, 500);
+                } else {
+                    $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(currentScore));
+                }
+
+                const existingUserScoreIndex = (currentScoreboard.scores || []).findIndex(score => score.user_id === loggedUser.uid && score.difficulty === selectedDifficulty);
+
+                if (existingUserScoreIndex !== -1) {
+                    const existingUserScore = currentScoreboard.scores[existingUserScoreIndex];
+
+                    if (currentScore > existingUserScore.score) {
+                        existingUserScore.score = currentScore;
+                        scoreboardRef.update({ scores: currentScoreboard.scores });
+                    }
+                } else {
+                    const updatedScoreboard = isNewRecord
+                        ? currentScoreboard.scores.concat({ user_id: loggedUser.uid, username: loggedUser.displayName, score: currentScore, difficulty: selectedDifficulty })
+                        : currentScoreboard.scores || [{ user_id: loggedUser.uid, username: loggedUser.displayName, score: currentScore, difficulty: selectedDifficulty }];
+                    scoreboardRef.set({ scores: updatedScoreboard });
+                }
+            }).catch((error) => {
+                console.error("Error updating document: ", error);
+            });
+
+            return
         }
 
-        saveScoreStorage(timeSeconds, difficulty);
-        updateRecord();
+        $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(currentScore));
     };
 };
 
@@ -447,6 +470,36 @@ const startGame = () => {
 const hidePreloader = () => {
     $('[data-preloader]').fadeOut('slow');
 };
+
+/**
+ * Login the user with Google
+ */
+const handleLogin = () => {
+    auth
+        .signInWithPopup(provider)
+        .then(({ user }) => {
+            $logoutGoogleBtn.show();
+            $loginGoogleBtn.hide();
+
+            loggedUser = user;
+        }).catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+        });
+}
+
+/**
+ * Logout the user from Google
+ */
+const handleLogout = () => {
+    auth.signOut()
+        .then(() => {
+            $loginGoogleBtn.show();
+            $logoutGoogleBtn.hide();
+            loggedUser = null;
+        })
+        .catch((error) => console.error(error));
+}
 
 /**
  * Handles button click events.
@@ -504,7 +557,7 @@ const handleDocumentClick = ({ target }) => {
         !$currentTarget.closest($scorePanel).length &&
         !$currentTarget.closest($commandsPanel).length &&
         !$currentTarget.closest($scoreToggleBtn).length &&
-        !$currentTarget.closest($cmdToggleBtn).length
+        !$currentTarget.closest($commandsToggleBtn).length
     ) {
         $scorePanel.removeClass('selected-screen');
         $commandsPanel.removeClass('selected-screen');
@@ -515,15 +568,18 @@ const handleDocumentClick = ({ target }) => {
  * Initializes event listeners.
  */
 const initializeEventListeners = () => {
+    $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, handleLogin));
+    $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, handleLogout));
+    $scoreSelect.on("change", event => toggleScoreDifficulty(event));
+
     $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode(event.target)));
     $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode(event.target)));
     $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode(event.target)));
     $startGameBtn.on("click touchstart", event => handleButtonClick(event, startGame));
     $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreScreen));
-    $cmdToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
+    $commandsToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
     backToStartBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
-    $clearScoreBtn.on("click touchstart", event => handleButtonClick(event, clearStorage));
     $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
     $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl, event.target)));
     $mobileJumpArea.on("touchstart", jumpCharacter);
@@ -532,7 +588,30 @@ const initializeEventListeners = () => {
 }
 
 $(window).on("load", function () {
+    $scoreToggleBtn.hide();
+    $logoutGoogleBtn.hide();
+
+    auth.onAuthStateChanged(user => {
+        if (!user) {
+            $scoreToggleBtn.hide();
+            $logoutGoogleBtn.hide();
+            return;
+        }
+
+        $loginGoogleBtn.hide();
+        $logoutGoogleBtn.show();
+        $scoreToggleBtn.show();
+
+        scoreboardRef.onSnapshot((snapshot) => {
+            if (snapshot.exists) {
+                updateRecord();
+            }
+        });
+
+        loggedUser = user;
+        updateRecord();
+    })
+
     initializeEventListeners();
-    updateRecord();
     hidePreloader();
 })

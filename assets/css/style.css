@@ -147,6 +147,7 @@ button {
         .score-wrapper {
             display: flex;
             flex-direction: column;
+            align-items: stretch;
             gap: 2rem;
             height: 100%;
             background-color: var(--background-secondary);
@@ -162,9 +163,16 @@ button {
             .container {
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: stretch;
                 flex-direction: column;
                 gap: .5rem;
+                height: inherit;
+
+                [data-google-login],
+                [data-google-logout] {
+                    margin-top: auto;
+                }
+
             }
         }
 
@@ -247,6 +255,40 @@ button {
             button,
             td {
                 white-space: nowrap;
+            }
+        }
+
+        .score-wrapper .score-form {
+            .select-score {
+                position: relative;
+                width: 100%;
+                background-color: var(--background-tertiary);
+                border: var(--border-width) solid var(--border-color);
+                border-radius: var(--radius);
+
+                &::before {
+                    font-family: FontAwesome;
+                    content: "\f0d7";
+                    position: absolute;
+                    top: 50%;
+                    right: 1rem;
+                    transform: translateY(-50%);
+                    display: grid;
+                }
+
+                select {
+                    width: 100%;
+                    padding: .5rem;
+                    color: inherit;
+                    appearance: none;
+                    border: none;
+                    font: inherit;
+                    background: transparent;
+
+                    option {
+                        color: #000;
+                    }
+                }
             }
         }
     }
