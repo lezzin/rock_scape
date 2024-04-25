@@ -105,7 +105,7 @@ const updateRecord = () => {
     let indexOfMaxTime = -1;
 
     userScores.forEach((item, index) => {
-        const timeSeconds = parseInt(item.match(/\d+/)[0]);
+        const timeSeconds = +(item.match(/\d+/)[0]);
         if (timeSeconds > maxTime) {
             maxTime = timeSeconds;
             indexOfMaxTime = index;

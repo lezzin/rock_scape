@@ -1,5 +1,5 @@
-@import "./variables.css";
-@import "./keyframes.css";
+@import url("./variables.css");
+@import url("./keyframes.css");
 
 * {
     margin: 0;
@@ -8,7 +8,6 @@
 }
 
 body {
-    -webkit-user-select: none;
     user-select: none;
     font-family: var(--normal-font-family);
     font-weight: 500;
@@ -23,7 +22,6 @@ button {
     transition: all .3s ease;
     color: inherit;
     font-family: var(--button-font-family);
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,7 +122,6 @@ button {
     inset: 0;
     background-color: var(--background-primary);
     z-index: calc(var(--side-index) + 1);
-
     display: grid;
     align-content: center;
     place-items: center;
@@ -145,7 +142,7 @@ button {
 
         @media(width <=768px) {
             position: absolute;
-            inset: 0 0 auto 0;
+            inset: 0 0 auto;  
             width: 100%;
         }
 
@@ -290,7 +287,7 @@ button {
                     display: block;
                     background: url('../img/mainBackground.png') no-repeat;
                     background-size: cover;
-                    padding-bottom: 0rem;
+                    padding-bottom: 0;
 
                     img {
                         margin-top: auto;
@@ -460,7 +457,6 @@ button {
                     top: 0;
                     left: 0;
                     z-index: var(--game-index);
-
                     padding: .5rem 1rem;
                     border-right: var(--border-width) solid var(--border-color);
                     border-bottom: var(--border-width) solid var(--border-color);

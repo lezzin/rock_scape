@@ -1,5 +1,4 @@
 @keyframes jump {
-
     0%,
     100% {
         bottom: 10px;
@@ -23,7 +22,6 @@
 }
 
 @keyframes movement {
-
     0%,
     100% {
         transform: translateX(0) rotate(0);
