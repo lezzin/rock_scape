@@ -230,7 +230,7 @@ const jumpCharacter = () => {
     }, 600);
 };
 
-const clearActiveTimeouts = () => {
+const clearActiveIntervals = () => {
     activeIntervals.forEach(intervalId => clearInterval(intervalId));
     activeIntervals = [];
 };
@@ -320,7 +320,7 @@ const verifyGame = () => {
 };
 
 const startGame = () => {
-    if ($gameStartScreen.css("display") === 'none' || $gameOverScreen.css("display") === 'none') return;
+    if ($gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none') return;
 
     canJump = false;
 
@@ -350,7 +350,7 @@ const startGame = () => {
     }, 500);
 
     hideAllScreens();
-    clearActiveTimeouts();
+    clearActiveIntervals();
     startGameModeConfig();
     verifyGame();
 };
@@ -378,8 +378,8 @@ const handleKeyPress = ({
 
     switch (which) {
         case SPACE_KEY:
-            jumpCharacter();
             startGame();
+            jumpCharacter();
             break;
         case ARROW_TOP_KEY:
             jumpCharacter();
