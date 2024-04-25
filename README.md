@@ -31,6 +31,7 @@ Os controles do jogo podem ser acessados na tela do projeto:
 
 Você pode me encontrar nas seguintes redes sociais:
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0b62145880c34b318dc9a4098552cf71)](https://app.codacy.com/gh/lezzin/rock_scape?utm_source=github.com&utm_medium=referral&utm_content=lezzin/rock_scape&utm_campaign=Badge_Grade)
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/leandroadrian_/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leandro-adrian)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/LeandroAdrian)
