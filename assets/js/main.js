@@ -377,27 +377,22 @@ const handleKeyPress = ({
     const P_KEY = 80;
 
     switch (which) {
-        case SPACE_KEY: {
+        case SPACE_KEY:
             jumpCharacter();
             startGame();
             break;
-        }
-        case ARROW_TOP_KEY: {
+        case ARROW_TOP_KEY:
             jumpCharacter();
             break;
-        }
-        case DELETE_KEY: {
+        case DELETE_KEY:
             clearStorage();
             break;
-        }
-        case C_KEY: {
+        case C_KEY:
             toggleCommandsScreen();
             break;
-        }
-        case P_KEY: {
+        case P_KEY:
             toggleScoreScreen();
             break;
-        }
         default:
             break;
     }
