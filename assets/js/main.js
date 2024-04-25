@@ -320,6 +320,8 @@ const verifyGame = () => {
 };
 
 const startGame = () => {
+    if ($gameStartScreen.css("display") === 'none' || $gameOverScreen.css("display") === 'none') return;
+
     canJump = false;
 
     const playerImage = selectedCharacter === GAME_CHARACTERS.boy ? IMAGE_P1 : IMAGE_P2;
@@ -371,28 +373,31 @@ const handleKeyPress = ({
     const SPACE_KEY = 32;
     const DELETE_KEY = 46;
     const ARROW_TOP_KEY = 38;
-    const T_KEY = 84;
     const C_KEY = 67;
     const P_KEY = 80;
 
     switch (which) {
-        case SPACE_KEY:
-            if ($gameStartScreen.css("display") === 'block' || $gameOverScreen.css("display") === 'block') startGame();
-        case ARROW_TOP_KEY:
+        case SPACE_KEY: {
+            jumpCharacter();
+            startGame();
+            break;
+        }
+        case ARROW_TOP_KEY: {
             jumpCharacter();
             break;
-        case T_KEY:
-            toggleFullscreen();
-            break;
-        case DELETE_KEY:
+        }
+        case DELETE_KEY: {
             clearStorage();
             break;
-        case C_KEY:
+        }
+        case C_KEY: {
             toggleCommandsScreen();
             break;
-        case P_KEY:
+        }
+        case P_KEY: {
             toggleScoreScreen();
             break;
+        }
         default:
             break;
     }
