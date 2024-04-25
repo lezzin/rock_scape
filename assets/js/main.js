@@ -67,12 +67,27 @@ let activeIntervals = [];
 let configMessageTimeout;
 let characterJumpTimeout;
 
+
+JUMP_SOUND.volume = 0.5;
+STEP_SOUND.volume = 0.3;
+RECORD_SOUND.volume = 0.5;
+DAMAGE_SOUND_P1.volume = 0.4;
+DAMAGE_SOUND_P2.volume = 0.4;
+
+/**
+ * Saves score to local storage.
+ * @param {number} time - Time elapsed.
+ * @param {string} difficulty - Game difficulty.
+ */
 const saveScoreStorage = (time, difficulty) => {
     const pontuationEntry = GAME_MESSAGES.scoreLocalStorage(time, difficulty);
     userScores.push(pontuationEntry);
     localStorage.setItem(STORAGE_PONTUATION_KEY, JSON.stringify(userScores));
 };
 
+/**
+ * Clears local storage.
+*/
 const clearStorage = () => {
     if (confirm('Confirmar a remoção de todos os dados do histórico?')) {
         localStorage.removeItem(STORAGE_PONTUATION_KEY);
@@ -82,6 +97,9 @@ const clearStorage = () => {
     }
 };
 
+/**
+ * Populates pontuation table.
+ */
 const populatePontuationTable = () => {
     $scorePanelTable.empty();
     $clearScoreBtn.show();
@@ -98,6 +116,9 @@ const populatePontuationTable = () => {
     });
 };
 
+/**
+ * Updates record.
+ */
 const updateRecord = () => {
     populatePontuationTable();
 
@@ -117,24 +138,40 @@ const updateRecord = () => {
     }
 };
 
+/**
+ * Toggles screen.
+ * @param {JQuery<HTMLElement>} screenToToggle - Screen to toggle.
+ */
 const toggleScreen = (screenToToggle) => {
     screenToToggle.toggleClass("selected-screen");
 };
 
+/**
+ * Toggles score screen.
+ */
 const toggleScoreScreen = () => {
     toggleScreen($scorePanel);
     $commandsPanel.removeClass("selected-screen");
 };
 
+/**
+ * Toggles commands screen.
+ */
 const toggleCommandsScreen = () => {
     toggleScreen($commandsPanel);
     $scorePanel.removeClass("selected-screen");
 };
 
+/**
+ * Toggles game config screen.
+ */
 const toggleGameConfigScreen = () => {
     $gameConfigScreen.fadeToggle();
 };
 
+/**
+ * Hides all screens.
+ */
 const hideAllScreens = () => {
     const screens = [$scorePanel, $commandsPanel, $gameConfigScreen];
     screens.forEach(screen => {
@@ -144,6 +181,11 @@ const hideAllScreens = () => {
     });
 };
 
+/**
+ * Toggles character.
+ * @param {string} character - Character to toggle.
+ * @param {HTMLElement} clickedButton - Clicked button.
+ */
 const toggleCharacter = (character, clickedButton) => {
     activateButton(clickedButton);
 
@@ -157,6 +199,10 @@ const toggleCharacter = (character, clickedButton) => {
     showConfigMessage(GAME_MESSAGES.selectedCharacter(characterText));
 }
 
+/**
+ * Shows configuration message.
+ * @param {string} message - Message to display.
+ */
 const showConfigMessage = (message) => {
     clearTimeout(configMessageTimeout);
 
@@ -164,11 +210,21 @@ const showConfigMessage = (message) => {
     configMessageTimeout = setTimeout(() => $gameConfigScreenAlert.removeClass("active"), MESSAGE_TIMER);
 };
 
+/**
+ * Activates button.
+ * @param {HTMLElement} target - Target button.
+ */
 const activateButton = (target) => {
     $(target).addClass("button-active");
     $(target).siblings().removeClass("button-active");
 }
 
+/**
+ * Sets game difficulty.
+ * @param {string} difficulty - Game difficulty.
+ * @param {string} message - Message to display.
+ * @param {HTMLElement} clickedButton - Clicked button.
+ */
 const setGameDifficulty = (difficulty, message, clickedButton) => {
     activateButton(clickedButton);
 
@@ -181,18 +237,33 @@ const setGameDifficulty = (difficulty, message, clickedButton) => {
     showConfigMessage(message);
 };
 
+/**
+ * Chooses easy game mode.
+ * @param {HTMLElement} clickedButton - Clicked button.
+ */
 const chooseEasyGameMode = (clickedButton) => {
     setGameDifficulty("easy", "Dificuldade fácil selecionada!", clickedButton);
 };
 
+/**
+ * Chooses medium game mode.
+ * @param {HTMLElement} clickedButton - Clicked button.
+ */
 const chooseMediumGameMode = (clickedButton) => {
     setGameDifficulty("medium", "Dificuldade média selecionada!", clickedButton);
 };
 
+/**
+ * Chooses hard game mode.
+ * @param {HTMLElement} clickedButton - Clicked button.
+ */
 const chooseHardGameMode = (clickedButton) => {
     setGameDifficulty("hard", "Dificuldade difícil selecionada!", clickedButton);
 };
 
+/**
+ * Starts game mode configuration.
+ */
 const startGameModeConfig = () => {
     const animations = {
         "easy": `obstacle-running ${EASY_SPEED}s infinite linear .6s`,
@@ -205,6 +276,9 @@ const startGameModeConfig = () => {
 
 const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
 
+/**
+ * Generates random obstacle.
+ */
 const generateRandomObstacle = () => {
     const randomImage = getRandomElement(OBSTACLE_IMAGES);
     const randomWidth = getRandomElement(OBSTACLE_WIDTHS);
@@ -213,6 +287,9 @@ const generateRandomObstacle = () => {
     $obstacle.css("width", randomWidth);
 };
 
+/**
+ * Makes the character jump.
+ */
 const jumpCharacter = () => {
     const isGameScreenVisible = $gameScreen.css("display") === 'block';
     if (!isGameScreenVisible || !canJump) return;
@@ -230,11 +307,17 @@ const jumpCharacter = () => {
     }, 600);
 };
 
+/**
+ * Clears active intervals.
+ */
 const clearActiveIntervals = () => {
     activeIntervals.forEach(intervalId => clearInterval(intervalId));
     activeIntervals = [];
 };
 
+/**
+ * Verifies the game state.
+ */
 const verifyGame = () => {
     let counter = 1;
 
@@ -319,6 +402,9 @@ const verifyGame = () => {
     };
 };
 
+/**
+ * Starts the game.
+ */
 const startGame = () => {
     if ($gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none') return;
 
@@ -355,10 +441,18 @@ const startGame = () => {
     verifyGame();
 };
 
+/**
+ * Hide the loading screen.
+ */
 const hidePreloader = () => {
     $('[data-preloader]').fadeOut('slow');
 };
 
+/**
+ * Handles button click events.
+ * @param {Event} event - Button click event.
+ * @param {Function} callback - Callback function.
+ */
 const handleButtonClick = (event, callback) => {
     if (event.type === 'touchstart') {
         event.preventDefault();
@@ -367,9 +461,11 @@ const handleButtonClick = (event, callback) => {
     callback && callback();
 };
 
-const handleKeyPress = ({
-    which
-}) => {
+/**
+ * Handles key press events.
+ * @param {Object} param0 - Key press event object.
+ */
+const handleKeyPress = ({ which }) => {
     const SPACE_KEY = 32;
     const DELETE_KEY = 46;
     const ARROW_TOP_KEY = 38;
@@ -398,9 +494,11 @@ const handleKeyPress = ({
     }
 };
 
-const handleDocumentClick = ({
-    target
-}) => {
+/**
+ * Handles document click events.
+ * @param {Object} param0 - Document click event object.
+ */
+const handleDocumentClick = ({ target }) => {
     const $currentTarget = $(target);
     if (
         !$currentTarget.closest($scorePanel).length &&
@@ -413,6 +511,9 @@ const handleDocumentClick = ({
     }
 };
 
+/**
+ * Initializes event listeners.
+ */
 const initializeEventListeners = () => {
     $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode(event.target)));
     $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode(event.target)));
