@@ -8,7 +8,7 @@
     <meta name="description" content="Jogo criado em javascript, com o uso da biblioteca jquery a fins de treinar meus conhecimentos.">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="icon" type="image/png" href="./assets/img/logo.png" />
+    <link rel="icon" type="image/svg" href="./assets/img/logo-sm.svg" />
     <link rel="stylesheet" href="./assets/css/style.css">
 
     <title>Rock Scape</title>
@@ -42,7 +42,7 @@
                 <header>
                     <h2>Histórico de pontuação</h2>
                     <div class="header-buttons">
-                        <button type="button" class="only-sm button-outline-danger" title="Fechar pontuação" data-score-toggler-btn>
+                        <button type="button" class="button-outline-danger" title="Fechar pontuação" data-score-toggler-btn>
                             <i class="fas fa-xmark"></i>
                         </button>
                         <button type="button" class="button-danger" title="Apagar histórico" data-score-trash-btn>
@@ -61,7 +61,7 @@
             <section class="commands-wrapper" data-commands-wrapper>
                 <header>
                     <h2>Comandos do jogo</h2>
-                    <button type="button" class="only-sm button-outline-danger" title="Fechar comandos" data-command-toggler-btn>
+                    <button type="button" class="button-outline-danger" title="Fechar comandos" data-command-toggler-btn>
                         <i class="fas fa-xmark"></i>
                     </button>
                 </header>
@@ -123,6 +123,8 @@
                 <!-- Inicio do menu de inicio do jogo -->
                 <section class="game-screen start-game-screen" data-start-game-screen>
                     <div class="screen-content">
+                        <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="480">
+
                         <div class="screen-buttons">
                             <button type="button" class="size-2 button-primary" title="Iniciar jogo" data-start-game-btn>
                                 <i class="fas fa-play"></i> Iniciar (ou espaço)
@@ -137,7 +139,6 @@
                                 <i class="fas fa-gamepad"></i> Comandos
                             </button>
                         </div>
-                        <img src="./assets/img/logo.png" alt="Logo do jogo" height="244">
                     </div>
                 </section>
                 <!-- Fim do menu de inicio do jogo -->
