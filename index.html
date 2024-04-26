@@ -5,234 +5,253 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Leandro Adrian da Silva">
-    <meta name="description" content="Jogo criado em javascript, com o uso da biblioteca jquery a fins de treinar meus conhecimentos.">
+    <meta name="description"
+        content="Jogo criado em javascript, com o uso da biblioteca jquery a fins de treinar meus conhecimentos.">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="icon" type="image/svg" href="./assets/img/logo-sm.svg" />
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" type="image/svg" href="./assets/img/logo-sm.svg" />
 
     <title>Rock Scape</title>
 </head>
 
 <body>
-    <!-- preloader -->
-    <div id="preloader" data-preloader>
-        <img src="./assets/img/boy.gif" alt="Garoto correndo - gif" alt="Garoto correndo">
-        <p class="size-3">Carregando...</p>
+    <div class="preloader" data-preloader>
+        <span class="spinner"></span>
     </div>
-    <!-- /preloader -->
 
-    <div class="grid-container">
-        <aside class="aside">
-            <!-- Menu lateral -->
-            <section class="sidemenu-wrapper">
-                <div class="container">
-                    <button class="button-primary" data-score-toggler-btn title="Abrir histórico">
-                        <i class="fas fa-trophy" ></i>
-                    </button>
-                    <button class="button-primary" data-command-toggler-btn title="Abrir a lista de comandos">
-                        <i class="fas fa-gamepad" ></i>
-                    </button>
-                    <button class="button-primary" data-google-login title="Login com Google">
-                        <i class="fab fa-google" ></i>
-                    </button>
-                    <button class="button-danger" data-google-logout title="Logout com Google">
-                        <i class="fas fa-sign-out-alt" ></i>
-                    </button>
+    <div class="toast-wrapper" data-toast>
+        <div class="toast">
+            <div class="toast-banner"></div>
+            <div class="toast-content">
+                <div class="toast-icon"></div>
+                <div>
+                    <p class="toast-title"></p>
+                    <p class="toast-text"> </p>
                 </div>
-            </section>
-            <!-- Fim do menu lateral -->
+            </div>
+        </div>
+    </div>
 
-            <!-- Lista do histórico de tempos -->
-            <section class="score-wrapper" data-score-wrapper>
-                <header>
-                    <h2>Lista de pontuações</h2>
-                    <div class="header-buttons">
-                        <button type="button" class="button-outline-danger" title="Fechar pontuação" data-score-toggler-btn>
-                            <i class="fas fa-xmark"></i>
-                        </button>
-                    </div>
-                </header>
-                
-                <div class="score-form">
-                    <div class="select-score">
-                        <select data-select-scores>
-                            <option value="easy">Filtrar dificuldade: fácil</option>
-                            <option value="medium">Filtrar dificuldade: médio</option>
-                            <option value="hard">Filtrar dificuldade: difícil</option>
-                        </select>
+    <aside class="float-dropdown">
+        <button type="button" class="button-primary size-3" data-google-login title="Entrar com Google">
+            <i class="fab fa-google"></i> Entrar com Google
+        </button>
+
+        <button type="button" data-dropdown-toggler title="Abrir/fechar dropdown">
+            <div data-user-info>
+                <div class="content">
+                    <img src="./assets/img/mainBackground.png" alt="Imagem de perfil do usuário" width="32" height="32">
+                    <div class="right">
+                        <p>username</p>
+                        <small>email</small>
                     </div>
                 </div>
+            </div>
+        </button>
 
-                <div class="table-responsive">
-                    <table><tbody data-score-table></tbody></table>
+        <div class="dropdown">
+            <div class="dropdown-menu">
+                <button type="button" class="button-outline-danger size-3" data-google-logout title="Logout com Google">
+                    <i class="fas fa-sign-out-alt"></i> Sair da conta
+                </button>
+                <button type="button" class="button-danger size-3" data-google-delete title="Excluir conta Google">
+                    <i class="fas fa-sign-out-alt"></i> Excluir conta
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <aside class="scoreboard-wrapper" data-scoreboard-wrapper>
+        <div class="dialog">
+            <header>
+                <div class="header-texts">
+                    <h2>Placar de jogadores</h2>
+                    <small scoreboard-message><i class="fas fa-exclamation-circle"></i> Você deve estar logado para
+                        participar do placar</small>
                 </div>
-            </section>
-            <!-- Fim da lista do histórico de tempos -->
-
-            <!-- Lista de comandos do jogo -->
-            <section class="commands-wrapper" data-commands-wrapper>
-                <header>
-                    <h2>Comandos do jogo</h2>
-                    <button type="button" class="button-outline-danger" title="Fechar comandos" data-command-toggler-btn>
+                <div class="header-buttons">
+                    <button type="button" class="button-outline-danger" title="Fechar placar"
+                        data-scoreboard-toggler-btn>
                         <i class="fas fa-xmark"></i>
                     </button>
-                </header>
-
-                <div class="table-responsive">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td><code>Espaço</code></td>
-                                <td>Inicia/reinicia o jogo</td>
-                                <td>Pula</td>
-                            </tr>
-                            <tr>
-                                <td><code><i class="fas fa-arrow-up"></i></code></td>
-                                <td colspan="2">Pula</td>
-                            </tr>
-                            <tr>
-                            <tr>
-                                <td><code>Tab</code></td>
-                                <td colspan="2">Navega pelos botões da página</td>
-                            </tr>
-                            <tr>
-                                <td><code>Enter</code></td>
-                                <td colspan="2">Ativa os eventos dos botões</td>
-                            </tr>
-                            <tr>
-                                <td><code>C</code></td>
-                                <td colspan="2">Abre a lista de comandos</td>
-                            </tr>
-                            <tr>
-                                <td><code>P</code></td>
-                                <td colspan="2">Abre o histórico de pontuação</td>
-                            </tr>
-                            <tr>
-                                <td><code>Delete</code></td>
-                                <td colspan="2">Limpa o histórico de tempos</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
+            </header>
+
+            <div class="scoreboard-form">
+                <div class="select">
+                    <select data-scoreboard-select>
+                        <option value="easy">Filtrar dificuldade: fácil</option>
+                        <option value="medium">Filtrar dificuldade: médio</option>
+                        <option value="hard">Filtrar dificuldade: difícil</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <tbody data-scoreboard-table></tbody>
+                </table>
+            </div>
+        </div>
+    </aside>
+
+    <aside class="commands-wrapper" data-commands-wrapper>
+        <div class="dialog">
+            <header>
+                <h2>Comandos do jogo</h2>
+                <button type="button" class="button-outline-danger" title="Fechar comandos" data-command-toggler-btn>
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </header>
+
+            <div class="table-responsive">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><code>Espaço</code></td>
+                            <td>Inicia/reinicia o jogo - pula</td>
+                        </tr>
+                        <tr>
+                            <td><code><i class="fas fa-arrow-up"></i></code></td>
+                            <td>Pula</td>
+                        </tr>
+                        <tr>
+                        <tr>
+                            <td><code>C</code></td>
+                            <td>Atalho para acessar a lista de comandos</td>
+                        </tr>
+                        <tr>
+                            <td><code>P</code></td>
+                            <td>Atalho para acessar o placar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </aside>
+
+    <main class="display">
+        <div class="game-board">
+            <section class="game" data-game>
+                <div id="mobile-jump-area" data-mobile-jump-area><span><i class="fas fa-caret-up"></i></span></div>
+
+                <span id="time-counter" data-time-counter></span>
+
+                <img src="./assets/img/boy.gif" id="character" alt="Imagem do jogador" data-character>
+                <img src="./assets/img/obstacle1.png" id="obstacle" alt="Imagem do obstáculo" data-obstacle>
+
+                <div class="background"></div>
             </section>
-            <!-- Fim da lista de comandos do jogo -->
-        </aside>
 
-        <!-- Inicio do display do jogo - onde ele vai aparecer -->
-        <main class="display">
-            <div class="game-board">
-                <section class="game" data-game>
-                    <div id="mobile-jump-area" data-mobile-jump-area><span><i class="fas fa-caret-up"></i></span></div>
+            <section class="game-screen start-game-screen" data-start-game-screen>
+                <div class="screen-content">
+                    <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="360">
 
-                    <span id="time-counter" data-time-counter></span>
-
-                    <img src="./assets/img/boy.gif" id="character" alt="Imagem do jogador" data-character>
-                    <img src="./assets/img/obstacle1.png" id="obstacle" alt="Imagem do obstáculo" data-obstacle>
-
-                    <div class="background"></div>
-                </section>
-
-                <!-- Inicio do menu de inicio do jogo -->
-                <section class="game-screen start-game-screen" data-start-game-screen>
-                    <div class="screen-content">
-                        <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="360">
-
-                        <div class="screen-buttons">
-                            <button type="button" class="size-2 button-primary" title="Iniciar jogo" data-start-game-btn>
-                                <i class="fas fa-play"></i> Iniciar (ou espaço)
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar configurações" data-config-toggler-btn>
-                                <i class="fas fa-gear"></i> Configurações
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
-                                <i class="fas fa-trophy"></i> Pontuação
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
-                                <i class="fas fa-gamepad"></i> Comandos
-                            </button>
-                        </div>
-                    </div>
-                </section>
-                <!-- Fim do menu de inicio do jogo -->
-
-                <!-- Inicio do menu de game-over -->
-                <section class="game-screen game-over-screen" data-game-over-screen>
-                    <div class="screen-content">
-                        <div class="screen-texts">
-                            <h2 class="size-1">Oops! Parece que você caiu...</h2>
-                            <span id="game-over-time-display" data-game-over-time></span>
-                        </div>
-
-                        <div class="screen-buttons">
-                            <button type="button" class="size-2 button-primary" title="Jogar novamente" data-start-game-btn>
-                                <i class="fas fa-play"></i> Jogar denovo (ou espaço)
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar configurações" data-config-toggler-btn>
-                                <i class="fas fa-gear"></i> Configurações
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar pontuação" data-score-toggler-btn>
-                                <i class="fas fa-trophy"></i> Pontuação
-                            </button>
-                            <button type="button" class="size-3 button-outline-primary" title="Acessar comandos" data-command-toggler-btn>
-                                <i class="fas fa-gamepad"></i> Comandos
-                            </button>
-                        </div>
-                    </div>
-                </section>
-                <!-- Fim do menu de game-over -->
-
-                <!-- Configurações -->
-                <section class="game-screen game-config-screen" data-game-config-screen>
-                    <div id="game-config-message" data-game-config-message></div>
-
-                    <div class="screen-content">
-                        <div class="options-container">
-                            <div class="options">
-                                <h3 class="size-1">Dificuldade</h3>
-
-                                <div class="screen-buttons">
-                                    <button type="button" class="size-3 button-primary button-active" title="Selecionar dificuldade fácil" data-easy-mode-btn>
-                                        Fácil
-                                    </button>
-                                    <button type="button" class="size-3 button-primary" title="Selecionar dificuldade média" data-medium-mode-btn>  
-                                        Médio
-                                    </button>
-                                    <button type="button" class="size-3 button-primary" title="Selecionar dificuldade difícil" data-hard-mode-btn>  
-                                        Difícil
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="options">
-                                <h3 class="size-1">Personagem</h3>
-
-                                <div class="screen-buttons images">
-                                    <button type="button" class="size-3 button-primary button-active" title="Selecionar personagem 1" data-select-char1-btn>
-                                        <img src="./assets/img/boy.gif" alt="Personagem 1 - garoto" width="18" height="18"> Masculino
-                                    </button>
-                                    <button type="button" class="size-3 button-primary" title="Selecionar personagem 2" data-select-char2-btn>
-                                        <img src="./assets/img/girl.gif" alt="Personagem 2 - garota" width="18" height="18"> Feminino
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="button-danger size-3" title="Voltar para a página inicial" data-back-start-btn>
-                            <i class="fas fa-arrow-left"></i> Voltar
+                    <div class="screen-buttons">
+                        <button type="button" class="size-1 button-primary" title="Iniciar jogo" data-start-game-btn>
+                            <i class="fas fa-play"></i> Iniciar (ou espaço)
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
+                            data-config-toggler-btn>
+                            <i class="fas fa-gear"></i> Configurações
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar placar"
+                            data-scoreboard-toggler-btn>
+                            <i class="fas fa-trophy"></i> Placar
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar comandos"
+                            data-command-toggler-btn>
+                            <i class="fas fa-gamepad"></i> Comandos
                         </button>
                     </div>
-                </section>
-                <!-- Fim das configurações -->
-            </div>
-        </main>
-        <!-- Fim do display do jogo -->
-    </div>
+                </div>
+            </section>
+
+            <section class="game-screen game-over-screen" data-game-over-screen>
+                <div class="screen-content">
+                    <div class="screen-texts">
+                        <h2 class="size-1">Oops! Parece que você caiu...</h2>
+                        <span id="game-over-time-display" data-game-over-time></span>
+                    </div>
+
+                    <div class="screen-buttons">
+                        <button type="button" class="size-2 button-primary" title="Jogar novamente" data-start-game-btn>
+                            <i class="fas fa-play"></i> Jogar denovo (ou espaço)
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
+                            data-config-toggler-btn>
+                            <i class="fas fa-gear"></i> Configurações
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar placar"
+                            data-scoreboard-toggler-btn>
+                            <i class="fas fa-trophy"></i> Placar
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" title="Acessar comandos"
+                            data-command-toggler-btn>
+                            <i class="fas fa-gamepad"></i> Comandos
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="game-screen game-config-screen" data-game-config-screen>
+                <div id="game-config-message" data-game-config-message></div>
+
+                <div class="screen-content">
+                    <div class="options-container">
+                        <div class="options">
+                            <h3 class="size-1">Dificuldade</h3>
+
+                            <div class="screen-buttons">
+                                <button type="button" class="size-3 button-primary button-active"
+                                    title="Selecionar dificuldade fácil" data-easy-mode-btn>
+                                    Fácil
+                                </button>
+                                <button type="button" class="size-3 button-primary" title="Selecionar dificuldade média"
+                                    data-medium-mode-btn>
+                                    Médio
+                                </button>
+                                <button type="button" class="size-3 button-primary"
+                                    title="Selecionar dificuldade difícil" data-hard-mode-btn>
+                                    Difícil
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="options">
+                            <h3 class="size-1">Personagem</h3>
+
+                            <div class="screen-buttons images">
+                                <button type="button" class="size-3 button-primary button-active"
+                                    title="Selecionar personagem 1" data-select-char1-btn>
+                                    <img src="./assets/img/boy.gif" alt="Personagem 1 - garoto" width="18" height="18">
+                                    Masculino
+                                </button>
+                                <button type="button" class="size-3 button-primary" title="Selecionar personagem 2"
+                                    data-select-char2-btn>
+                                    <img src="./assets/img/girl.gif" alt="Personagem 2 - garota" width="18" height="18">
+                                    Feminino
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
+                        data-back-start-btn>
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js" type="text/javascript"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth-compat.js" type="text/javascript"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js" type="text/javascript"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics-compat.js" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore-compat.js"
+        type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics-compat.js"
+        type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./assets/js/main.js" type="module"></script>
 </body>

@@ -1,23 +1,38 @@
-@import url('https://fonts.googleapis.com/css?family=Bangers');
-@import url('https://fonts.googleapis.com/css?family=Archivo');
+@import url('https://fonts.googleapis.com/css?family=Bangers&');
+@import url('https://fonts.googleapis.com/css?family=Archivo&');
 
 :root {
-    --primary-color: #324c67;
-    --primary-color-light: #dde5ee;
-    --primary-color-dark: #243242;
-    --danger-color: #eb4747;
-    --danger-color-light: #fad1d1;
-    --danger-color-dark: #6b2e2e;
-    --background-primary: #111;
-    --background-secondary: #222;
-    --background-tertiary: #333;
+    --color-primary-100: #324c67;
+    --color-primary-200: #485e77;
+    --color-primary-300: #5d7087;
+    --color-primary-400: #738397;
+    --color-primary-500: #8a97a8;
+    --color-primary-600: #e2e2e2;
+
+    --color-surface-100: #121212;
+    --color-surface-300: #3f3f3f;
+
+    --color-surface-mixed-100: #191d22;
+    --color-surface-mixed-300: #45484c;
+
+    --overlay-color: rgb(0 0 0 / 80%);
+
+    --color-danger-300: #eb4747;
+    --color-danger-600: #fad1d1;
+    --color-danger-100: #6b2e2e;
+
     --border-color: #444;
-    --font-color: #fff;
+
+    --color-font: #e2e2e2;
+    --color-font-muted: #ccc;
+    --color-font-secondary: #282828;
+
     --button-font-family: "Bangers", sans-serif;
     --normal-font-family: "Archivo", sans-serif;
-    --radius: 5px;
-    --border-width: 2px;
-    --side-width: calc(5vw + 1rem);
+
+    --default-border-radius: 5px;
+    --default-border-width: 2px;
+
     --game-index: 3;
     --side-index: 4;
 }

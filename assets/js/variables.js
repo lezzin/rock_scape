@@ -29,10 +29,10 @@ export const GAME_CHARACTERS = {
     girl: "p2",
 };
 
-export const exclamationIcon = '<i class="fa-solid fa-exclamation-circle"></i>';
+export const exclamationIcon = '<i class="fas fa-exclamation-circle"></i>';
 
 export const GAME_MESSAGES = {
-    emptyScore: "<tr><td>Nenhuma pontuação existente</td></tr>",
+    emptyScore: "<tr class=\"empty\"><td>Nenhuma pontuação existente</td></tr>",
     scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time + (time === 1 ? ' segundo' : ' segundos')}`,
     scoreTable: (index, html) => `<tr><td>${index}) <span>${html}</span></td></tr>`,
     characterIsSelected: `<p>${exclamationIcon} Personagem já selecionado<p>`,

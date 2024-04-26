@@ -1,5 +1,7 @@
 import { auth, db, provider } from "./firebase.js";
-import {
+import * as variables from "./variables.js";
+
+const {
     EASY_SPEED,
     MEDIUM_SPEED,
     HARD_SPEED,
@@ -18,17 +20,18 @@ import {
     GAME_DIFICULTIES,
     GAME_CHARACTERS,
     GAME_MESSAGES
-} from "./variables.js";
+} = variables;
 
 const scoreboardRef = db.collection('scoreboard').doc('scoreboard_users');
 
+const $deleteAccountBtn = $("[data-google-delete]");
 const $loginGoogleBtn = $("[data-google-login]");
 const $logoutGoogleBtn = $("[data-google-logout]");
-let loggedUser = null;
-
+const $userDataDisplay = $("[data-user-info]");
+const $dropdownToggler = $("[data-dropdown-toggler]");
+const $dropdowns = $(".dropdown");
 const $character = $("[data-character]");
 const $obstacle = $("[data-obstacle]");
-
 const $gameScreen = $("[data-game]");
 const $gameScreenCounter = $("[data-time-counter]");
 const $mobileJumpArea = $("[data-mobile-jump-area]");
@@ -37,39 +40,33 @@ const $gameOverScreen = $("[data-game-over-screen]");
 const $gameOverCounterDisplay = $("[data-game-over-time]");
 const $gameConfigScreen = $("[data-game-config-screen]");
 const $gameConfigScreenAlert = $("[data-game-config-message]");
-
-const $scorePanel = $("[data-score-wrapper]");
-const $scorePanelTable = $("[data-score-table]");
-const $scoreSelect = $("[data-select-scores]");
-
+const $scorePanel = $("[data-scoreboard-wrapper]");
+const $scorePanelTable = $("[data-scoreboard-table]");
+const $scoreSelect = $("[data-scoreboard-select]");
+const $scoreMessage = $("[scoreboard-message]");
 const $commandsPanel = $("[data-commands-wrapper]");
-
 const $configSelectP1Btn = $("[data-select-char1-btn]");
 const $configSelectP2Btn = $("[data-select-char2-btn]");
 const $configEasyModeBtn = $("[data-easy-mode-btn]");
 const $configMediumModeBtn = $("[data-medium-mode-btn]");
 const $configHardModeBtn = $("[data-hard-mode-btn]");
-
 const $startGameBtn = $("[data-start-game-btn]");
 const backToStartBtn = $("[data-back-start-btn]");
-const $scoreToggleBtn = $("[data-score-toggler-btn]");
+const $scoreToggleBtn = $("[data-scoreboard-toggler-btn]");
 const $commandsToggleBtn = $("[data-command-toggler-btn]");
 const $configToggleBtn = $("[data-config-toggler-btn]");
-
 const $gameWidth = $gameScreen.width();
 const $gameOffset = $gameScreen.offset();
+const $toast = $("[data-toast]");
 
-let scoreboard = [];
-
-let selectedScoreDifficulty = $scoreSelect.val();
-let selectedCharacter = GAME_CHARACTERS.boy;
-let selectedDifficulty = GAME_DIFICULTIES.easy;
-let canJump = true;
-
+let loggedUser = null;
 let activeIntervals = [];
 let configMessageTimeout;
 let characterJumpTimeout;
-
+let selectedScoreboardDifficulty = $scoreSelect.val();
+let selectedCharacter = GAME_CHARACTERS.boy;
+let selectedDifficulty = GAME_DIFICULTIES.easy;
+let canCharacterJump = true;
 
 JUMP_SOUND.volume = 0.5;
 STEP_SOUND.volume = 0.3;
@@ -77,15 +74,42 @@ RECORD_SOUND.volume = 0.5;
 DAMAGE_SOUND_P1.volume = 0.4;
 DAMAGE_SOUND_P2.volume = 0.4;
 
-const toggleScoreDifficulty = ({ target: { value } }) => {
-    selectedScoreDifficulty = value;
-    updateRecord();
+/**
+ * Shows a toast in the screen.
+ * @param {String} type - The toast type.
+ * @param {String} message - The toast message.
+ */
+const showToast = (type, message) => {
+    const $toastContent = $toast.find(".toast");
+    const toastClass = type === "error" ? "error-toast" : "success-toast";
+    const toastTitle = type === "error" ? "Erro" : "Sucesso";
+    const toastIcon = type === "error" ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-check"></i>';
+
+    $toastContent.removeClass("error-toast", "success-toast").addClass(toastClass);
+    $toastContent.find(".toast-title").text(toastTitle);
+    $toastContent.find(".toast-icon").html(toastIcon);
+    $toastContent.find(".toast-text").text(message);
+    $toast.fadeIn();
+
+    setTimeout(() => {
+        $toast.fadeOut();
+    }, MESSAGE_TIMER);
 }
 
 /**
- * Populates pontuation table.
+ * Filter the scoreboard by difficulty.
+ * @param {String} difficulty - The selected difficulty.
  */
-const populatePontuationTable = (data) => {
+const filterScoreboardByDifficulty = (difficulty) => {
+    selectedScoreboardDifficulty = difficulty;
+    updateScoreboardTable();
+}
+
+/**
+ * Populates the scoreboard table.
+ * @param {Array} data - The array of scores
+ */
+const populateScoreboardTable = (data) => {
     $scorePanelTable.empty();
 
     if (data.length === 0) {
@@ -93,46 +117,41 @@ const populatePontuationTable = (data) => {
         return;
     }
 
-    data.forEach((user, index) => {
-        const { username, score, difficulty } = user;
+    const currentUserID = loggedUser ? loggedUser.uid : null;
 
-        const translatedDifficulties = {
-            easy: "fácil",
-            medium: "média",
-            hard: "difícil",
+    data.forEach((user, index) => {
+        const { user_id, username, score } = user;
+
+        const scoreHTML = `${username} - ${score}s`;
+        const pontuationIndex = index + 1;
+        const $scoreItem = $(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
+
+        if (user_id === currentUserID) {
+            $scoreItem.addClass("user-score");
         }
 
-        const scoreHTML = `${username} - ${score}s na dificuldade ${translatedDifficulties[difficulty]}`
-        const pontuationIndex = index + 1;
-        $scorePanelTable.append(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
+        $scorePanelTable.append($scoreItem);
     });
 };
 
 /**
- * Updates record.
- */
-const updateRecord = () => {
-    scoreboardRef.get().then((doc) => {
-        const scoreboardData = doc.data()?.scores;
-        scoreboard = scoreboardData ? scoreboardData.filter((score, index) => score.difficulty === selectedScoreDifficulty && index < 10) : [];
+ * Updates the scoreboard table.
+*/
+const updateScoreboardTable = async () => {
+    try {
+        const doc = await scoreboardRef.get();
+        const scoreboardData = doc.data()?.scores || [];
+        const MAX_SCORES = 10;
 
-        populatePontuationTable(scoreboard);
+        const filteredScoreboardByDifficulty = scoreboardData
+            .filter(score => score.difficulty === selectedScoreboardDifficulty)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, MAX_SCORES);
 
-        let maxTime = 0;
-        let indexOfMaxTime = -1;
-
-        scoreboard.forEach((item, index) => {
-            const timeSeconds = +(item.score);
-            if (timeSeconds > maxTime) {
-                maxTime = timeSeconds;
-                indexOfMaxTime = index;
-            }
-        });
-
-        if (indexOfMaxTime !== -1) {
-            $scorePanelTable.children().removeClass("recorde").eq(indexOfMaxTime).addClass("recorde");
-        }
-    });
+        populateScoreboardTable(filteredScoreboardByDifficulty);
+    } catch (error) {
+        showToast("error", "Erro ao atualizar placar:", error);
+    }
 };
 
 /**
@@ -140,14 +159,14 @@ const updateRecord = () => {
  * @param {JQuery<HTMLElement>} screenToToggle - Screen to toggle.
  */
 const toggleScreen = (screenToToggle) => {
+    if ($gameStartScreen.css("display") === "none" && $gameOverScreen.css("display") === "none") return;
     screenToToggle.toggleClass("selected-screen");
 };
 
 /**
  * Toggles score screen.
  */
-const toggleScoreScreen = () => {
-    if (!loggedUser) return;
+const toggleScoreboardScreen = () => {
     toggleScreen($scorePanel);
     $commandsPanel.removeClass("selected-screen");
 };
@@ -289,19 +308,19 @@ const generateRandomObstacle = () => {
  * Makes the character jump.
  */
 const jumpCharacter = () => {
-    const isGameScreenVisible = $gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none';
-    if (!isGameScreenVisible || !canJump) return;
+    const isGameRunning = $gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none';
+    if (!isGameRunning || !canCharacterJump) return;
 
     clearTimeout(characterJumpTimeout);
 
     $character.addClass("jump");
     JUMP_SOUND.play();
 
-    canJump = false;
+    canCharacterJump = false;
 
     characterJumpTimeout = setTimeout(() => {
         $character.removeClass("jump");
-        canJump = true;
+        canCharacterJump = true;
     }, 600);
 };
 
@@ -377,51 +396,54 @@ const verifyGame = () => {
         const currentScore = counter - 1;
 
         if (loggedUser) {
-            const newScore = {
-                user_id: loggedUser.uid,
-                username: loggedUser.displayName,
-                score: currentScore,
-                difficulty: selectedDifficulty
-            };
-
-            scoreboardRef.get().then((doc) => {
-                const currentScoreboard = doc.data() || {};
-                const scoresFilteredByDifficulty = (currentScoreboard.scores || []).filter(score => score.difficulty === selectedDifficulty);
-                const recordScoreInCurrentDifficulty = scoresFilteredByDifficulty.reduce((max, score) => Math.max(max, score.score), 0);
-                const isNewRecord = currentScore > recordScoreInCurrentDifficulty;
-
-                if (isNewRecord) {
-                    setTimeout(() => {
-                        RECORD_SOUND.play();
-                        $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(currentScore));
-                    }, 500);
-                } else {
-                    $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(currentScore));
-                }
-
-                const existingUserScoreIndex = (currentScoreboard.scores || []).findIndex(score => score.user_id === loggedUser.uid && score.difficulty === selectedDifficulty);
-
-                if (existingUserScoreIndex !== -1) {
-                    const existingUserScore = currentScoreboard.scores[existingUserScoreIndex];
-
-                    if (currentScore > existingUserScore.score) {
-                        existingUserScore.score = currentScore;
-                        scoreboardRef.update({ scores: currentScoreboard.scores });
-                    }
-                } else {
-                    const updatedScoreboard = isNewRecord
-                        ? currentScoreboard.scores.concat({ user_id: loggedUser.uid, username: loggedUser.displayName, score: currentScore, difficulty: selectedDifficulty })
-                        : currentScoreboard.scores || [{ user_id: loggedUser.uid, username: loggedUser.displayName, score: currentScore, difficulty: selectedDifficulty }];
-                    scoreboardRef.set({ scores: updatedScoreboard });
-                }
-            }).catch((error) => {
-                console.error("Error updating document: ", error);
-            });
-
-            return
+            updateScoreboard(currentScore);
+            return;
         }
 
         $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(currentScore));
+    };
+
+    const updateScoreboard = async (currentScore) => {
+        const newScore = {
+            user_id: loggedUser.uid,
+            username: loggedUser.displayName,
+            score: currentScore,
+            difficulty: selectedDifficulty
+        };
+
+        try {
+            const doc = await scoreboardRef.get();
+            const currentScoreboard = doc.data() || {};
+            const { scores = [] } = currentScoreboard;
+            const scoresFilteredByDifficulty = scores.filter(score => score.difficulty === selectedDifficulty);
+            const recordScoreInCurrentDifficulty = scoresFilteredByDifficulty.reduce((max, score) => Math.max(max, score.score), 0);
+            const isNewRecord = currentScore > recordScoreInCurrentDifficulty;
+
+            if (isNewRecord) {
+                setTimeout(() => {
+                    RECORD_SOUND.play();
+                    $gameOverCounterDisplay.text(GAME_MESSAGES.newRecord(currentScore));
+                }, 500);
+            } else {
+                $gameOverCounterDisplay.text(GAME_MESSAGES.runFeedback(currentScore));
+            }
+
+            const existingUserScoreIndex = scores.findIndex(score => score.user_id === loggedUser.uid && score.difficulty === selectedDifficulty);
+
+            if (existingUserScoreIndex !== -1) {
+                const existingUserScore = scores[existingUserScoreIndex];
+
+                if (currentScore > existingUserScore.score) {
+                    existingUserScore.score = currentScore;
+                    await scoreboardRef.update({ scores });
+                }
+            } else {
+                const updatedScoreboard = isNewRecord ? scores.concat(newScore) : scores;
+                await scoreboardRef.set({ scores: updatedScoreboard });
+            }
+        } catch (error) {
+            showToast("error", "Erro ao atualizar placar:", error);
+        }
     };
 };
 
@@ -431,7 +453,7 @@ const verifyGame = () => {
 const startGame = () => {
     if ($gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none') return;
 
-    canJump = false;
+    canCharacterJump = false;
 
     const playerImage = selectedCharacter === GAME_CHARACTERS.boy ? IMAGE_P1 : IMAGE_P2;
     $character.prop("src", playerImage);
@@ -455,7 +477,7 @@ const startGame = () => {
     }
 
     setTimeout(() => {
-        canJump = true;
+        canCharacterJump = true;
     }, 500);
 
     hideAllScreens();
@@ -472,34 +494,92 @@ const hidePreloader = () => {
 };
 
 /**
+ * Updates the user data display
+ */
+const updateUserDataDisplay = () => {
+    const { displayName, photoURL, email } = loggedUser;
+
+    $userDataDisplay.find("img").prop("src", photoURL);
+    $userDataDisplay.find("p").text(displayName);
+    $userDataDisplay.find("small").text(email);
+}
+
+/**
+ * Resets the elements to their default states
+ */
+const resetElements = () => {
+    $loginGoogleBtn.show();
+    $logoutGoogleBtn.hide();
+    $dropdowns.hide();
+    loggedUser = null;
+
+    updateScoreboardTable();
+}
+
+/**
  * Login the user with Google
  */
-const handleLogin = () => {
-    auth
-        .signInWithPopup(provider)
-        .then(({ user }) => {
-            $logoutGoogleBtn.show();
-            $loginGoogleBtn.hide();
-
-            loggedUser = user;
-        }).catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-        });
-}
+const loginUserAccount = async () => {
+    try {
+        const { user } = await auth.signInWithPopup(provider);
+        $logoutGoogleBtn.show();
+        $loginGoogleBtn.hide();
+        loggedUser = user;
+        showToast("success", "Logado com sucesso");
+    } catch (error) {
+        showToast("error", "Erro ao fazer login:", error);
+    }
+};
 
 /**
  * Logout the user from Google
  */
-const handleLogout = () => {
-    auth.signOut()
-        .then(() => {
-            $loginGoogleBtn.show();
-            $logoutGoogleBtn.hide();
-            loggedUser = null;
-        })
-        .catch((error) => console.error(error));
+const logoutUserAccount = async () => {
+    try {
+        await auth.signOut();
+        resetElements();
+        showToast("success", "Deslogado com sucesso");
+    } catch (error) {
+        showToast("error", "Erro ao sair:", error);
+    }
+};
+
+/**
+ * Excluir a the user's account and scores.
+ */
+const deleteUserAccount = async () => {
+    if (!confirm("Realmente deseja excluir a conta? Essa ação é irreversível")) return;
+
+    const user = auth.currentUser;
+
+    try {
+        await scoreboardRef.get().then(snapshot => {
+            if (snapshot.exists) {
+                const scoreboardData = snapshot.data()?.scores || [];
+                const updatedScores = scoreboardData.filter(score => score.user_id !== user.uid);
+                scoreboardRef.set({ scores: updatedScores });
+            }
+        });
+
+        await user.delete();
+
+        resetElements();
+        showToast("success", "Conta removida com sucesso");
+    } catch (error) {
+        showToast("error", "Erro ao excluir conta:", error);
+    }
 }
+
+
+/**
+ * Toggles dropdowns.
+ * @param {HTMLElement} clickedElement - Target dropdown toggler.
+ */
+const toggleDropdown = (clickedElement) => {
+    const $dropdown = $(clickedElement).closest("[data-dropdown-toggler]").siblings(".dropdown");
+    $dropdowns.not($dropdown).hide();
+    $dropdown.toggle();
+};
 
 /**
  * Handles button click events.
@@ -519,32 +599,17 @@ const handleButtonClick = (event, callback) => {
  * @param {Object} param0 - Key press event object.
  */
 const handleKeyPress = ({ which }) => {
-    const SPACE_KEY = 32;
-    const DELETE_KEY = 46;
-    const ARROW_TOP_KEY = 38;
-    const C_KEY = 67;
-    const P_KEY = 80;
-
-    switch (which) {
-        case SPACE_KEY:
+    const functions = {
+        32: () => {
             startGame();
             jumpCharacter();
-            break;
-        case ARROW_TOP_KEY:
-            jumpCharacter();
-            break;
-        case DELETE_KEY:
-            clearStorage();
-            break;
-        case C_KEY:
-            toggleCommandsScreen();
-            break;
-        case P_KEY:
-            toggleScoreScreen();
-            break;
-        default:
-            break;
+        },
+        38: jumpCharacter,
+        67: toggleCommandsScreen,
+        80: toggleScoreboardScreen
     }
+
+    functions[which] && functions[which]();
 };
 
 /**
@@ -553,14 +618,18 @@ const handleKeyPress = ({ which }) => {
  */
 const handleDocumentClick = ({ target }) => {
     const $currentTarget = $(target);
+    const $dialogElements = $('.dialog');
+
     if (
-        !$currentTarget.closest($scorePanel).length &&
-        !$currentTarget.closest($commandsPanel).length &&
+        !$currentTarget.closest($dialogElements).length &&
         !$currentTarget.closest($scoreToggleBtn).length &&
-        !$currentTarget.closest($commandsToggleBtn).length
+        !$currentTarget.closest($commandsToggleBtn).length &&
+        !$currentTarget.closest($dropdownToggler).length &&
+        !$currentTarget.closest($dropdowns).length
     ) {
         $scorePanel.removeClass('selected-screen');
         $commandsPanel.removeClass('selected-screen');
+        $dropdowns.hide();
     }
 };
 
@@ -568,15 +637,16 @@ const handleDocumentClick = ({ target }) => {
  * Initializes event listeners.
  */
 const initializeEventListeners = () => {
-    $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, handleLogin));
-    $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, handleLogout));
-    $scoreSelect.on("change", event => toggleScoreDifficulty(event));
-
+    $scoreSelect.on("change", event => filterScoreboardByDifficulty(event.target.value));
+    $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, loginUserAccount));
+    $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, logoutUserAccount));
+    $deleteAccountBtn.on("click touchstart", event => handleButtonClick(event, deleteUserAccount));
+    $dropdownToggler.on("click touchstart", event => handleButtonClick(event, toggleDropdown(event.target)));
     $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode(event.target)));
     $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode(event.target)));
     $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode(event.target)));
     $startGameBtn.on("click touchstart", event => handleButtonClick(event, startGame));
-    $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreScreen));
+    $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreboardScreen));
     $commandsToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
     backToStartBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
@@ -588,30 +658,32 @@ const initializeEventListeners = () => {
 }
 
 $(window).on("load", function () {
-    $scoreToggleBtn.hide();
-    $logoutGoogleBtn.hide();
-
     auth.onAuthStateChanged(user => {
         if (!user) {
-            $scoreToggleBtn.hide();
             $logoutGoogleBtn.hide();
+            $deleteAccountBtn.hide();
+            $userDataDisplay.hide();
+            $scoreMessage.show();
             return;
         }
 
+        $scoreMessage.hide();
         $loginGoogleBtn.hide();
         $logoutGoogleBtn.show();
-        $scoreToggleBtn.show();
+        $deleteAccountBtn.show();
+        $userDataDisplay.show();
 
         scoreboardRef.onSnapshot((snapshot) => {
             if (snapshot.exists) {
-                updateRecord();
+                updateScoreboardTable();
             }
         });
 
         loggedUser = user;
-        updateRecord();
+        updateUserDataDisplay();
     })
 
+    updateScoreboardTable();
     initializeEventListeners();
     hidePreloader();
 })
