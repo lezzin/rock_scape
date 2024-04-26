@@ -21,25 +21,6 @@
     }
 }
 
-@keyframes movement {
-    0%,
-    100% {
-        transform: translateX(0) rotate(0);
-    }
-
-    25% {
-        transform: translateX(-.1rem) rotate(.1deg);
-    }
-
-    50% {
-        transform: translateX(.1rem) rotate(-.1deg);
-    }
-
-    75% {
-        transform: translateX(-.1rem) rotate(.1deg);
-    }
-}
-
 @keyframes spin {
     from {
         transform: rotate(0deg);

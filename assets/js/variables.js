@@ -7,8 +7,8 @@ export const STORAGE_PONTUATION_KEY = "pontuacao";
 export const STORAGE_RECORD_KEY = "recordTime";
 export const MESSAGE_TIMER = 2000;
 
-export const GAME_OVER_IMAGE_P1 = "./assets/img/falledBoy.png";
-export const GAME_OVER_IMAGE_P2 = "./assets/img/falledGirl.png";
+export const GAME_OVER_IMAGE_P1 = "./assets/img/falled-boy.png";
+export const GAME_OVER_IMAGE_P2 = "./assets/img/falled-girl.png";
 export const IMAGE_P1 = "./assets/img/boy.gif";
 export const IMAGE_P2 = "./assets/img/girl.gif";
 

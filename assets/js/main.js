@@ -122,7 +122,7 @@ const populateScoreboardTable = (data) => {
     data.forEach((user, index) => {
         const { user_id, username, score } = user;
 
-        const scoreHTML = `${username} - ${score}s`;
+        const scoreHTML = `${username} - ${score} segundos`;
         const pontuationIndex = index + 1;
         const $scoreItem = $(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
 
@@ -385,7 +385,6 @@ const verifyGame = () => {
         gameOverSound.play();
         gameOverSound.loop = false;
 
-        $gameScreen.removeClass("running");
         $gameOverScreen.fadeIn();
         $gameScreenCounter.hide();
 
@@ -459,9 +458,7 @@ const startGame = () => {
     $character.prop("src", playerImage);
 
     $gameScreenCounter.text(GAME_MESSAGES.timeCounterInitial).show();
-    $gameOverCounterDisplay.text("---");
-
-    $gameScreen.addClass("running");
+    $gameOverCounterDisplay.text("Carregando...");
 
     $obstacle.show();
     $character.show();
@@ -499,8 +496,8 @@ const hidePreloader = () => {
 const updateUserDataDisplay = () => {
     const { displayName, photoURL, email } = loggedUser;
 
-    $userDataDisplay.find("img").prop("src", photoURL);
-    $userDataDisplay.find("p").text(displayName);
+    $userDataDisplay.find("img").prop("src", photoURL ?? "https://via.placeholder.com/32x32.webp/e2e2e2/000000");
+    $userDataDisplay.find("p").text(displayName ?? "Usuário");
     $userDataDisplay.find("small").text(email);
 }
 
@@ -525,6 +522,8 @@ const loginUserAccount = async () => {
         $logoutGoogleBtn.show();
         $loginGoogleBtn.hide();
         loggedUser = user;
+
+        updateScoreboardTable();
         showToast("success", "Logado com sucesso");
     } catch (error) {
         showToast("error", "Erro ao fazer login:", error);
@@ -569,7 +568,6 @@ const deleteUserAccount = async () => {
         showToast("error", "Erro ao excluir conta:", error);
     }
 }
-
 
 /**
  * Toggles dropdowns.
@@ -673,17 +671,17 @@ $(window).on("load", function () {
         $deleteAccountBtn.show();
         $userDataDisplay.show();
 
-        scoreboardRef.onSnapshot((snapshot) => {
-            if (snapshot.exists) {
-                updateScoreboardTable();
-            }
-        });
-
         loggedUser = user;
         updateUserDataDisplay();
     })
 
-    updateScoreboardTable();
+    scoreboardRef.onSnapshot((snapshot) => {
+        if (snapshot.exists) {
+            updateScoreboardTable();
+        }
+    });
+
     initializeEventListeners();
+    updateScoreboardTable();
     hidePreloader();
 })

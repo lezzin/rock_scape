@@ -49,12 +49,6 @@ button {
         background-color: var(--color-primary-100);
         border-color: var(--color-primary-200);
         color: var(--color-font);
-
-        &.button-active::before {
-            font-family: FontAwesome;
-            content: "\f0da";
-            font-size: .8rem;
-        }
     }
 
     &.button-outline-primary {
@@ -75,7 +69,8 @@ button {
         color: var(--color-danger-300);
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
         filter: brightness(80%);
     }
 }
@@ -115,11 +110,11 @@ button {
         display: grid;
         grid-template-columns: 1.5rem 1fr;
         overflow: hidden;
-        background-color: var(--color-font);
         border-radius: var(--default-border-radius);
         color: var(--color-font-secondary);
 
         &.success-toast {
+
             .toast-banner,
             .toast-icon {
                 background-color: var(--color-primary-100);
@@ -127,6 +122,7 @@ button {
         }
 
         &.error-toast {
+
             .toast-banner,
             .toast-icon {
                 background-color: var(--color-danger-300);
@@ -138,7 +134,8 @@ button {
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            padding: .5rem 1rem;
+            background-color: var(--color-font);
+            padding: .5rem 1.5rem;
 
             .toast-icon {
                 display: grid;
@@ -174,7 +171,7 @@ button {
         border: 3px solid var(--color-font);
         border-left-color: var(--color-primary-100);
         border-radius: 50%;
-        animation: spin .6s linear infinite;
+        animation: spin 1s linear infinite;
     }
 }
 
@@ -184,9 +181,9 @@ button {
     right: 1rem;
     z-index: var(--side-index);
 
-    .preloader {
-        border-radius: var(--default-border-radius);
-        border: var(--default-border-width) solid var(--border-color);
+    @media(width <=768px) {
+        top: .5rem;
+        right: .5rem;
     }
 
     button {
@@ -329,7 +326,6 @@ button {
             td {
                 padding: .5rem;
                 border-bottom: var(--default-border-width) solid var(--border-color);
-                font-variant-numeric: tabular-nums;
 
                 code {
                     background: var(--color-primary-100);
@@ -484,12 +480,12 @@ button {
 
             &.start-game-screen {
                 display: block;
-                background: url('../img/mainBackground.png') no-repeat;
+                background: url('../img/main-background.webp') no-repeat;
                 background-size: cover;
                 padding-bottom: 0;
 
-                img {
-                    @media(width <=768px) {
+                @media(width <=768px) {
+                    img {
                         display: none;
                     }
                 }
@@ -508,7 +504,7 @@ button {
             }
 
             &.game-config-screen {
-                background: url('../img/mainBackground.png') no-repeat;
+                background: url('../img/main-background.webp') no-repeat;
                 background-size: cover;
                 display: none;
 
@@ -570,7 +566,23 @@ button {
                                 width: 100%;
 
                                 button {
+                                    position: relative;
                                     width: inherit;
+
+                                    &.button-active {
+                                        background-color: var(--color-primary-200);
+
+                                        &::before {
+                                            font-size: .8rem;
+                                            position: absolute;
+                                            top: 50%;
+                                            transform: translateY(-50%);
+                                            left: 1rem;
+                                            font-family: FontAwesome;
+                                            content: "\f0da";
+                                            font-size: .8rem;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -581,19 +593,9 @@ button {
 
         .game {
             position: absolute;
+            background: url("../img/game-background.webp") no-repeat bottom;
+            background-size: cover;
             inset: 0;
-
-            .background {
-                position: absolute;
-                z-index: -1;
-                inset: 0;
-                background: url("../img/gameBackground.jpg") no-repeat bottom;
-                background-size: cover;
-            }
-
-            &.running .background {
-                animation: movement 1s ease infinite;
-            }
 
             #mobile-jump-area {
                 position: absolute;
