@@ -34,7 +34,7 @@ export const exclamationIcon = '<i class="fas fa-exclamation-circle"></i>';
 export const GAME_MESSAGES = {
     emptyScore: "<tr class=\"empty\"><td>Nenhuma pontuação existente</td></tr>",
     scoreLocalStorage: (time, difficulty) => `Tempo correndo na dificuldade ${difficulty}: ${time + (time === 1 ? ' segundo' : ' segundos')}`,
-    scoreTable: (index, html) => `<tr><td>${index}) <span>${html}</span></td></tr>`,
+    scoreTable: ({ left, center, right }) => `<tr><td>${left}</td><td>${center}</td><td>${right}</td></tr>`,
     characterIsSelected: `<p>${exclamationIcon} Personagem já selecionado<p>`,
     difficultyIsSelected: `<p>${exclamationIcon} Dificuldade já selecionada<p>`,
     selectedCharacter: (character) => `<p>${exclamationIcon} Personagem ${character} selecionado!</p>`,

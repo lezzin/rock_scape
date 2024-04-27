@@ -75,6 +75,33 @@ DAMAGE_SOUND_P1.volume = 0.4;
 DAMAGE_SOUND_P2.volume = 0.4;
 
 /**
+ * Formats an date to the Brazil UTC.
+ * @param {String} date - The date to format.
+ */
+function formatDate(date) {
+    const utcDate = new Date(date + "T00:00:00Z");
+
+    const day = utcDate.getUTCDate();
+    const month = utcDate.getUTCMonth() + 1;
+    const year = utcDate.getUTCFullYear();
+
+    return `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
+}
+
+/**
+ * Return the current datetime.
+ */
+function currentTime() {
+    return new Date().toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+/**
  * Shows a toast in the screen.
  * @param {String} type - The toast type.
  * @param {String} message - The toast message.
@@ -122,9 +149,14 @@ const populateScoreboardTable = (data) => {
     data.forEach((user, index) => {
         const { user_id, username, score } = user;
 
-        const scoreHTML = `${username} - ${score} segundos`;
+        
         const pontuationIndex = index + 1;
-        const $scoreItem = $(GAME_MESSAGES.scoreTable(pontuationIndex, scoreHTML));
+        const data = {
+            left: pontuationIndex,
+            center: username,
+            right: score
+        }
+        const $scoreItem = $(GAME_MESSAGES.scoreTable(data));
 
         if (user_id === currentUserID) {
             $scoreItem.addClass("user-score");
@@ -407,7 +439,8 @@ const verifyGame = () => {
             user_id: loggedUser.uid,
             username: loggedUser.displayName,
             score: currentScore,
-            difficulty: selectedDifficulty
+            difficulty: selectedDifficulty,
+            created_at: currentTime()
         };
 
         try {

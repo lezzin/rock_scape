@@ -182,8 +182,8 @@ button {
     z-index: var(--side-index);
 
     @media(width <=768px) {
-        top: .5rem;
-        right: .5rem;
+        top: 0;
+        right: 0;
     }
 
     button {
@@ -226,7 +226,7 @@ button {
 
     .dropdown {
         position: absolute;
-        inset: calc(100% + 0.25rem) 100% 0 0;
+        inset: 100% 100% 0 0;
         display: none;
         width: 100%;
 
@@ -277,7 +277,7 @@ button {
             width: 40vw;
 
             @media(width <=768px) {
-                width: 90%;
+                width: 80%;
             }
         }
     }
@@ -381,6 +381,8 @@ button {
     }
 
     tr {
+        text-align: center;
+
         &:not(.empty):nth-child(1) {
             background-color: var(--color-primary-300);
             color: var(--color-font);
@@ -394,21 +396,14 @@ button {
             background-color: var(--color-primary-500);
         }
 
-        &.user-score {
-            td {
-                position: relative;
-
-                &::after {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    right: 1rem;
-                    font-family: FontAwesome;
-                    content: "\f007";
-                }
+        &.user-score td:nth-child(2) {
+            &::before {
+                margin-right: 1rem;
+                transform: translateY(-50%);
+                font-family: FontAwesome;
+                content: "\f007";
             }
         }
-
     }
 }
 
@@ -601,7 +596,7 @@ button {
                 position: absolute;
                 right: 1rem;
                 bottom: 1rem;
-                z-index: var(--side-index);
+                z-index: calc(var(--game-index) + 1);
                 display: none;
 
                 span {
