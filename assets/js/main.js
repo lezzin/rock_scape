@@ -40,11 +40,11 @@ const $gameOverScreen = $("[data-game-over-screen]");
 const $gameOverCounterDisplay = $("[data-game-over-time]");
 const $gameConfigScreen = $("[data-game-config-screen]");
 const $gameConfigScreenAlert = $("[data-game-config-message]");
-const $scorePanel = $("[data-scoreboard-wrapper]");
-const $scorePanelTable = $("[data-scoreboard-table]");
-const $scoreSelect = $("[data-scoreboard-select]");
-const $scoreMessage = $("[scoreboard-message]");
-const $commandsPanel = $("[data-commands-wrapper]");
+const $scoreboardScreen = $("[data-scoreboard-wrapper]");
+const $scoreboardTable = $("[data-scoreboard-table]");
+const $scoreboardSelect = $("[data-scoreboard-select]");
+const $scoreboardMessage = $("[scoreboard-message]");
+const $commandsScreen = $("[data-commands-wrapper]");
 const $configSelectP1Btn = $("[data-select-char1-btn]");
 const $configSelectP2Btn = $("[data-select-char2-btn]");
 const $configEasyModeBtn = $("[data-easy-mode-btn]");
@@ -63,7 +63,7 @@ let loggedUser = null;
 let activeIntervals = [];
 let configMessageTimeout;
 let characterJumpTimeout;
-let selectedScoreboardDifficulty = $scoreSelect.val();
+let selectedScoreboardDifficulty = $scoreboardSelect.val();
 let selectedCharacter = GAME_CHARACTERS.boy;
 let selectedDifficulty = GAME_DIFICULTIES.easy;
 let canCharacterJump = true;
@@ -137,10 +137,10 @@ const filterScoreboardByDifficulty = (difficulty) => {
  * @param {Array} data - The array of scores
  */
 const populateScoreboardTable = (data) => {
-    $scorePanelTable.empty();
+    $scoreboardTable.empty();
 
     if (data.length === 0) {
-        $scorePanelTable.append(GAME_MESSAGES.emptyScore);
+        $scoreboardTable.append(GAME_MESSAGES.emptyScore);
         return;
     }
 
@@ -149,20 +149,20 @@ const populateScoreboardTable = (data) => {
     data.forEach((user, index) => {
         const { user_id, username, score } = user;
 
-        
         const pontuationIndex = index + 1;
         const data = {
             left: pontuationIndex,
             center: username,
             right: score
-        }
+        };
+
         const $scoreItem = $(GAME_MESSAGES.scoreTable(data));
 
         if (user_id === currentUserID) {
             $scoreItem.addClass("user-score");
         }
 
-        $scorePanelTable.append($scoreItem);
+        $scoreboardTable.append($scoreItem);
     });
 };
 
@@ -187,46 +187,44 @@ const updateScoreboardTable = async () => {
 };
 
 /**
- * Toggles screen.
- * @param {JQuery<HTMLElement>} screenToToggle - Screen to toggle.
- */
-const toggleScreen = (screenToToggle) => {
-    if ($gameStartScreen.css("display") === "none" && $gameOverScreen.css("display") === "none") return;
-    screenToToggle.toggleClass("selected-screen");
-};
-
-/**
  * Toggles score screen.
  */
 const toggleScoreboardScreen = () => {
-    toggleScreen($scorePanel);
-    $commandsPanel.removeClass("selected-screen");
+    hideScreens($commandsScreen, $gameConfigScreen);
+    $scoreboardScreen.fadeToggle();
 };
 
 /**
  * Toggles commands screen.
- */
+*/
 const toggleCommandsScreen = () => {
-    toggleScreen($commandsPanel);
-    $scorePanel.removeClass("selected-screen");
+    hideScreens($scoreboardScreen, $gameConfigScreen);
+    $commandsScreen.fadeToggle();
 };
 
 /**
  * Toggles game config screen.
  */
 const toggleGameConfigScreen = () => {
+    hideScreens($commandsScreen, $scoreboardScreen);
     $gameConfigScreen.fadeToggle();
+};
+
+/**
+ * Hides some screens.
+ * @param {Array} screensToHide - The screens to hide
+ */
+const hideScreens = (...screensToHide) => {
+    screensToHide.forEach(screen => screen.fadeOut());
 };
 
 /**
  * Hides all screens.
  */
 const hideAllScreens = () => {
-    const screens = [$scorePanel, $commandsPanel, $gameConfigScreen];
+    const screens = [$scoreboardScreen, $commandsScreen, $gameConfigScreen];
     screens.forEach(screen => {
-        if (screen.hasClass("selected-screen")) {
-            toggleScreen(screen);
-        }
+        screen.fadeOut();
     });
 };
 
@@ -483,8 +481,12 @@ const verifyGame = () => {
  * Starts the game.
  */
 const startGame = () => {
-    if ($gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none') return;
-
+    if (
+        $gameStartScreen.css("display") === 'none' &&
+        $gameOverScreen.css("display") === 'none' &&
+        $scoreboardScreen.css("display") === 'none' &&
+        $commandsScreen.css("display") === 'none'
+    ) return;
     canCharacterJump = false;
 
     const playerImage = selectedCharacter === GAME_CHARACTERS.boy ? IMAGE_P1 : IMAGE_P2;
@@ -636,8 +638,6 @@ const handleKeyPress = ({ which }) => {
             jumpCharacter();
         },
         38: jumpCharacter,
-        67: toggleCommandsScreen,
-        80: toggleScoreboardScreen
     }
 
     functions[which] && functions[which]();
@@ -658,8 +658,8 @@ const handleDocumentClick = ({ target }) => {
         !$currentTarget.closest($dropdownToggler).length &&
         !$currentTarget.closest($dropdowns).length
     ) {
-        $scorePanel.removeClass('selected-screen');
-        $commandsPanel.removeClass('selected-screen');
+        $scoreboardScreen.removeClass('selected-screen');
+        $commandsScreen.removeClass('selected-screen');
         $dropdowns.hide();
     }
 };
@@ -668,7 +668,7 @@ const handleDocumentClick = ({ target }) => {
  * Initializes event listeners.
  */
 const initializeEventListeners = () => {
-    $scoreSelect.on("change", event => filterScoreboardByDifficulty(event.target.value));
+    $scoreboardSelect.on("change", event => filterScoreboardByDifficulty(event.target.value));
     $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, loginUserAccount));
     $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, logoutUserAccount));
     $deleteAccountBtn.on("click touchstart", event => handleButtonClick(event, deleteUserAccount));
@@ -680,7 +680,7 @@ const initializeEventListeners = () => {
     $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreboardScreen));
     $commandsToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
-    backToStartBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
+    backToStartBtn.on("click touchstart", event => handleButtonClick(event, hideAllScreens));
     $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
     $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl, event.target)));
     $mobileJumpArea.on("touchstart", jumpCharacter);
@@ -694,11 +694,11 @@ $(window).on("load", function () {
             $logoutGoogleBtn.hide();
             $deleteAccountBtn.hide();
             $userDataDisplay.hide();
-            $scoreMessage.show();
+            $scoreboardMessage.show();
             return;
         }
 
-        $scoreMessage.hide();
+        $scoreboardMessage.hide();
         $loginGoogleBtn.hide();
         $logoutGoogleBtn.show();
         $deleteAccountBtn.show();

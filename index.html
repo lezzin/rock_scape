@@ -20,6 +20,38 @@
         <span class="spinner"></span>
     </div>
 
+    <aside class="google-account">
+        <button type="button" class="button-primary size-3" data-google-login title="Entrar com Google">
+            <i class="fab fa-google"></i> Entrar com Google
+        </button>
+
+        <button type="button" data-dropdown-toggler title="Abrir/fechar dropdown">
+            <div data-user-info>
+                <div class="content">
+                    <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000"
+                        alt="Imagem de perfil do usuário" width="32" height="32">
+                    <div class="right">
+                        <p>username</p>
+                        <small>email</small>
+                    </div>
+                </div>
+            </div>
+        </button>
+
+        <div class="dropdown">
+            <div class="dropdown-menu">
+                <button type="button" class="button-outline-danger size-3" data-google-logout
+                    title="Logout com Google">
+                    <i class="fas fa-sign-out-alt"></i> Sair da conta
+                </button>
+                <button type="button" class="button-danger size-3" data-google-delete
+                    title="Excluir conta Google">
+                    <i class="fas fa-sign-out-alt"></i> Excluir conta
+                </button>
+            </div>
+        </div>
+    </aside>
+
     <div class="toast-wrapper" data-toast>
         <div class="toast">
             <div class="toast-banner"></div>
@@ -33,109 +65,8 @@
         </div>
     </div>
 
-    <aside class="float-dropdown">
-        <button type="button" class="button-primary size-3" data-google-login title="Entrar com Google">
-            <i class="fab fa-google"></i> Entrar com Google
-        </button>
-
-        <button type="button" data-dropdown-toggler title="Abrir/fechar dropdown">
-            <div data-user-info>
-                <div class="content">
-                    <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000" alt="Imagem de perfil do usuário" width="32" height="32">
-                    <div class="right">
-                        <p>username</p>
-                        <small>email</small>
-                    </div>
-                </div>
-            </div>
-        </button>
-
-        <div class="dropdown">
-            <div class="dropdown-menu">
-                <button type="button" class="button-outline-danger size-3" data-google-logout title="Logout com Google">
-                    <i class="fas fa-sign-out-alt"></i> Sair da conta
-                </button>
-                <button type="button" class="button-danger size-3" data-google-delete title="Excluir conta Google">
-                    <i class="fas fa-sign-out-alt"></i> Excluir conta
-                </button>
-            </div>
-        </div>
-    </aside>
-
-    <aside class="scoreboard-wrapper" data-scoreboard-wrapper>
-        <div class="dialog">
-            <header>
-                <div class="header-texts">
-                    <h2>Placar de jogadores</h2>
-                    <small scoreboard-message><i class="fas fa-exclamation-circle"></i> Você deve estar logado para
-                        participar do placar</small>
-                </div>
-                <div class="header-buttons">
-                    <button type="button" class="button-outline-danger" title="Fechar placar"
-                        data-scoreboard-toggler-btn>
-                        <i class="fas fa-xmark"></i>
-                    </button>
-                </div>
-            </header>
-
-            <div class="scoreboard-form">
-                <div class="select">
-                    <select data-scoreboard-select>
-                        <option value="easy">Filtrar dificuldade: fácil</option>
-                        <option value="medium">Filtrar dificuldade: médio</option>
-                        <option value="hard">Filtrar dificuldade: difícil</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table>
-                    <tbody data-scoreboard-table></tbody>
-                </table>
-            </div>
-        </div>
-    </aside>
-
-    <aside class="commands-wrapper" data-commands-wrapper>
-        <div class="dialog">
-            <header>
-                <h2>Comandos do jogo</h2>
-                <button type="button" class="button-outline-danger" title="Fechar comandos" data-command-toggler-btn>
-                    <i class="fas fa-xmark"></i>
-                </button>
-            </header>
-
-            <div class="table-responsive">
-                <table>
-                    <tbody>
-                        <tr>
-                            <td><code>C</code></td>
-                            <td>Atalho para acessar a lista de comandos</td>
-                        </tr>
-                        <tr>
-                            <td><code>P</code></td>
-                            <td>Atalho para acessar o placar</td>
-                        </tr>
-                        <tr>
-                            <td><code>Espaço</code></td>
-                            <td>Inicia/reinicia o jogo</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <code><i class="fas fa-arrow-up"></i></code>
-                                <code>Espaço</code>
-                            </td>
-                            <td>Pula</td>
-                        </tr>
-                        <tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </aside>
-
     <main class="display">
-        <div class="game-board">
+        <div class="game-board" data-game-board>
             <section class="game" data-game>
                 <div id="mobile-jump-area" data-mobile-jump-area><span><i class="fas fa-caret-up"></i></span></div>
 
@@ -147,12 +78,13 @@
                 <div class="background"></div>
             </section>
 
-            <section class="game-screen start-game-screen" data-start-game-screen>
+            <section class="game-screen game-start-screen" data-start-game-screen>
                 <div class="screen-content">
                     <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="360">
 
                     <div class="screen-buttons">
-                        <button type="button" class="size-1 button-primary" title="Iniciar jogo" data-start-game-btn>
+                        <button type="button" class="size-1 button-primary" title="Iniciar jogo"
+                            data-start-game-btn>
                             <i class="fas fa-play"></i> Iniciar (ou espaço)
                         </button>
                         <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
@@ -169,6 +101,11 @@
                         </button>
                     </div>
                 </div>
+
+                <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
+                    data-back-start-btn>
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
             </section>
 
             <section class="game-screen game-over-screen" data-game-over-screen>
@@ -179,7 +116,8 @@
                     </div>
 
                     <div class="screen-buttons">
-                        <button type="button" class="size-2 button-primary" title="Jogar novamente" data-start-game-btn>
+                        <button type="button" class="size-2 button-primary" title="Jogar novamente"
+                            data-start-game-btn>
                             <i class="fas fa-play"></i> Jogar denovo (ou espaço)
                         </button>
                         <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
@@ -211,8 +149,8 @@
                                     title="Selecionar dificuldade fácil" data-easy-mode-btn>
                                     Fácil
                                 </button>
-                                <button type="button" class="size-3 button-primary" title="Selecionar dificuldade média"
-                                    data-medium-mode-btn>
+                                <button type="button" class="size-3 button-primary"
+                                    title="Selecionar dificuldade média" data-medium-mode-btn>
                                     Médio
                                 </button>
                                 <button type="button" class="size-3 button-primary"
@@ -226,14 +164,80 @@
                             <h3 class="size-1">Personagem</h3>
 
                             <div class="screen-buttons images">
-                                <button type="button" class="size-3 button-primary button-active" title="Selecionar personagem 1" data-select-char1-btn>
+                                <button type="button" class="size-3 button-primary button-active"
+                                    title="Selecionar personagem 1" data-select-char1-btn>
                                     Masculino
                                 </button>
-                                <button type="button" class="size-3 button-primary" title="Selecionar personagem 2" data-select-char2-btn>
+                                <button type="button" class="size-3 button-primary" title="Selecionar personagem 2"
+                                    data-select-char2-btn>
                                     Feminino
                                 </button>
                             </div>
                         </div>
+                    </div>
+
+                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
+                        data-back-start-btn>
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </section>
+
+            <section class="game-screen game-scoreboard-screen" data-scoreboard-wrapper>
+                <div class="screen-content">
+                    <h2>Placar de jogadores</h2>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td colspan="3" class="select-col">
+                                        <div class="select">
+                                            <select data-scoreboard-select>
+                                                <option value="easy">Filtrar dificuldade: fácil</option>
+                                                <option value="medium">Filtrar dificuldade: médio</option>
+                                                <option value="hard">Filtrar dificuldade: difícil</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody data-scoreboard-table></tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
+                        data-back-start-btn>
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </section>
+
+            <section class="game-screen game-commands-screen" data-commands-wrapper>
+                <div class="screen-content">
+                    <h2>Comandos do jogo</h2>
+
+                    <div class="table-responsive">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><code>R</code></td>
+                                    <td>Tela cheia</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Espaço</code></td>
+                                    <td>Inicia/reinicia o jogo</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code><i class="fas fa-arrow-up"></i></code>
+                                        <code>Espaço</code>
+                                    </td>
+                                    <td>Pula</td>
+                                </tr>
+                                <tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <button type="button" class="button-danger size-3" title="Voltar para a página inicial"

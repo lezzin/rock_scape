@@ -11,9 +11,22 @@
     }
 }
 
+@keyframes jump-resized {
+    0%,
+    100% {
+        bottom: 10px;
+    }
+
+    40%,
+    50%,
+    60% {
+        bottom: 200px;
+    }
+}
+
 @keyframes obstacle-running {
     from {
-        right: -120px;
+        right: -150px;
     }
 
     to {
