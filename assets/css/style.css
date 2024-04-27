@@ -246,7 +246,7 @@ button {
 
 .commands-wrapper,
 .scoreboard-wrapper {
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: var(--side-index);
     background-color: var(--overlay-color);
