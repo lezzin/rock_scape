@@ -1,0 +1,17 @@
+.preloader {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-surface-mixed-100);
+    z-index: calc(var(--side-index) + 1);
+    display: grid;
+    place-items: center;
+
+    .spinner {
+        width: 2.5rem;
+        aspect-ratio: 1;
+        border: 3px solid var(--color-font);
+        border-left-color: var(--color-primary-100);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+}

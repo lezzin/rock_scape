@@ -28,8 +28,8 @@
         <button type="button" data-dropdown-toggler title="Abrir/fechar dropdown">
             <div data-user-info>
                 <div class="content">
-                    <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000"
-                        alt="Imagem de perfil do usuário" width="32" height="32">
+                    <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000" alt="Imagem de perfil do usuário"
+                        width="32" height="32">
                     <div class="right">
                         <p>username</p>
                         <small>email</small>
@@ -40,12 +40,10 @@
 
         <div class="dropdown">
             <div class="dropdown-menu">
-                <button type="button" class="button-outline-danger size-3" data-google-logout
-                    title="Logout com Google">
+                <button type="button" class="button-outline-danger size-3" data-google-logout title="Logout com Google">
                     <i class="fas fa-sign-out-alt"></i> Sair da conta
                 </button>
-                <button type="button" class="button-danger size-3" data-google-delete
-                    title="Excluir conta Google">
+                <button type="button" class="button-danger size-3" data-google-delete title="Excluir conta Google">
                     <i class="fas fa-sign-out-alt"></i> Excluir conta
                 </button>
             </div>
@@ -83,8 +81,7 @@
                     <img src="./assets/img/logo-lg.svg" alt="Logo do jogo" width="360">
 
                     <div class="screen-buttons">
-                        <button type="button" class="size-1 button-primary" title="Iniciar jogo"
-                            data-start-game-btn>
+                        <button type="button" class="size-1 button-primary" title="Iniciar jogo" data-start-game-btn>
                             <i class="fas fa-play"></i> Iniciar (ou espaço)
                         </button>
                         <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
@@ -95,17 +92,8 @@
                             data-scoreboard-toggler-btn>
                             <i class="fas fa-trophy"></i> Placar
                         </button>
-                        <button type="button" class="size-3 button-outline-primary" title="Acessar comandos"
-                            data-command-toggler-btn>
-                            <i class="fas fa-gamepad"></i> Comandos
-                        </button>
                     </div>
                 </div>
-
-                <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
-                    data-back-start-btn>
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </button>
             </section>
 
             <section class="game-screen game-over-screen" data-game-over-screen>
@@ -116,8 +104,7 @@
                     </div>
 
                     <div class="screen-buttons">
-                        <button type="button" class="size-2 button-primary" title="Jogar novamente"
-                            data-start-game-btn>
+                        <button type="button" class="size-2 button-primary" title="Jogar novamente" data-start-game-btn>
                             <i class="fas fa-play"></i> Jogar denovo (ou espaço)
                         </button>
                         <button type="button" class="size-3 button-outline-primary" title="Acessar configurações"
@@ -128,10 +115,6 @@
                             data-scoreboard-toggler-btn>
                             <i class="fas fa-trophy"></i> Placar
                         </button>
-                        <button type="button" class="size-3 button-outline-primary" title="Acessar comandos"
-                            data-command-toggler-btn>
-                            <i class="fas fa-gamepad"></i> Comandos
-                        </button>
                     </div>
                 </div>
             </section>
@@ -139,7 +122,7 @@
             <section class="game-screen game-config-screen" data-game-config-screen>
                 <div id="game-config-message" data-game-config-message></div>
 
-                <div class="screen-content">
+                <div class="screen-content with-background">
                     <div class="options-container">
                         <div class="options">
                             <h3 class="size-1">Dificuldade</h3>
@@ -149,8 +132,8 @@
                                     title="Selecionar dificuldade fácil" data-easy-mode-btn>
                                     Fácil
                                 </button>
-                                <button type="button" class="size-3 button-primary"
-                                    title="Selecionar dificuldade média" data-medium-mode-btn>
+                                <button type="button" class="size-3 button-primary" title="Selecionar dificuldade média"
+                                    data-medium-mode-btn>
                                     Médio
                                 </button>
                                 <button type="button" class="size-3 button-primary"
@@ -184,60 +167,24 @@
             </section>
 
             <section class="game-screen game-scoreboard-screen" data-scoreboard-wrapper>
-                <div class="screen-content">
-                    <h2>Placar de jogadores</h2>
-
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td colspan="3" class="select-col">
-                                        <div class="select">
-                                            <select data-scoreboard-select>
-                                                <option value="easy">Filtrar dificuldade: fácil</option>
-                                                <option value="medium">Filtrar dificuldade: médio</option>
-                                                <option value="hard">Filtrar dificuldade: difícil</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody data-scoreboard-table></tbody>
-                        </table>
+                <div class="screen-content with-background">
+                    <div>
+                        <h3 class="size-1">Placar de jogadores</h3>
+                        <small data-scoreboard-message>(Você deve estar logado para participar)</small>
                     </div>
 
-                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
-                        data-back-start-btn>
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                </div>
-            </section>
+                    <div class="screen-body">
+                        <div class="scoreboard-filter-buttons">
+                            <button type="button" class="button-primary size-3 button-active " data-scoreboard-select-difficulty data-difficulty="easy">Fácil</button>
+                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty data-difficulty="medium">Médio</button>
+                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty data-difficulty="hard">Difícil</button>
+                        </div>
 
-            <section class="game-screen game-commands-screen" data-commands-wrapper>
-                <div class="screen-content">
-                    <h2>Comandos do jogo</h2>
-
-                    <div class="table-responsive">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><code>R</code></td>
-                                    <td>Tela cheia</td>
-                                </tr>
-                                <tr>
-                                    <td><code>Espaço</code></td>
-                                    <td>Inicia/reinicia o jogo</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <code><i class="fas fa-arrow-up"></i></code>
-                                        <code>Espaço</code>
-                                    </td>
-                                    <td>Pula</td>
-                                </tr>
-                                <tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive size-3">
+                            <table class="scoreboard-table">
+                                <tbody data-scoreboard-table></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <button type="button" class="button-danger size-3" title="Voltar para a página inicial"

@@ -42,9 +42,8 @@ const $gameConfigScreen = $("[data-game-config-screen]");
 const $gameConfigScreenAlert = $("[data-game-config-message]");
 const $scoreboardScreen = $("[data-scoreboard-wrapper]");
 const $scoreboardTable = $("[data-scoreboard-table]");
-const $scoreboardSelect = $("[data-scoreboard-select]");
-const $scoreboardMessage = $("[scoreboard-message]");
-const $commandsScreen = $("[data-commands-wrapper]");
+const $scoreboardSelectButtons = $("[data-scoreboard-select-difficulty]");
+const $scoreboardMessage = $("[data-scoreboard-message]");
 const $configSelectP1Btn = $("[data-select-char1-btn]");
 const $configSelectP2Btn = $("[data-select-char2-btn]");
 const $configEasyModeBtn = $("[data-easy-mode-btn]");
@@ -53,7 +52,6 @@ const $configHardModeBtn = $("[data-hard-mode-btn]");
 const $startGameBtn = $("[data-start-game-btn]");
 const backToStartBtn = $("[data-back-start-btn]");
 const $scoreToggleBtn = $("[data-scoreboard-toggler-btn]");
-const $commandsToggleBtn = $("[data-command-toggler-btn]");
 const $configToggleBtn = $("[data-config-toggler-btn]");
 const $gameWidth = $gameScreen.width();
 const $gameOffset = $gameScreen.offset();
@@ -63,7 +61,7 @@ let loggedUser = null;
 let activeIntervals = [];
 let configMessageTimeout;
 let characterJumpTimeout;
-let selectedScoreboardDifficulty = $scoreboardSelect.val();
+let selectedScoreboardDifficulty = "easy";
 let selectedCharacter = GAME_CHARACTERS.boy;
 let selectedDifficulty = GAME_DIFICULTIES.easy;
 let canCharacterJump = true;
@@ -73,20 +71,6 @@ STEP_SOUND.volume = 0.3;
 RECORD_SOUND.volume = 0.5;
 DAMAGE_SOUND_P1.volume = 0.4;
 DAMAGE_SOUND_P2.volume = 0.4;
-
-/**
- * Formats an date to the Brazil UTC.
- * @param {String} date - The date to format.
- */
-function formatDate(date) {
-    const utcDate = new Date(date + "T00:00:00Z");
-
-    const day = utcDate.getUTCDate();
-    const month = utcDate.getUTCMonth() + 1;
-    const year = utcDate.getUTCFullYear();
-
-    return `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
-}
 
 /**
  * Return the current datetime.
@@ -125,10 +109,13 @@ const showToast = (type, message) => {
 
 /**
  * Filter the scoreboard by difficulty.
- * @param {String} difficulty - The selected difficulty.
+ * @param {String} clickedButton - The selected difficulty button.
  */
-const filterScoreboardByDifficulty = (difficulty) => {
+const filterScoreboardByDifficulty = (clickedButton) => {
+    const difficulty = $(clickedButton).data("difficulty");
     selectedScoreboardDifficulty = difficulty;
+
+    activateButton(clickedButton);
     updateScoreboardTable();
 }
 
@@ -190,23 +177,15 @@ const updateScoreboardTable = async () => {
  * Toggles score screen.
  */
 const toggleScoreboardScreen = () => {
-    hideScreens($commandsScreen, $gameConfigScreen);
+    hideScreens($gameConfigScreen);
     $scoreboardScreen.fadeToggle();
-};
-
-/**
- * Toggles commands screen.
-*/
-const toggleCommandsScreen = () => {
-    hideScreens($scoreboardScreen, $gameConfigScreen);
-    $commandsScreen.fadeToggle();
 };
 
 /**
  * Toggles game config screen.
  */
 const toggleGameConfigScreen = () => {
-    hideScreens($commandsScreen, $scoreboardScreen);
+    hideScreens($scoreboardScreen);
     $gameConfigScreen.fadeToggle();
 };
 
@@ -222,7 +201,7 @@ const hideScreens = (...screensToHide) => {
  * Hides all screens.
  */
 const hideAllScreens = () => {
-    const screens = [$scoreboardScreen, $commandsScreen, $gameConfigScreen];
+    const screens = [$scoreboardScreen, $gameConfigScreen];
     screens.forEach(screen => {
         screen.fadeOut();
     });
@@ -484,8 +463,7 @@ const startGame = () => {
     if (
         $gameStartScreen.css("display") === 'none' &&
         $gameOverScreen.css("display") === 'none' &&
-        $scoreboardScreen.css("display") === 'none' &&
-        $commandsScreen.css("display") === 'none'
+        $scoreboardScreen.css("display") === 'none'
     ) return;
     canCharacterJump = false;
 
@@ -649,17 +627,8 @@ const handleKeyPress = ({ which }) => {
  */
 const handleDocumentClick = ({ target }) => {
     const $currentTarget = $(target);
-    const $dialogElements = $('.dialog');
 
-    if (
-        !$currentTarget.closest($dialogElements).length &&
-        !$currentTarget.closest($scoreToggleBtn).length &&
-        !$currentTarget.closest($commandsToggleBtn).length &&
-        !$currentTarget.closest($dropdownToggler).length &&
-        !$currentTarget.closest($dropdowns).length
-    ) {
-        $scoreboardScreen.removeClass('selected-screen');
-        $commandsScreen.removeClass('selected-screen');
+    if (!$currentTarget.closest($dropdownToggler).length && !$currentTarget.closest($dropdowns).length) {
         $dropdowns.hide();
     }
 };
@@ -668,7 +637,7 @@ const handleDocumentClick = ({ target }) => {
  * Initializes event listeners.
  */
 const initializeEventListeners = () => {
-    $scoreboardSelect.on("change", event => filterScoreboardByDifficulty(event.target.value));
+    $scoreboardSelectButtons.on("click touchstart", event => handleButtonClick(event, filterScoreboardByDifficulty(event.target)));
     $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, loginUserAccount));
     $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, logoutUserAccount));
     $deleteAccountBtn.on("click touchstart", event => handleButtonClick(event, deleteUserAccount));
@@ -678,7 +647,6 @@ const initializeEventListeners = () => {
     $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode(event.target)));
     $startGameBtn.on("click touchstart", event => handleButtonClick(event, startGame));
     $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreboardScreen));
-    $commandsToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleCommandsScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
     backToStartBtn.on("click touchstart", event => handleButtonClick(event, hideAllScreens));
     $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
