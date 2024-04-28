@@ -471,7 +471,6 @@ const startGame = () => {
     $character.prop("src", playerImage);
 
     $gameScreenCounter.text(GAME_MESSAGES.timeCounterInitial).show();
-    $gameOverCounterDisplay.text("Carregando...");
 
     $obstacle.show();
     $character.show();
