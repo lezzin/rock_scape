@@ -657,8 +657,6 @@ const initializeEventListeners = () => {
 
 $(window).on("load", function () {
     auth.onAuthStateChanged(user => {
-        hidePreloader();
-
         if (!user) {
             $logoutGoogleBtn.hide();
             $deleteAccountBtn.hide();
@@ -685,4 +683,5 @@ $(window).on("load", function () {
 
     initializeEventListeners();
     updateScoreboardTable();
+    hidePreloader();
 })

@@ -282,6 +282,10 @@ table {
     right: 0.5rem;
     z-index: calc(var(--side-index) + 1);
 
+    [data-user-info] {
+        display: none;
+    }
+
     button {
         font-family: var(--normal-font-family);
         font-size: 1rem;
