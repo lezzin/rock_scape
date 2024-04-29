@@ -170,18 +170,6 @@ table {
 
         td {
             padding: .25rem;
-
-            code {
-                background: var(--color-primary-100);
-                padding: .25rem .5rem;
-                border-radius: var(--default-border-radius);
-                color: var(--color-font);
-                font-size: .8rem;
-
-                i {
-                    font-size: inherit;
-                }
-            }
         }
     }
 
@@ -364,7 +352,7 @@ table {
         border: calc(var(--default-border-width) * 2) solid var(--border-color);
         box-shadow: 0 0 3rem var(--color-surface-mixed-300);
         width: 100%;
-        max-width: 854px;
+        max-width: var(--game-width);
         aspect-ratio: 16/9;
 
         @media(width <=768px) {
@@ -476,7 +464,7 @@ table {
                     position: absolute;
                     inset: 0;
                     z-index: -1;
-                    background-color: var(--overlay-color);
+                    background-color: var(--color-overlay);
                 }
             }
 

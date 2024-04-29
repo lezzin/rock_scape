@@ -22,7 +22,7 @@ const {
     GAME_MESSAGES
 } = variables;
 
-const scoreboardRef = db.collection('scoreboard').doc('scoreboard_users');
+const scoreboardRef = db.collection("scoreboard").doc("scoreboard_users");
 
 const $deleteAccountBtn = $("[data-google-delete]");
 const $loginGoogleBtn = $("[data-google-login]");
@@ -94,7 +94,7 @@ const showToast = (type, message) => {
     const $toastContent = $toast.find(".toast");
     const toastClass = type === "error" ? "error-toast" : "success-toast";
     const toastTitle = type === "error" ? "Erro" : "Sucesso";
-    const toastIcon = type === "error" ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-check"></i>';
+    const toastIcon = type === "error" ? "<i class=\"fas fa-xmark\"></i>" : "<i class=\"fas fa-check\"></i>";
 
     $toastContent.removeClass("error-toast", "success-toast").addClass(toastClass);
     $toastContent.find(".toast-title").text(toastTitle);
@@ -317,7 +317,7 @@ const generateRandomObstacle = () => {
  * Makes the character jump.
  */
 const jumpCharacter = () => {
-    const isGameRunning = $gameStartScreen.css("display") === 'none' && $gameOverScreen.css("display") === 'none';
+    const isGameRunning = $gameStartScreen.css("display") === "none" && $gameOverScreen.css("display") === "none";
     if (!isGameRunning || !canCharacterJump) return;
 
     clearTimeout(characterJumpTimeout);
@@ -388,7 +388,7 @@ const verifyGame = () => {
         const selectedCharacterIsP1 = selectedCharacter === GAME_CHARACTERS.boy;
         const gameOverSound = selectedCharacterIsP1 ? DAMAGE_SOUND_P1 : DAMAGE_SOUND_P2;
         $character.prop("src", selectedCharacterIsP1 ? GAME_OVER_IMAGE_P1 : GAME_OVER_IMAGE_P2);
-        $obstacle.css("animation", "none");
+        $obstacle.css("animation", "");
 
         STEP_SOUND.pause();
         gameOverSound.play();
@@ -461,9 +461,9 @@ const verifyGame = () => {
  */
 const startGame = () => {
     if (
-        $gameStartScreen.css("display") === 'none' &&
-        $gameOverScreen.css("display") === 'none' &&
-        $scoreboardScreen.css("display") === 'none'
+        $gameStartScreen.css("display") === "none" &&
+        $gameOverScreen.css("display") === "none" &&
+        $scoreboardScreen.css("display") === "none"
     ) return;
     canCharacterJump = false;
 
@@ -499,7 +499,7 @@ const startGame = () => {
  * Hide the loading screen.
  */
 const hidePreloader = () => {
-    $('[data-preloader]').fadeOut('slow');
+    $("[data-preloader]").fadeOut("slow");
 };
 
 /**
@@ -556,7 +556,7 @@ const logoutUserAccount = async () => {
 };
 
 /**
- * Excluir a the user's account and scores.
+ * Excluir a the user"s account and scores.
  */
 const deleteUserAccount = async () => {
     if (!confirm("Realmente deseja excluir a conta? Essa ação é irreversível")) return;
@@ -597,7 +597,7 @@ const toggleDropdown = (clickedElement) => {
  * @param {Function} callback - Callback function.
  */
 const handleButtonClick = (event, callback) => {
-    if (event.type === 'touchstart') {
+    if (event.type === "touchstart") {
         event.preventDefault();
     }
 
