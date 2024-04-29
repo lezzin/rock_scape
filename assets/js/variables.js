@@ -29,7 +29,7 @@ export const GAME_CHARACTERS = {
     girl: "p2",
 };
 
-export const exclamationIcon = "<i class=\"fas fa-exclamation-circle\"></i>";
+const exclamationIcon = "<i class=\"fas fa-exclamation-circle\"></i>";
 
 export const GAME_MESSAGES = {
     emptyScore: "<tr class=\"empty\"><td>Nenhuma pontuação existente</td></tr>",
