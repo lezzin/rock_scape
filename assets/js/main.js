@@ -469,8 +469,11 @@ const startGame = () => {
     if (
         $gameStartScreen.css("display") === "none" &&
         $gameOverScreen.css("display") === "none" &&
-        $scoreboardScreen.css("display") === "none"
+        $scoreboardScreen.css("display") === "none" &&
+        $gameConfigScreen.css("display") === "none" &&
+        $gameProfileScreen.css("display") === "none"
     ) return;
+
     canCharacterJump = false;
 
     const playerImage = selectedCharacter === GAME_CHARACTERS.boy ? IMAGE_P1 : IMAGE_P2;
