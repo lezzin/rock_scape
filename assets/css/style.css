@@ -70,14 +70,14 @@ button {
     &.button-danger,
     &.button-outline-primary,
     &.button-outline-danger {
-        padding: .25rem .5rem;
+        padding: .35rem;
         border-radius: var(--default-border-radius);
         border: var(--default-border-width) solid;
     }
 
     &.button-primary {
         background-color: var(--color-primary-100);
-        border-color: var(--color-surface-mixed-300);
+        border-color: var(--color-primary-200);
         color: var(--color-font);
     }
 
@@ -276,74 +276,6 @@ table {
     }
 }
 
-.google-account {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    z-index: calc(var(--side-index) + 1);
-
-    [data-user-info] {
-        display: none;
-    }
-
-    button {
-        font-family: var(--normal-font-family);
-        font-size: 1rem;
-    }
-
-    .content {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        padding: .25rem .5rem;
-        background-color: var(--color-primary-100);
-        border: var(--default-border-width) solid var(--border-color);
-        border-radius: var(--default-border-radius);
-        cursor: pointer;
-
-        img {
-            border-radius: 50%;
-            border: 1px solid var(--border-color);
-        }
-
-        .right {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            text-align: left;
-
-            p {
-                font-size: 1rem;
-            }
-
-            small {
-                color: var(--color-font-muted);
-                font-size: .7rem;
-            }
-        }
-    }
-
-    .dropdown {
-        position: absolute;
-        inset: 100% 100% 0 0;
-        display: none;
-        width: 100%;
-        z-index: var(--side-index);
-
-        .dropdown-menu {
-            display: grid;
-            border: var(--default-border-width) solid var(--border-color);
-            border-radius: var(--default-border-radius);
-            overflow: hidden;
-
-            button {
-                border-radius: 0;
-                border: none;
-            }
-        }
-    }
-}
-
 .display {
     display: grid;
     place-items: center;
@@ -374,6 +306,14 @@ table {
             [data-back-start-btn] {
                 margin-top: auto;
                 align-self: flex-start;
+            }
+
+            &.game-config-screen,
+            &.game-over-screen,
+            &.game-scoreboard-screen,
+            &.game-profile-screen,
+            [data-profile-togger-btn] {
+                display: none;
             }
 
             .screen-content {
@@ -430,8 +370,8 @@ table {
             &.game-start-screen {
                 background: url('../img/main-background.jpg') no-repeat;
                 background-size: cover;
-                display: block;
                 padding-bottom: 0;
+                display: block;
 
                 @media(width <=768px) {
                     img {
@@ -441,8 +381,6 @@ table {
             }
 
             &.game-scoreboard-screen {
-                display: none;
-
                 .screen-body {
                     overflow: hidden;
                     width: 100%;
@@ -461,8 +399,6 @@ table {
             }
 
             &.game-over-screen {
-                display: none;
-
                 &::before {
                     content: "";
                     position: absolute;
@@ -473,8 +409,6 @@ table {
             }
 
             &.game-config-screen {
-                display: none;
-
                 #game-config-message {
                     position: absolute;
                     left: 50%;
@@ -537,6 +471,33 @@ table {
                                     width: inherit;
                                 }
                             }
+                        }
+                    }
+                }
+            }
+
+            &.game-profile-screen {
+                .google-account {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: 0.6rem;
+                    padding: .25rem .5rem;
+                    margin-bottom: 1.6rem;
+
+                    img {
+                        border-radius: 50%;
+                        border: 1px solid var(--border-color);
+                    }
+
+                    .google-account-info {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.25rem;
+
+                        small {
+                            color: var(--color-font-muted);
                         }
                     }
                 }

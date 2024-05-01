@@ -28,8 +28,6 @@ const $deleteAccountBtn = $("[data-google-delete]");
 const $loginGoogleBtn = $("[data-google-login]");
 const $logoutGoogleBtn = $("[data-google-logout]");
 const $userDataDisplay = $("[data-user-info]");
-const $dropdownToggler = $("[data-dropdown-toggler]");
-const $dropdowns = $(".dropdown");
 const $character = $("[data-character]");
 const $obstacle = $("[data-obstacle]");
 const $gameScreen = $("[data-game]");
@@ -40,6 +38,7 @@ const $gameOverScreen = $("[data-game-over-screen]");
 const $gameOverCounterDisplay = $("[data-game-over-time]");
 const $gameConfigScreen = $("[data-game-config-screen]");
 const $gameConfigScreenAlert = $("[data-game-config-message]");
+const $gameProfileScreen = $("[data-profile-screen]");
 const $scoreboardScreen = $("[data-scoreboard-wrapper]");
 const $scoreboardTable = $("[data-scoreboard-table]");
 const $scoreboardSelectButtons = $("[data-scoreboard-select-difficulty]");
@@ -53,6 +52,7 @@ const $startGameBtn = $("[data-start-game-btn]");
 const backToStartBtn = $("[data-back-start-btn]");
 const $scoreToggleBtn = $("[data-scoreboard-toggler-btn]");
 const $configToggleBtn = $("[data-config-toggler-btn]");
+const $profileToggleBtn = $("[data-profile-toggler-btn]");
 const $gameWidth = $gameScreen.width();
 const $gameOffset = $gameScreen.offset();
 const $toast = $("[data-toast]");
@@ -177,15 +177,23 @@ const updateScoreboardTable = async () => {
  * Toggles score screen.
  */
 const toggleScoreboardScreen = () => {
-    hideScreens($gameConfigScreen);
+    hideScreens($gameConfigScreen, $gameProfileScreen);
     $scoreboardScreen.fadeToggle();
+};
+
+/**
+ * Toggles profile screen.
+ */
+const toggleProfileScreen = () => {
+    hideScreens($gameConfigScreen, $gameScreen);
+    $gameProfileScreen.fadeToggle();
 };
 
 /**
  * Toggles game config screen.
  */
 const toggleGameConfigScreen = () => {
-    hideScreens($scoreboardScreen);
+    hideScreens($scoreboardScreen, $gameProfileScreen);
     $gameConfigScreen.fadeToggle();
 };
 
@@ -201,10 +209,8 @@ const hideScreens = (...screensToHide) => {
  * Hides all screens.
  */
 const hideAllScreens = () => {
-    const screens = [$scoreboardScreen, $gameConfigScreen];
-    screens.forEach(screen => {
-        screen.fadeOut();
-    });
+    const screens = [$scoreboardScreen, $gameConfigScreen, $gameProfileScreen];
+    screens.forEach(screen => screen.fadeOut());
 };
 
 /**
@@ -517,9 +523,10 @@ const updateUserDataDisplay = () => {
  * Resets the elements to their default states
  */
 const resetElements = () => {
+    hideScreens($gameProfileScreen);
+    
     $loginGoogleBtn.show();
     $logoutGoogleBtn.hide();
-    $dropdowns.hide();
     loggedUser = null;
 
     updateScoreboardTable();
@@ -582,16 +589,6 @@ const deleteUserAccount = async () => {
 }
 
 /**
- * Toggles dropdowns.
- * @param {HTMLElement} clickedElement - Target dropdown toggler.
- */
-const toggleDropdown = (clickedElement) => {
-    const $dropdown = $(clickedElement).closest("[data-dropdown-toggler]").siblings(".dropdown");
-    $dropdowns.not($dropdown).hide();
-    $dropdown.toggle();
-};
-
-/**
  * Handles button click events.
  * @param {Event} event - Button click event.
  * @param {Function} callback - Callback function.
@@ -621,18 +618,6 @@ const handleKeyPress = ({ which }) => {
 };
 
 /**
- * Handles document click events.
- * @param {Object} param0 - Document click event object.
- */
-const handleDocumentClick = ({ target }) => {
-    const $currentTarget = $(target);
-
-    if (!$currentTarget.closest($dropdownToggler).length && !$currentTarget.closest($dropdowns).length) {
-        $dropdowns.hide();
-    }
-};
-
-/**
  * Initializes event listeners.
  */
 const initializeEventListeners = () => {
@@ -640,19 +625,19 @@ const initializeEventListeners = () => {
     $loginGoogleBtn.on("click touchstart", event => handleButtonClick(event, loginUserAccount));
     $logoutGoogleBtn.on("click touchstart", event => handleButtonClick(event, logoutUserAccount));
     $deleteAccountBtn.on("click touchstart", event => handleButtonClick(event, deleteUserAccount));
-    $dropdownToggler.on("click touchstart", event => handleButtonClick(event, toggleDropdown(event.target)));
     $configEasyModeBtn.on("click touchstart", event => handleButtonClick(event, chooseEasyGameMode(event.target)));
     $configMediumModeBtn.on("click touchstart", event => handleButtonClick(event, chooseMediumGameMode(event.target)));
     $configHardModeBtn.on("click touchstart", event => handleButtonClick(event, chooseHardGameMode(event.target)));
     $startGameBtn.on("click touchstart", event => handleButtonClick(event, startGame));
     $scoreToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleScoreboardScreen));
     $configToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleGameConfigScreen));
+    $profileToggleBtn.on("click touchstart", event => handleButtonClick(event, toggleProfileScreen));
     backToStartBtn.on("click touchstart", event => handleButtonClick(event, hideAllScreens));
     $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
     $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl, event.target)));
     $mobileJumpArea.on("touchstart", jumpCharacter);
+    
     $(document).keydown(handleKeyPress);
-    $(document).click(handleDocumentClick);
 }
 
 $(window).on("load", function () {
@@ -660,8 +645,8 @@ $(window).on("load", function () {
         if (!user) {
             $logoutGoogleBtn.hide();
             $deleteAccountBtn.hide();
-            $userDataDisplay.hide();
             $scoreboardMessage.show();
+            $profileToggleBtn.hide();
             return;
         }
 
@@ -669,7 +654,7 @@ $(window).on("load", function () {
         $loginGoogleBtn.hide();
         $logoutGoogleBtn.show();
         $deleteAccountBtn.show();
-        $userDataDisplay.show();
+        $profileToggleBtn.show();
 
         loggedUser = user;
         updateUserDataDisplay();

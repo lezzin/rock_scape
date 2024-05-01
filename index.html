@@ -20,36 +20,6 @@
         <span class="spinner"></span>
     </div>
 
-    <aside class="google-account">
-        <button type="button" class="button-primary size-3" data-google-login title="Entrar com Google">
-            <i class="fab fa-google"></i> Entrar com Google
-        </button>
-
-        <button type="button" data-dropdown-toggler title="Abrir/fechar dropdown">
-            <div data-user-info>
-                <div class="content">
-                    <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000" alt="Imagem de perfil do usuário"
-                        width="32" height="32">
-                    <div class="right">
-                        <p>username</p>
-                        <small>email</small>
-                    </div>
-                </div>
-            </div>
-        </button>
-
-        <div class="dropdown">
-            <div class="dropdown-menu">
-                <button type="button" class="button-outline-danger size-3" data-google-logout title="Logout com Google">
-                    <i class="fas fa-sign-out-alt"></i> Sair da conta
-                </button>
-                <button type="button" class="button-danger size-3" data-google-delete title="Excluir conta Google">
-                    <i class="fas fa-sign-out-alt"></i> Excluir conta
-                </button>
-            </div>
-        </div>
-    </aside>
-
     <div class="toast-wrapper" data-toast>
         <div class="toast">
             <div class="toast-banner"></div>
@@ -92,7 +62,43 @@
                             data-scoreboard-toggler-btn>
                             <i class="fas fa-trophy"></i> Placar
                         </button>
+                        <button type="button" class="size-3 button-outline-primary" data-google-login
+                            title="Entrar com Google">
+                            <i class="fab fa-google"></i> Entrar com Google
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" data-profile-toggler-btn
+                            title="Acessar perfil">
+                            <i class="fas fa-user"></i> Perfil
+                        </button>
                     </div>
+                </div>
+            </section>
+
+            <section class="game-screen game-profile-screen" data-profile-screen>
+                <div class="screen-content with-background">
+                    <div class="google-account" data-user-info>
+                        <img src="https://via.placeholder.com/32x32.webp/e2e2e2/000000"
+                            alt="Imagem de perfil do usuário" width="64" height="64">
+                        <div class="google-account-info">
+                            <p>username</p>
+                            <small>email</small>
+                        </div>
+                    </div>
+
+                    <div class="screen-buttons">
+                        <button type="button" class="button-outline-danger size-3" data-google-logout
+                            title="Logout com Google">
+                            <i class="fas fa-sign-out-alt"></i> Sair da conta
+                        </button>
+                        <button type="button" class="button-danger size-3" data-google-delete
+                            title="Excluir conta Google">
+                            <i class="fas fa-xmark"></i> Excluir conta
+                        </button>
+                    </div>
+
+                    <button type="button" class="size-3" title="Voltar para a página inicial" data-back-start-btn>
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
                 </div>
             </section>
 
@@ -114,6 +120,14 @@
                         <button type="button" class="size-3 button-outline-primary" title="Acessar placar"
                             data-scoreboard-toggler-btn>
                             <i class="fas fa-trophy"></i> Placar
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" data-google-login
+                            title="Entrar com Google">
+                            <i class="fab fa-google"></i> Entrar com Google
+                        </button>
+                        <button type="button" class="size-3 button-outline-primary" data-profile-toggler-btn
+                            title="Acessar perfil">
+                            <i class="fas fa-user"></i> Perfil
                         </button>
                     </div>
                 </div>
@@ -159,8 +173,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
-                        data-back-start-btn>
+                    <button type="button" class="size-3" title="Voltar para a página inicial" data-back-start-btn>
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                 </div>
@@ -175,9 +188,12 @@
 
                     <div class="screen-body">
                         <div class="scoreboard-filter-buttons">
-                            <button type="button" class="button-primary size-3 button-active " data-scoreboard-select-difficulty data-difficulty="easy">Fácil</button>
-                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty data-difficulty="medium">Médio</button>
-                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty data-difficulty="hard">Difícil</button>
+                            <button type="button" class="button-primary size-3 button-active "
+                                data-scoreboard-select-difficulty data-difficulty="easy">Fácil</button>
+                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty
+                                data-difficulty="medium">Médio</button>
+                            <button type="button" class="button-primary size-3" data-scoreboard-select-difficulty
+                                data-difficulty="hard">Difícil</button>
                         </div>
 
                         <div class="table-responsive size-3">
@@ -187,8 +203,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="button-danger size-3" title="Voltar para a página inicial"
-                        data-back-start-btn>
+                    <button type="button" class="size-3" title="Voltar para a página inicial" data-back-start-btn>
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                 </div>
