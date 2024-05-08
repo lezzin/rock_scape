@@ -1,6 +1,13 @@
-![Foto do projeto](https://github.com/lezzin/rock_scape/assets/103830032/9c80f6b8-0757-4b28-9208-1d51d8c18ac0)
+# Rock Scape
 
-Inicialmente, esse jogo era apenas uma cópia de um vídeo que vi no YouTube. Com o passar do tempo, fui adquirindo mais conhecimentos e decidi recriá-lo do zero, resultando no que é hoje.
+Um jogo 2d parecido com o dino do Google, com sistema de ranking em tempo real. 
+
+## Recursos
+
+- Sistema de dificuldades (fácil, médio e difícil)
+- Sistema de rankings por dificuldade
+- Autenticação de usuário com Firebase Authentication
+- Persistência dos dados com Firebase Firestore
 
 ## Guia de Instalação
 ### Acesso Local:
