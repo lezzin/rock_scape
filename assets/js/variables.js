@@ -38,6 +38,7 @@ export const GAME_MESSAGES = {
     characterIsSelected: `<p>${exclamationIcon} Personagem já selecionado<p>`,
     difficultyIsSelected: `<p>${exclamationIcon} Dificuldade já selecionada<p>`,
     selectedCharacter: (character) => `<p>${exclamationIcon} Personagem ${character} selecionado!</p>`,
+    selectedDifficulty: (difficulty) => `<p>${exclamationIcon} Dificuldade ${difficulty} selecionada!</p>`,
     config: (message) => `<p> ${message}</p>`,
     timeCounterInitial: "Tempo: 0s",
     timeCounter: (time) => `Tempo: ${time}s`,

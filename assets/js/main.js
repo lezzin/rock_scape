@@ -178,15 +178,15 @@ const updateScoreboardTable = async () => {
  */
 const toggleScoreboardScreen = () => {
     hideScreens($gameConfigScreen, $gameProfileScreen);
-    $scoreboardScreen.fadeToggle();
+    $scoreboardScreen.toggle();
 };
 
 /**
  * Toggles profile screen.
  */
 const toggleProfileScreen = () => {
-    hideScreens($gameConfigScreen, $gameScreen);
-    $gameProfileScreen.fadeToggle();
+    hideScreens($gameConfigScreen, $scoreboardScreen);
+    $gameProfileScreen.toggle();
 };
 
 /**
@@ -194,7 +194,7 @@ const toggleProfileScreen = () => {
  */
 const toggleGameConfigScreen = () => {
     hideScreens($scoreboardScreen, $gameProfileScreen);
-    $gameConfigScreen.fadeToggle();
+    $gameConfigScreen.toggle();
 };
 
 /**
@@ -202,7 +202,7 @@ const toggleGameConfigScreen = () => {
  * @param {Array} screensToHide - The screens to hide
  */
 const hideScreens = (...screensToHide) => {
-    screensToHide.forEach(screen => screen.fadeOut());
+    screensToHide.forEach(screen => screen.hide());
 };
 
 /**
@@ -210,7 +210,7 @@ const hideScreens = (...screensToHide) => {
  */
 const hideAllScreens = () => {
     const screens = [$scoreboardScreen, $gameConfigScreen, $gameProfileScreen];
-    screens.forEach(screen => screen.fadeOut());
+    screens.forEach(screen => screen.hide());
 };
 
 /**
@@ -274,7 +274,7 @@ const setGameDifficulty = (difficulty, message, clickedButton) => {
  * @param {HTMLElement} clickedButton - Clicked button.
  */
 const chooseEasyGameMode = (clickedButton) => {
-    setGameDifficulty("easy", "Dificuldade fácil selecionada!", clickedButton);
+    setGameDifficulty("easy", GAME_MESSAGES.selectedDifficulty("fácil"), clickedButton);
 };
 
 /**
@@ -282,7 +282,7 @@ const chooseEasyGameMode = (clickedButton) => {
  * @param {HTMLElement} clickedButton - Clicked button.
  */
 const chooseMediumGameMode = (clickedButton) => {
-    setGameDifficulty("medium", "Dificuldade média selecionada!", clickedButton);
+    setGameDifficulty("medium", GAME_MESSAGES.selectedDifficulty("média"), clickedButton);
 };
 
 /**
@@ -290,7 +290,7 @@ const chooseMediumGameMode = (clickedButton) => {
  * @param {HTMLElement} clickedButton - Clicked button.
  */
 const chooseHardGameMode = (clickedButton) => {
-    setGameDifficulty("hard", "Dificuldade difícil selecionada!", clickedButton);
+    setGameDifficulty("hard", GAME_MESSAGES.selectedDifficulty("difícil"), clickedButton);
 };
 
 /**
@@ -487,8 +487,8 @@ const startGame = () => {
     STEP_SOUND.loop = true;
     STEP_SOUND.playbackRate = 1.3;
 
-    $gameOverScreen.fadeOut();
-    $gameStartScreen.fadeOut();
+    $gameOverScreen.hide();
+    $gameStartScreen.hide();
 
     if (innerWidth <= 768) {
         $mobileJumpArea.show();
@@ -527,7 +527,7 @@ const updateUserDataDisplay = () => {
  */
 const resetElements = () => {
     hideScreens($gameProfileScreen);
-    
+
     $loginGoogleBtn.show();
     $logoutGoogleBtn.hide();
     loggedUser = null;
@@ -639,7 +639,7 @@ const initializeEventListeners = () => {
     $configSelectP1Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.boy, event.target)));
     $configSelectP2Btn.on("click touchstart", event => handleButtonClick(event, toggleCharacter(GAME_CHARACTERS.girl, event.target)));
     $mobileJumpArea.on("touchstart", jumpCharacter);
-    
+
     $(document).keydown(handleKeyPress);
 }
 
@@ -653,13 +653,15 @@ $(window).on("load", function () {
             return;
         }
 
+        loggedUser = user;
+
         $scoreboardMessage.hide();
         $loginGoogleBtn.hide();
         $logoutGoogleBtn.show();
         $deleteAccountBtn.show();
         $profileToggleBtn.show();
 
-        loggedUser = user;
+        showToast("success", "Logado com sucesso");
         updateUserDataDisplay();
     })
 

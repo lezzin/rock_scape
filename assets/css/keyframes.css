@@ -1,4 +1,5 @@
 @keyframes jump {
+
     0%,
     100% {
         bottom: 10px;
@@ -12,6 +13,7 @@
 }
 
 @keyframes jump-resized {
+
     0%,
     100% {
         bottom: 10px;
