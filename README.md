@@ -1,4 +1,4 @@
-<h1 align="center"> 🚀 <br> Rock Scape</h1>
+<h1 align="center"> 🏃‍♂️ <br> Rock Scape</h1>
 
 ![Rock Scape](https://github.com/lezzin/rock_scape/assets/103830032/04d17b9b-df9a-4688-aa3d-65d17bcc99df)
 
