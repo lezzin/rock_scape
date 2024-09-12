@@ -172,6 +172,10 @@ td {
     content: "\f007";
 }
 
+.scoreboard-table .user-score td:nth-child(3) {
+    min-width: 8.2rem;
+}
+
 .toast-wrapper {
     position: fixed;
     bottom: 1rem;
