@@ -173,7 +173,7 @@ td {
 }
 
 .scoreboard-table .user-score td:nth-child(3) {
-    min-width: 7.625rem;
+    min-width: 3.8rem;
 }
 
 .toast-wrapper {
